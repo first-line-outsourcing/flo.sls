@@ -1,0 +1,25 @@
+# ================== Hello =====================
+
+hello:
+  handler: api/hello/handler.hello
+  events:
+    - http:
+        path: api/hello
+        method: get
+        integration: lambda
+        cors: true
+#          origin: '*'
+#          headers:
+#            - Content-Type
+#            - X-Amz-Date
+#            - Authorization
+#            - X-Api-Key
+#            - X-Amz-Security-Token
+#            - X-Amz-User-Agent
+#            - Auth-Token
+#          allowCredentials: false
+        response:
+          headers:
+            Access-Control-Allow-Origin: "'*'"
+            Content-Type: "'application/json'"
+          template: $input.json('$')

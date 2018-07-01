@@ -1,0 +1,17 @@
+# package directories
+node_modules
+offline
+jspm_packages
+.idea/
+.webpack
+.tmp
+
+# Serverless directories
+.serverless
+env.yml
+api/**.js
+.nyc_output/
+.build/
+typings/
+documentation/
+package-lock.json
