@@ -7,20 +7,23 @@ provider:
   profile: bmt-home
   environment: ${file(env.yml):${opt:stage, self:provider.stage}}
 
-  iamRoleStatements:
-      - Effect: "Allow"
-        Action:
-          - dynamodb:DescribeTable
-          - dynamodb:Query
-          - dynamodb:Scan
-          - dynamodb:GetItem
-          - dynamodb:PutItem
-          - dynamodb:DeleteItem
-          - dynamodb:UpdateItem
-          - dynamodb:BatchGetItem
-          - dynamodb:BatchWriteItem
-          - s3:*
-        Resource: "*"
+#  iamRoleStatements:
+#      - Effect: Allow
+#        Action:
+#          - dynamodb:DescribeTable
+#          - dynamodb:Query
+#          - dynamodb:Scan
+#          - dynamodb:GetItem
+#          - dynamodb:PutItem
+#          - dynamodb:DeleteItem
+#          - dynamodb:UpdateItem
+#          - dynamodb:BatchGetItem
+#          - dynamodb:BatchWriteItem
+#        Resource: arn:aws:dynamodb:*:*:${self:provider.environment.TABLE}
+#      - Effect: Allow
+#        Action:
+#          - s3:*
+#        Resource: arn:aws:s3:*:*:${self:provider.environment.BUCKET}
 
 custom:
   dirconfig:
@@ -31,15 +34,7 @@ custom:
 #        forceExclude:
 #          - aws-sdk
       packager: 'npm'   # Packager that will be used to package your external modules
-  dynamodb:
-    start:
-      port: 8000
-      inMemory: true
-      migrate: true
 
 plugins:
   - serverless-webpack
   - serverless-dir-config-plugin
-  - serverless-offline
-  - serverless-dynamodb-local
-  - serverless-plugin-existing-s3
