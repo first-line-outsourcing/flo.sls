@@ -1,0 +1,38 @@
+#Resources:
+#  Queue:
+#    Type: AWS::SQS::Queue
+#    Properties:
+#      QueueName: ${self:provider.environment.SQS}
+#      MessageRetentionPeriod: 1209600
+#      VisibilityTimeout: 60
+#      FifoQueue: true
+#      ContentBasedDeduplication: true
+#      RedrivePolicy:
+#        deadLetterTargetArn:
+#          Fn::GetAtt:
+#          - DeadLetterQueue
+#          - Arn
+#        maxReceiveCount: 50
+#
+#  DeadLetterQueue:
+#    Type: AWS::SQS::Queue
+#    Properties:
+#      FifoQueue: true
+#      MessageRetentionPeriod: 1209600
+#
+#  QueueDepthAlarmOver1000:
+#    Type: AWS::CloudWatch::Alarm
+#    Properties:
+#      AlarmDescription: Alarm if queue depth grows beyond 1000 messages
+#      Namespace: AWS/SQS
+#      MetricName: NumberOfMessagesVisible
+#      Dimensions:
+#      - Name: QueueName
+#        Value: ${self:provider.environment.SQS}
+#      Statistic: Sum
+#      Period: 60
+#      EvaluationPeriods: 1
+#      Threshold: 1000
+#      ComparisonOperator: GreaterThanOrEqualToThreshold
+#      AlarmActions:
+#      - { "Fn::Join" : ["", ["arn:aws:sns:${self:provider.region}:", { "Ref" : "AWS::AccountId" }, ":${self:provider.environment.SNS}" ] ]  }

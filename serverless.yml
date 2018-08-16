@@ -4,7 +4,7 @@ provider:
   name: aws
   region: us-east-1
   runtime: nodejs8.10
-  profile: bmt-home
+  profile: serverless-default
   environment: ${file(env.yml):${opt:stage, self:provider.stage}}
 
 #  iamRoleStatements:
@@ -27,14 +27,37 @@ provider:
 
 custom:
   dirconfig:
-      quiet: true
+    quiet: true
   webpack:
-      webpackConfig: 'webpack.config.js'   # Name of webpack configuration file
-      includeModules: false
+    webpackConfig: 'webpack.config.js'   # Name of webpack configuration file
+    includeModules: false
 #        forceExclude:
 #          - aws-sdk
-      packager: 'npm'   # Packager that will be used to package your external modules
+    packager: 'npm'   # Packager that will be used to package your external modules
+  serverless-offline-sns:
+    port: 4002 # a free port for the sns server to run on
+    debug: false
+  serverless-offline-sqs:
+    apiVersion: '2012-11-05'
+    endpoint: http://0.0.0.0:9324
+  dynamodb:
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+      seed: true
+      convertEmptyValues: true
+  s3:
+    host: 0.0.0.0
+    port: 8001
+    directory: /tmp
+
 
 plugins:
   - serverless-webpack
   - serverless-dir-config-plugin
+  - serverless-offline-sns
+  - serverless-offline-sqs
+  - serverless-dynamodb-local
+  - serverless-s3-local
+  - serverless-offline

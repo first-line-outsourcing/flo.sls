@@ -1,6 +1,6 @@
 #Resources:
 #  UsersTable:
-#    Type: 'AWS::DynamoDB::Table'
+#    Type: AWS::DynamoDB::Table
 #    DeletionPolicy: Retain
 #    Properties:
 #      AttributeDefinitions:
@@ -14,4 +14,4 @@
 #      ProvisionedThroughput:
 #        ReadCapacityUnits: 1
 #        WriteCapacityUnits: 1
-#      TableName: ${self:provider.environment.STAGE}_${self:provider.environment.myTableName}
+#      TableName: ${self:provider.environment.USERS_TABLE}

@@ -2,5 +2,5 @@
 #  MyBucket:
 #    Type: AWS::S3::Bucket
 #    Properties:
-#      BucketName: ${self:provider.environment.myBucketName}
+#      BucketName: ${self:provider.environment.BUCKET}
 #      AccessControl: PublicReadWrite

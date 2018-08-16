@@ -7,6 +7,10 @@ hello:
         path: api/hello
         method: get
         integration: lambda
+#        tags:
+#            client: client-name
+#        timeout: 30
+#        memorySize: 512
         cors: true
 #          origin: '*'
 #          headers:
@@ -23,3 +27,16 @@ hello:
             Access-Control-Allow-Origin: "'*'"
             Content-Type: "'application/json'"
           template: $input.json('$')
+#    - schedule: cron(1 20 * * ? *)
+#    - sqs:
+#        arn:
+#          Fn::GetAtt:
+#            - AssetsAclUpdate
+#            - Arn
+#        batchSize: 1
+#    - s3:
+#        bucket: ${self:provider.environment.BUCKET}
+#        events:
+#          - s3:ObjectCreated:*
+#    - schedule: rate(3 minutes)
+#    - sns: ${self:provider.environment.SNS}
