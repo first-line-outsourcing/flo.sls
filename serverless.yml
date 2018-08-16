@@ -8,22 +8,22 @@ provider:
   environment: ${file(env.yml):${opt:stage, self:provider.stage}}
 
 #  iamRoleStatements:
-#      - Effect: Allow
-#        Action:
-#          - dynamodb:DescribeTable
-#          - dynamodb:Query
-#          - dynamodb:Scan
-#          - dynamodb:GetItem
-#          - dynamodb:PutItem
-#          - dynamodb:DeleteItem
-#          - dynamodb:UpdateItem
-#          - dynamodb:BatchGetItem
-#          - dynamodb:BatchWriteItem
-#        Resource: arn:aws:dynamodb:*:*:${self:provider.environment.TABLE}
-#      - Effect: Allow
-#        Action:
-#          - s3:*
-#        Resource: arn:aws:s3:*:*:${self:provider.environment.BUCKET}
+#    - Effect: Allow
+#      Action:
+#        - dynamodb:DescribeTable
+#        - dynamodb:Query
+#        - dynamodb:Scan
+#        - dynamodb:GetItem
+#        - dynamodb:PutItem
+#        - dynamodb:DeleteItem
+#        - dynamodb:UpdateItem
+#        - dynamodb:BatchGetItem
+#        - dynamodb:BatchWriteItem
+#      Resource: arn:aws:dynamodb:*:*:${self:provider.environment.TABLE}
+#    - Effect: Allow
+#      Action:
+#        - s3:*
+#      Resource: arn:aws:s3:*:*:${self:provider.environment.BUCKET}
 
 custom:
   dirconfig:
@@ -40,6 +40,9 @@ custom:
   serverless-offline-sqs:
     apiVersion: '2012-11-05'
     endpoint: http://0.0.0.0:9324
+    region: us-east-1
+    accessKeyId: root
+    secretAccessKey: root
   dynamodb:
     start:
       port: 8000
