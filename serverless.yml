@@ -19,7 +19,7 @@ provider:
 #        - dynamodb:UpdateItem
 #        - dynamodb:BatchGetItem
 #        - dynamodb:BatchWriteItem
-#      Resource: arn:aws:dynamodb:*:*:${self:provider.environment.TABLE}
+#      Resource: arn:aws:dynamodb:*:*:table/${self:provider.environment.TABLE}
 #    - Effect: Allow
 #      Action:
 #        - s3:*
