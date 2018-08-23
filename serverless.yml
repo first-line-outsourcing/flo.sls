@@ -30,7 +30,7 @@ custom:
     quiet: true
   webpack:
     webpackConfig: 'webpack.config.js'   # Name of webpack configuration file
-    includeModules: false
+    includeModules: true
 #        forceExclude:
 #          - aws-sdk
     packager: 'npm'   # Packager that will be used to package your external modules
