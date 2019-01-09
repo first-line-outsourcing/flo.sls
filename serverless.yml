@@ -7,19 +7,19 @@ provider:
   profile: serverless-default
   environment: ${file(env.yml):${opt:stage, self:provider.stage}}
 
-#  iamRoleStatements:
-#    - Effect: Allow
-#      Action:
-#        - dynamodb:DescribeTable
-#        - dynamodb:Query
-#        - dynamodb:Scan
-#        - dynamodb:GetItem
-#        - dynamodb:PutItem
-#        - dynamodb:DeleteItem
-#        - dynamodb:UpdateItem
-#        - dynamodb:BatchGetItem
-#        - dynamodb:BatchWriteItem
-#      Resource: arn:aws:dynamodb:*:*:table/${self:provider.environment.TABLE}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:DeleteItem
+        - dynamodb:UpdateItem
+        - dynamodb:BatchGetItem
+        - dynamodb:BatchWriteItem
+      Resource: arn:aws:dynamodb:*:*:table/${self:provider.environment.USERS_TABLE}
 #    - Effect: Allow
 #      Action:
 #        - s3:*
