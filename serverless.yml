@@ -1,29 +1,114 @@
-service: hello-api
+service: hello-sls
 
 provider:
   name: aws
-  region: us-east-1
   runtime: nodejs8.10
-  profile: serverless-default
   environment: ${file(env.yml):${opt:stage, self:provider.stage}}
+  region: ${self:provider.environment.REGION}
+  profile: ${self:provider.environment.PROFILE}
 
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:DescribeTable
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-        - dynamodb:DeleteItem
-        - dynamodb:UpdateItem
-        - dynamodb:BatchGetItem
-        - dynamodb:BatchWriteItem
-      Resource: arn:aws:dynamodb:*:*:table/${self:provider.environment.USERS_TABLE}
+#  iamRoleStatements:
+#    - Effect: Allow
+#      Action:
+#        - dynamodb:DescribeTable
+#        - dynamodb:Query
+#        - dynamodb:Scan
+#        - dynamodb:GetItem
+#        - dynamodb:PutItem
+#        - dynamodb:DeleteItem
+#        - dynamodb:UpdateItem
+#        - dynamodb:BatchGetItem
+#        - dynamodb:BatchWriteItem
+#      Resource:
+#        - arn:aws:dynamodb:*:*:table/${self:provider.environment.USERS_TABLE}
+#    - Effect: Allow
+#      Action:
+#        - dynamodb:DescribeTable
+#        - dynamodb:Query
+#        - dynamodb:Scan
+#        - dynamodb:GetItem
+#        - dynamodb:PutItem
+#        - dynamodb:DeleteItem
+#        - dynamodb:UpdateItem
+#        - dynamodb:BatchGetItem
+#        - dynamodb:BatchWriteItem
+#      Resource:
+#        - arn:aws:dynamodb:*:*:table/${self:provider.environment.JOBS_TABLE}
+#        - arn:aws:dynamodb:*:*:table/${self:provider.environment.JOBS_TABLE}/index/*
 #    - Effect: Allow
 #      Action:
 #        - s3:*
-#      Resource: arn:aws:s3:*:*:${self:provider.environment.BUCKET}
+#      Resource:
+#        - arn:aws:s3:::${self:provider.environment.BUCKET}
+#        - arn:aws:s3:::${self:provider.environment.BUCKET}/*
+#    - Effect: Allow
+#      Action:
+#        - es:*
+#      Resource:
+#        - arn:aws:es:*:*:domain/${self:provider.environment.ELASTIC_SEARCH_DOMAIN}
+#        - arn:aws:es:*:*:domain/${self:provider.environment.ELASTIC_SEARCH_DOMAIN}/*
+#    - Effect: Allow
+#      Action:
+#        - ses:SendEmail
+#      Resource: '*'
+#    - Effect: Allow
+#      Action:
+#        - sqs:DeleteMessage
+#        - sqs:ReceiveMessage
+#        - sqs:SendMessage
+#      Resource: arn:aws:sqs:*:*:${self:provider.environment.SQS}
+#    - Effect: Allow
+#      Action:
+#        - sns:CreatePlatformEndpoint
+#        - sns:DeleteEndpoint
+#        - sns:Publish
+#      Resource:
+#        - ${self:provider.environment.SNS_ANDROID_APPLICATION_ARN}
+#        - ${self:provider.environment.SNS_IOS_APPLICATION_ARN}
+
+
+#resources:
+#  Resources:
+#    UserPool:
+#      Type: AWS::Cognito::UserPool
+#      Properties:
+#        UserPoolName: ${self:provider.environment.USER_POOL}
+#        UsernameAttributes: [email]
+#        AutoVerifiedAttributes:
+#          - email
+#        Schema:
+#          - Name: email
+#            AttributeDataType: String
+#            Mutable: false
+#            Required: true
+#        Policies:
+#          PasswordPolicy:
+#            RequireLowercase: true
+#            RequireSymbols: false
+#            RequireNumbers: true
+#            MinimumLength: 8
+#            RequireUppercase: true
+#        AdminCreateUserConfig:
+#          UnusedAccountValidityDays: 60
+#    UserPoolClient:
+#      Type: AWS::Cognito::UserPoolClient
+#      Properties:
+#        ClientName: ${self:provider.environment.USER_POOL_CLIENT}
+#        GenerateSecret: false
+#        UserPoolId:
+#          Ref: UserPool
+#  Outputs:
+#    UserPoolId:
+#      Value:
+#        Ref: UserPool
+#      Export:
+#        Name: ${opt:stage, self:provider.stage}UserPool::Id
+#    UserPoolClientId:
+#      Value:
+#        Ref: UserPoolClient
+#      Export:
+#        Name: ${opt:stage, self:provider.stage}UserPoolClient::Id
+
 
 custom:
   dirconfig:
@@ -34,33 +119,64 @@ custom:
 #        forceExclude:
 #          - aws-sdk
     packager: 'npm'   # Packager that will be used to package your external modules
-  serverless-offline-sns:
-    port: 4002 # a free port for the sns server to run on
-    debug: false
-  serverless-offline-sqs:
-    apiVersion: '2012-11-05'
-    endpoint: http://0.0.0.0:9324
-    region: us-east-1
-    accessKeyId: root
-    secretAccessKey: root
-  dynamodb:
-    start:
-      port: 8000
-      inMemory: true
-      migrate: true
-      seed: true
-      convertEmptyValues: true
-  s3:
-    host: 0.0.0.0
-    port: 8001
-    directory: /tmp
+#  output:
+#    handler: api/helper/output.handler
+#    file: stack.yml
+#  serverless-offline-sns:
+#    port: 4002 # a free port for the sns server to run on
+#    debug: false
+#  serverless-offline-sqs:
+#    apiVersion: '2012-11-05'
+#    endpoint: http://0.0.0.0:9324
+#    region: us-east-1
+#    accessKeyId: root
+#    secretAccessKey: root
+#  dynamodb:
+#    start:
+#      port: 8000
+#      inMemory: true
+#      migrate: true
+#      seed: true
+#      convertEmptyValues: true
+#  s3:
+#    host: 0.0.0.0
+#    port: 8001
+#    directory: /tmp
+#  capacities:
+#    - table: UsersTable  # DynamoDB Resource
+#      read:
+#        minimum: 5       # Minimum read capacity
+#        maximum: 100     # Maximum read capacity
+#        usage: 0.75      # Targeted usage percentage
+#      write:
+#        minimum: 5       # Minimum write capacity
+#        maximum: 100     # Maximum write capacity
+#        usage: 0.75      # Targeted usage percentage
+#    - table: JobsTable   # DynamoDB Resource
+#      index:             # List or single index name
+#        - ProducerIdGlobalIndex
+#        - CrewIdGlobalIndex
+#      read:
+#        minimum: 4       # Minimum read capacity
+#        maximum: 200     # Maximum read capacity
+#        usage: 0.75      # Targeted usage percentage
+#      write:
+#        minimum: 2       # Minimum write capacity
+#        maximum: 200     # Maximum write capacity
+#        usage: 0.5       # Targeted usage percentage
+  prune:
+    automatic: true
+    number: 2
 
 
 plugins:
   - serverless-webpack
   - serverless-dir-config-plugin
-  - serverless-offline-sns
-  - serverless-offline-sqs
-  - serverless-dynamodb-local
-  - serverless-s3-local
+#  - serverless-stack-output
+#  - serverless-offline-sns
+#  - serverless-offline-sqs
+#  - serverless-dynamodb-local
+#  - serverless-s3-local
   - serverless-offline
+#  - serverless-dynamodb-autoscaling
+  - serverless-prune-plugin

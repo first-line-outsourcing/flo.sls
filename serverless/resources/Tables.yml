@@ -1,15 +1,61 @@
-Resources:
-  UsersTable:
-    Type: AWS::DynamoDB::Table
-    DeletionPolicy: Retain
-    Properties:
-      AttributeDefinitions:
-        -
-          AttributeName: id
-          AttributeType: S
-      KeySchema:
-        -
-          AttributeName: id
-          KeyType: HASH
-      BillingMode: PAY_PER_REQUEST
-      TableName: ${self:provider.environment.USERS_TABLE}
+#Resources:
+#  UsersTable:
+#    Type: AWS::DynamoDB::Table
+#    DeletionPolicy: Retain
+#    Properties:
+#      AttributeDefinitions:
+#        -
+#          AttributeName: id
+#          AttributeType: S
+#      KeySchema:
+#        -
+#          AttributeName: id
+#          KeyType: HASH
+#      BillingMode: PAY_PER_REQUEST
+#      TableName: ${self:provider.environment.USERS_TABLE}
+#      StreamSpecification:
+#        StreamViewType: NEW_AND_OLD_IMAGES
+
+#  JobsTable:
+#    Type: AWS::DynamoDB::Table
+#    DeletionPolicy: Retain
+#    Properties:
+#      AttributeDefinitions:
+#        - AttributeName: id
+#          AttributeType: S
+#        - AttributeName: producerId
+#          AttributeType: S
+#        - AttributeName: crewId
+#          AttributeType: S
+#        - AttributeName: status
+#          AttributeType: S
+#      KeySchema:
+#        - AttributeName: id
+#          KeyType: HASH
+#      ProvisionedThroughput:
+#        ReadCapacityUnits: 4
+#        WriteCapacityUnits: 2
+#      TableName: ${self:provider.environment.JOBS_TABLE}
+#      GlobalSecondaryIndexes:
+#        - IndexName: ProducerIdGlobalIndex
+#          KeySchema:
+#            - AttributeName: producerId
+#              KeyType: HASH
+#            - AttributeName: status
+#              KeyType: RANGE
+#          Projection:
+#            ProjectionType: ALL
+#          ProvisionedThroughput:
+#            ReadCapacityUnits: 4
+#            WriteCapacityUnits: 2
+#        - IndexName: CrewIdGlobalIndex
+#          KeySchema:
+#            - AttributeName: crewId
+#              KeyType: HASH
+#            - AttributeName: status
+#              KeyType: RANGE
+#          Projection:
+#            ProjectionType: ALL
+#          ProvisionedThroughput:
+#            ReadCapacityUnits: 4
+#            WriteCapacityUnits: 2

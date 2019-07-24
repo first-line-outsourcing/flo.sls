@@ -1,8 +1,9 @@
+import { log } from '@helper/logger';
 import { readFile, writeFile } from 'fs';
 import { promisify } from 'util';
 
 export async function hello(event) {
-  console.log('hello', event);
+  log('hello', event);
 
   /*const s3 = new AWS.S3({
     s3ForcePathStyle: true,

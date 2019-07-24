@@ -1,0 +1,15 @@
+#Resources:
+#  ElasticSearchUsersInstance:
+#    Type: AWS::Elasticsearch::Domain
+#    Properties:
+#      DomainName: ${self:provider.environment.ELASTIC_SEARCH_DOMAIN}
+#      EBSOptions:
+#        EBSEnabled: true
+#        VolumeType: gp2
+#        VolumeSize: 10
+#      ElasticsearchClusterConfig:
+#        InstanceType: ${self:provider.environment.ELASTIC_SEARCH_INSTANCE_TYPE}
+#        InstanceCount: ${self:provider.environment.ELASTIC_SEARCH_INSTANCE_COUNT}
+#        DedicatedMasterEnabled: false
+#        ZoneAwarenessEnabled: false
+#      ElasticsearchVersion: 6.3

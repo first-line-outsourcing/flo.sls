@@ -2,6 +2,9 @@
 
 hello:
   handler: api/hello/handler.hello
+  tags:
+    client: client
+  timeout: 30
   events:
     - http:
         path: api/hello
@@ -27,11 +30,14 @@ hello:
             Access-Control-Allow-Origin: "'*'"
             Content-Type: "'application/json'"
           template: $input.json('$')
-#    - schedule: cron(1 20 * * ? *)
+#        authorizer:
+#          name: authorizer
+#          resultTtlInSeconds: 0
+#    - schedule: cron(1 10 * * ? *) # in Hawaii Standard Time will be 12:01am, in Eastern Daylight Time will be 06:01am
 #    - sqs:
 #        arn:
 #          Fn::GetAtt:
-#            - AssetsAclUpdate
+#            - Queue
 #            - Arn
 #        batchSize: 1
 #    - s3:
@@ -40,3 +46,15 @@ hello:
 #          - s3:ObjectCreated:*
 #    - schedule: rate(3 minutes)
 #    - sns: ${self:provider.environment.SNS}
+#    - stream:
+#        type: dynamodb
+#        arn:
+#          Fn::GetAtt:
+#            - UsersTable
+#            - StreamArn
+
+#authorizer:
+#  handler: api/auth/handler.authentication
+#  tags:
+#    client: client
+#  timeout: 30

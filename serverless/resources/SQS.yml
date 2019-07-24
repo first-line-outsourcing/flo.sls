@@ -36,3 +36,11 @@
 #      ComparisonOperator: GreaterThanOrEqualToThreshold
 #      AlarmActions:
 #      - { "Fn::Join" : ["", ["arn:aws:sns:${self:provider.region}:", { "Ref" : "AWS::AccountId" }, ":${self:provider.environment.SNS}" ] ]  }
+
+
+#  Queue2:
+#    Type: AWS::SQS::Queue
+#    Properties:
+#      QueueName: ${self:provider.environment.SQS2}
+#      MessageRetentionPeriod: 1209600
+#      VisibilityTimeout: 300

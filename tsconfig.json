@@ -14,7 +14,19 @@
       "dom",
       "esnext.asynciterable"
     ],
-    "rootDir": "./"
+    "rootDir": "./",
+    "baseUrl": ".",
+    "paths": {
+      "@models/*": [
+        "./models/*"
+      ],
+      "@services/*": [
+        "./services/*"
+      ],
+      "@helper/*": [
+        "./api/helper/*"
+      ]
+    }
   },
   "exclude": [
     "node_modules",
