@@ -1,0 +1,7 @@
+package.json
+package-lock.json
+dist
+.angulardoc.json
+.vscode/*
+node_modules
+release

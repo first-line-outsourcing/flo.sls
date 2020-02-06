@@ -7,7 +7,7 @@ export interface SignInUser {
 }
 
 export interface PasswordUser {
-  oldPassword: string
+  oldPassword: string;
   newPassword: string;
   confirmPassword: string;
   idToken: string;
@@ -121,7 +121,7 @@ export class User implements UserBody {
   public termsOfServiceAccepted: boolean;
 
   constructor(user: UserBody) {
-    if (user.password && user.confirmPassword && (user.password !== user.confirmPassword)) {
+    if (user.password && user.confirmPassword && user.password !== user.confirmPassword) {
       throw {
         message: messages.error.forbiddenPasswords,
       };
@@ -228,132 +228,141 @@ export class User implements UserBody {
   }
 }
 
-export const UserSchema = new dynamoose.Schema({
-  id: {
-    type: String,
-    hashKey: true,
-  },
-  email: {
-    type: String,
-  },
-  type: {
-    type: String,
-    enum: ['producer', 'crew' , 'admin'],
-  },
-  paypal: {
-    type: String,
-  },
-  aboutMe: {
-    type: String,
-  },
-  firstName: {
-    type: String,
-  },
-  lastName: {
-    type: String,
-  },
-  companyName: {
-    type: String,
-  },
-  phoneNumber: {
-    type: String,
-  },
-  location: {
-    type: 'map',
-    map: {
-      lat: Number,
-      lon: Number,
+export const userSchema = new dynamoose.Schema(
+  {
+    id: {
+      type: String,
+      hashKey: true,
+    },
+    email: {
+      type: String,
+    },
+    type: {
+      type: String,
+      enum: ['producer', 'crew', 'admin'],
+    },
+    paypal: {
+      type: String,
+    },
+    aboutMe: {
+      type: String,
+    },
+    firstName: {
+      type: String,
+    },
+    lastName: {
+      type: String,
+    },
+    companyName: {
+      type: String,
+    },
+    phoneNumber: {
+      type: String,
+    },
+    // location: {
+    //   type: 'map',
+    //   map: {
+    //     lat: Number,
+    //     lon: Number,
+    //   },
+    // },
+    distance: {
+      type: Number,
+    },
+    city: {
+      type: String,
+    },
+    linkedIn: {
+      type: String,
+    },
+    IMDb: {
+      type: String,
+    },
+    rating: {
+      type: Number,
+    },
+    union: {
+      type: Boolean,
+    },
+    photo: {
+      type: String,
+    },
+    // notifications: {
+    //   type: 'map',
+    //   map: {
+    //     offerIsAvailable: Boolean,
+    //     isPaid: Boolean,
+    //     reminder: Boolean,
+    //     offerIsAccepted: Boolean,
+    //     offerIsDeclined: Boolean,
+    //   },
+    //   default: () => {
+    //   },
+    // },
+    unavailability: {
+      type: 'list',
+      list: [String],
+      default: () => [],
+    },
+    saved: {
+      type: 'list',
+      list: [String],
+      default: () => [],
+    },
+    project: {
+      type: 'list',
+      list: [String],
+      default: () => [],
+    },
+    pushNotifications: {
+      type: 'list',
+      list: [
+        {
+          type: 'map',
+          map: {
+            registrationId: String,
+            registrationType: String,
+            endpointArn: String,
+          },
+        },
+      ],
+      default: () => [],
+    },
+    // w9: {
+    //   type: 'map',
+    //   map: {
+    //     USCitizen: Boolean,
+    //     legalNameOfBusiness: String,
+    //     address: String,
+    //     city: String,
+    //     postalCode: String,
+    //     country: String,
+    //     federalTaxClassification: String,
+    //     taxpayerIdentificationNumberType: String,
+    //     SSNorEIN: String,
+    //     isCertified: Boolean,
+    //     status: String,
+    //     updatedAt: Number,
+    //   },
+    //   default: () => {
+    //   },
+    // },
+    termsOfServiceAccepted: {
+      type: Boolean,
     },
   },
-  distance: {
-    type: Number,
-  },
-  city: {
-    type: String,
-  },
-  linkedIn: {
-    type: String,
-  },
-  IMDb: {
-    type: String,
-  },
-  rating: {
-    type: Number,
-  },
-  union: {
-    type: Boolean,
-  },
-  photo: {
-    type: String,
-  },
-  notifications: {
-    type: 'map',
-    map: {
-      offerIsAvailable: Boolean,
-      isPaid: Boolean,
-      reminder: Boolean,
-      offerIsAccepted: Boolean,
-      offerIsDeclined: Boolean,
-    },
-    default: () => {
-    },
-  },
-  unavailability: {
-    type: 'list',
-    list: [String],
-    default: () => [],
-  },
-  saved: {
-    type: 'list',
-    list: [String],
-    default: () => [],
-  },
-  project: {
-    type: 'list',
-    list: [String],
-    default: () => [],
-  },
-  pushNotifications: {
-    type: 'list',
-    list: [{
-      type: 'map',
-      map: {
-        registrationId: String,
-        registrationType: String,
-        endpointArn: String,
-      },
-    }],
-    default: () => [],
-  },
-  w9: {
-    type: 'map',
-    map: {
-      USCitizen: Boolean,
-      legalNameOfBusiness: String,
-      address: String,
-      city: String,
-      postalCode: String,
-      country: String,
-      federalTaxClassification: String,
-      taxpayerIdentificationNumberType: String,
-      SSNorEIN: String,
-      isCertified: Boolean,
-      status: String,
-      updatedAt: Number,
-    },
-    default: () => {
-    },
-  },
-  termsOfServiceAccepted: {
-    type: Boolean,
-  },
-}, {
-  useNativeBooleans: true,
-  useDocumentTypes: true,
-  timestamps: true,
-});
+  {
+    useNativeBooleans: true,
+    useDocumentTypes: true,
+    timestamps: true,
+  }
+);
 
-export const UserModel = dynamoose.model<UserBody, string>(process.env.USERS_TABLE as string, UserSchema, {
-  create: false,
-  update: false,
-});
+export const UserModel = dynamoose.model<UserBody, string>(
+  process.env.USERS_TABLE as string,
+  userSchema,
+  {
+    create: false,
+    update: false,
+  }
+);

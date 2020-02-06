@@ -2,11 +2,13 @@ service: hello-sls
 
 provider:
   name: aws
-  runtime: nodejs8.10
-  environment: ${file(env.yml):${opt:stage, self:provider.stage}}
-  region: ${self:provider.environment.REGION}
-  profile: ${self:provider.environment.PROFILE}
-
+  runtime: nodejs12.x
+  environment:
+    hello: world
+  region: us-west-2
+  #  profile: flo
+  tags:
+    client: 'client'
 #  iamRoleStatements:
 #    - Effect: Allow
 #      Action:
@@ -66,7 +68,6 @@ provider:
 #        - ${self:provider.environment.SNS_ANDROID_APPLICATION_ARN}
 #        - ${self:provider.environment.SNS_IOS_APPLICATION_ARN}
 
-
 #resources:
 #  Resources:
 #    UserPool:
@@ -109,74 +110,85 @@ provider:
 #      Export:
 #        Name: ${opt:stage, self:provider.stage}UserPoolClient::Id
 
-
 custom:
   dirconfig:
     quiet: true
   webpack:
-    webpackConfig: 'webpack.config.js'   # Name of webpack configuration file
+    webpackConfig: 'webpack.config.js' # Name of webpack configuration file
     includeModules: true
-#        forceExclude:
-#          - aws-sdk
-    packager: 'npm'   # Packager that will be used to package your external modules
-#  output:
-#    handler: api/helper/output.handler
-#    file: stack.yml
-#  serverless-offline-sns:
-#    port: 4002 # a free port for the sns server to run on
-#    debug: false
-#  serverless-offline-sqs:
-#    apiVersion: '2012-11-05'
-#    endpoint: http://0.0.0.0:9324
-#    region: us-east-1
-#    accessKeyId: root
-#    secretAccessKey: root
-#  dynamodb:
-#    start:
-#      port: 8000
-#      inMemory: true
-#      migrate: true
-#      seed: true
-#      convertEmptyValues: true
-#  s3:
-#    host: 0.0.0.0
-#    port: 8001
-#    directory: /tmp
-#  capacities:
-#    - table: UsersTable  # DynamoDB Resource
-#      read:
-#        minimum: 5       # Minimum read capacity
-#        maximum: 100     # Maximum read capacity
-#        usage: 0.75      # Targeted usage percentage
-#      write:
-#        minimum: 5       # Minimum write capacity
-#        maximum: 100     # Maximum write capacity
-#        usage: 0.75      # Targeted usage percentage
-#    - table: JobsTable   # DynamoDB Resource
-#      index:             # List or single index name
-#        - ProducerIdGlobalIndex
-#        - CrewIdGlobalIndex
-#      read:
-#        minimum: 4       # Minimum read capacity
-#        maximum: 200     # Maximum read capacity
-#        usage: 0.75      # Targeted usage percentage
-#      write:
-#        minimum: 2       # Minimum write capacity
-#        maximum: 200     # Maximum write capacity
-#        usage: 0.5       # Targeted usage percentage
+    #      packagePath: '../package.json'
+    #        forceExclude:
+    #          - aws-sdk
+    packager: 'npm' # Packager that will be used to package your external modules
+  #  output:
+  #    handler: api/helper/output.handler
+  #    file: stack.yml
+  #  serverless-offline-sns:
+  #    port: 4002 # a free port for the sns server to run on
+  #    debug: false
+  #  serverless-offline-sqs:
+  #    apiVersion: '2012-11-05'
+  #    endpoint: http://0.0.0.0:9324
+  #    region: us-east-1
+  #    accessKeyId: root
+  #    secretAccessKey: root
+  #  dynamodb:
+  #    start:
+  #      port: 8000
+  #      inMemory: true
+  #      migrate: true
+  #      seed: true
+  #      convertEmptyValues: true
+  #  s3:
+  #    host: 0.0.0.0
+  #    port: 8001
+  #    directory: /tmp
+  #  capacities:
+  #    - table: UsersTable  # DynamoDB Resource
+  #      read:
+  #        minimum: 5       # Minimum read capacity
+  #        maximum: 100     # Maximum read capacity
+  #        usage: 0.75      # Targeted usage percentage
+  #      write:
+  #        minimum: 5       # Minimum write capacity
+  #        maximum: 100     # Maximum write capacity
+  #        usage: 0.75      # Targeted usage percentage
+  #    - table: JobsTable   # DynamoDB Resource
+  #      index:             # List or single index name
+  #        - ProducerIdGlobalIndex
+  #        - CrewIdGlobalIndex
+  #      read:
+  #        minimum: 4       # Minimum read capacity
+  #        maximum: 200     # Maximum read capacity
+  #        usage: 0.75      # Targeted usage percentage
+  #      write:
+  #        minimum: 2       # Minimum write capacity
+  #        maximum: 200     # Maximum write capacity
+  #        usage: 0.5       # Targeted usage percentage
   prune:
     automatic: true
     number: 2
+  envFiles: #YAML files used to create .env file
+    - env.yml
+  envEncryptionKeyId: #KMS Key used for encrypting values
+    dev: ${file(kms_key.yml):key} #Key used for development-stage
+  serverless-offline-sqs:
+    autoCreate: true # create queue if not exists
+    apiVersion: '2012-11-05'
+    endpoint: http://0.0.0.0:9324
+    region: us-west-2
+    accessKeyId: root
+    secretAccessKey: root
+    skipCacheInvalidation: false
 
-
-plugins:
-  - serverless-webpack
+plugins: # order matters!
+  - serverless-env-generator
   - serverless-dir-config-plugin
-#  - serverless-stack-output
-#  - serverless-offline-sns
-#  - serverless-offline-sqs
-#  - serverless-dynamodb-local
-#  - serverless-s3-local
+  - serverless-webpack
+  - serverless-offline-sqs
   - serverless-offline
-#  - serverless-dynamodb-autoscaling
+  #  - serverless-stack-output
+  #  - serverless-offline-sns
+  #  - serverless-dynamodb-local
+  #  - serverless-s3-local
   - serverless-prune-plugin

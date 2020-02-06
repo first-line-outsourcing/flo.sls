@@ -1,8 +1,17 @@
 import { User } from '@models/User';
 import * as dynamoose from 'dynamoose';
-import * as uuid from 'node-uuid'
+import * as uuid from 'node-uuid';
 
-export type JobStatus = 'offer' | 'declined' | 'accepted' | 'active' | 'pending' | 'pending_payout' | 'paid' | 'disputed' | 'expired';
+export type JobStatus =
+  | 'offer'
+  | 'declined'
+  | 'accepted'
+  | 'active'
+  | 'pending'
+  | 'pending_payout'
+  | 'paid'
+  | 'disputed'
+  | 'expired';
 
 export interface Payment {
   id: string;
@@ -147,94 +156,114 @@ export class Job implements JobBody {
   }
 }
 
-export const JobSchema = new dynamoose.Schema({
-  id: {
-    type: String,
-    hashKey: true,
-    default: uuid.v4,
-  },
-  producerId: {
-    type: String,
-    index: {
-      global: true,
-      name: 'ProducerIdGlobalIndex',
-      rangeKey: 'status',
+export const jobSchema = new dynamoose.Schema(
+  {
+    id: {
+      type: String,
+      hashKey: true,
+      default: uuid.v4,
+    },
+    producerId: {
+      type: String,
+      index: {
+        global: true,
+        name: 'ProducerIdGlobalIndex',
+        rangeKey: 'status',
+      },
+    },
+    crewId: {
+      type: String,
+      index: {
+        global: true,
+        name: 'CrewIdGlobalIndex',
+        rangeKey: 'status',
+      },
+    },
+    status: {
+      type: String,
+      enum: [
+        'offer',
+        'declined',
+        'active',
+        'accepted',
+        'pending',
+        'pending_payout',
+        'paid',
+        'disputed',
+        'expired',
+      ],
+    },
+    startDate: {
+      type: String,
+    },
+    endDate: {
+      type: String,
+    },
+    paidDate: {
+      type: String,
+    },
+    flatPrice: {
+      type: Number,
+    },
+    location: {
+      type: String,
+    },
+    callTime: {
+      type: String,
+    },
+    duration: {
+      type: String,
+    },
+    requirements: {
+      type: String,
+    },
+    optional: {
+      type: String,
+    },
+    // fund: {
+    //   type: 'map',
+    //   map: {
+    //     id: String,
+    //     state: String,
+    //     create_time: String,
+    //     intent: String,
+    //   },
+    // },
+    // payout: {
+    //   type: 'map',
+    //   map: {
+    //     payout_batch_id: String,
+    //     transaction_id: String,
+    //     transaction_status: String,
+    //     time_processed: String,
+    //   },
+    // },
+    // refund: {
+    //   type: 'map',
+    //   map: {
+    //     id: String,
+    //     state: String,
+    //     create_time: String,
+    //   },
+    // },
+    lat: {
+      type: Number,
+    },
+    lon: {
+      type: Number,
     },
   },
-  crewId: {
-    type: String,
-    index: {
-      global: true,
-      name: 'CrewIdGlobalIndex',
-      rangeKey: 'status',
-    },
-  },
-  status: {
-    type: String,
-    enum: ['offer', 'declined', 'active', 'accepted', 'pending', 'pending_payout', 'paid', 'disputed', 'expired']
-  },
-  startDate: {
-    type: String,
-  },
-  endDate: {
-    type: String,
-  },
-  paidDate: {
-    type: String,
-  },
-  flatPrice: {
-    type: Number,
-  },
-  location: {
-    type: String,
-  },
-  callTime: {
-    type: String,
-  },
-  duration: {
-    type: String,
-  },
-  requirements: {
-    type: String,
-  },
-  optional: {
-    type: String,
-  },
-  fund: {
-    type: 'map',
-    map: {
-      id: String,
-      state: String,
-      create_time: String,
-      intent: String,
-    },
-  },
-  payout: {
-    type: 'map',
-    map: {
-      payout_batch_id: String,
-      transaction_id: String,
-      transaction_status: String,
-      time_processed: String,
-    },
-  },
-  refund: {
-    type: 'map',
-    map: {
-      id: String,
-      state: String,
-      create_time: String,
-    },
-  },
-  lat: {
-    type: Number,
-  },
-  lon: {
-    type: Number,
-  },
-}, {
-  useNativeBooleans: true,
-  useDocumentTypes: true,
-});
+  {
+    useNativeBooleans: true,
+    useDocumentTypes: true,
+  }
+);
 
-export const JobModel = dynamoose.model<JobBody, string>(process.env.JOBS_TABLE as string, JobSchema, { create: false, update: false });
+export const JobModel = dynamoose.model<JobBody, string>(
+  process.env.JOBS_TABLE as string,
+  jobSchema,
+  {
+    create: false,
+    update: false,
+  }
+);

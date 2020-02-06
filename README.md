@@ -1,85 +1,75 @@
-# Serverless API
+# Serverless API for Toolset Service
 
-
-
-# NPM commands
+## NPM commands
 
 - **deploy:dev**: deploy to the AWS dev environment
 - **deploy:prod**: deploy to the AWS prod environment
 - **deploy:local**: start local development environment
 
-Add env.yml with following structure
+## How to add evn variable
 
-```js
-local:
-  IS_OFFLINE: 'true'
-  USERS_TABLE: '${self:service}-${opt:stage, self:provider.stage}-Users'
-  JOBS_TABLE: '${self:service}-${opt:stage, self:provider.stage}-Jobs'
-  USER_POOL: '${self:service}-${opt:stage, self:provider.stage}-User-Pool'
-  USER_POOL_CLIENT: '${self:service}-${opt:stage, self:provider.stage}-User-Pool-Client'
-  USER_POOL_CLIENT_ID: ''
-  USER_POOL_ID: ''
-  REGION: 'us-east-1'
-  PROFILE: ''
-  CLOUDFORMATION_NAME: '${self:service}-${opt:stage, self:provider.stage}'
-  PHOTO_BUCKET: '${self:service}-${opt:stage, self:provider.stage}-photo'
-  VERIFICATION_BUCKET: '${self:service}-${opt:stage, self:provider.stage}-verification-incoming'
-  ELASTIC_SEARCH_DOMAIN: '${self:service}-${opt:stage, self:provider.stage}'
-  ELASTIC_SEARCH_INSTANCE_COUNT: '3'
-  ELASTIC_SEARCH_DEDICATE_MASTER_COUNT: '1'
-  ELASTIC_SEARCH_INSTANCE_TYPE: 't2.small.elasticsearch'
-  SOURCE_EMAIL: ''
-  PAYPAL_MODE: 'sandbox'
-  PAYPAL_CLIENT_ID: 'U'
-  PAYPAL_CLIENT_SECRET: ''
-  PAYPAL_PAYOUT_SQS: '${self:service}-${opt:stage, self:provider.stage}-payout'
-  SNS_ANDROID_APPLICATION_ARN: 'arn:aws:sns:us-east-1:xxx:app/GCM/CRWAndroidApplication'
-  SNS_IOS_APPLICATION_ARN: 'arn:aws:sns:us-east-1:xxx:app/APNS_SANDBOX/CRWIOSSandboxApplication'
-dev:
-  IS_OFFLINE: 'false'
-  USERS_TABLE: '${self:service}-${opt:stage, self:provider.stage}-Users'
-  JOBS_TABLE: '${self:service}-${opt:stage, self:provider.stage}-Jobs'
-  USER_POOL: '${self:service}-${opt:stage, self:provider.stage}-User-Pool'
-  USER_POOL_CLIENT: '${self:service}-${opt:stage, self:provider.stage}-User-Pool-Client'
-  USER_POOL_CLIENT_ID: ''
-  USER_POOL_ID: ''
-  REGION: 'us-east-1'
-  PROFILE: ''
-  CLOUDFORMATION_NAME: '${self:service}-${opt:stage, self:provider.stage}'
-  PHOTO_BUCKET: '${self:service}-${opt:stage, self:provider.stage}-photo'
-  VERIFICATION_BUCKET: '${self:service}-${opt:stage, self:provider.stage}-verification-incoming'
-  ELASTIC_SEARCH_DOMAIN: '${self:service}-${opt:stage, self:provider.stage}'
-  ELASTIC_SEARCH_INSTANCE_COUNT: '1'
-  ELASTIC_SEARCH_INSTANCE_TYPE: 't2.small.elasticsearch'
-  SOURCE_EMAIL: ''
-  PAYPAL_MODE: 'sandbox'
-  PAYPAL_CLIENT_ID: ''
-  PAYPAL_CLIENT_SECRET: ''
-  PAYPAL_PAYOUT_SQS: '${self:service}-${opt:stage, self:provider.stage}-payout'
-  SNS_ANDROID_APPLICATION_ARN: 'arn:aws:sns:us-east-1:xxx:app/GCM/CRWAndroidApplication'
-  SNS_IOS_APPLICATION_ARN: 'arn:aws:sns:us-east-1:xxx:app/APNS_SANDBOX/CRWIOSSandboxApplication'
-prod:
-  IS_OFFLINE: 'false'
-  USERS_TABLE: '${self:service}-${opt:stage, self:provider.stage}-Users'
-  JOBS_TABLE: '${self:service}-${opt:stage, self:provider.stage}-Jobs'
-  USER_POOL: '${self:service}-${opt:stage, self:provider.stage}-User-Pool'
-  USER_POOL_CLIENT: '${self:service}-${opt:stage, self:provider.stage}-User-Pool-Client'
-  USER_POOL_CLIENT_ID: ''
-  USER_POOL_ID: ''
-  REGION: 'us-east-1'
-  PROFILE: ''
-  CLOUDFORMATION_NAME: '${self:service}-${opt:stage, self:provider.stage}'
-  PHOTO_BUCKET: '${self:service}-${opt:stage, self:provider.stage}-photo'
-  VERIFICATION_BUCKET: '${self:service}-${opt:stage, self:provider.stage}-verification-incoming'
-  ELASTIC_SEARCH_DOMAIN: '${self:service}-${opt:stage, self:provider.stage}'
-  ELASTIC_SEARCH_INSTANCE_COUNT: '2'
-  ELASTIC_SEARCH_INSTANCE_TYPE: 'm4.large.elasticsearch'
-  SOURCE_EMAIL: ''
-  PAYPAL_MODE: 'live'
-  PAYPAL_CLIENT_ID: ''
-  PAYPAL_CLIENT_SECRET: ''
-  PAYPAL_PAYOUT_SQS: '${self:service}-${opt:stage, self:provider.stage}-payout'
-  SNS_ANDROID_APPLICATION_ARN: 'arn:aws:sns:us-east-1:xxx:app/GCM/CRWAndroidApplication'
-  SNS_IOS_APPLICATION_ARN: 'arn:aws:sns:us-east-1:xxx:app/APNS/CRWIOSApplication'
+Read this https://github.com/DieProduktMacher/serverless-env-generator
+
+## In short:
+
+### Viewing environment variables
+
+Use the following commands to read and decrypt variables from your YAML environment files:
+
+### List variables
+
+```sh
+serverless env
+serverless env --stage $STAGE
 ```
 
+### View one variable
+
+```sh
+serverless env --attribute $NAME
+serverless env --attribute $NAME --stage $STAGE
+
+#shorthand:
+sls env -a $NAME
+sls env -a $NAME -s $STAGE
+```
+
+### Decrypt variables
+
+```sh
+serverless env --decrypt
+serverless env --attribute $NAME --decrypt
+serverless env --attribute $NAME --stage $STAGE --decrypt
+
+#shorthand:
+sls env -a $NAME --decrypt
+sls env -a $NAME -s $STAGE -d
+```
+
+### Setting environment variables
+
+Use the following commands to store and encrypt variables in your YAML environment files:
+
+Note that variables are stored to the first file listed in _envFiles_.
+
+### Set a variable
+
+```sh
+serverless env --attribute $NAME --value $PLAINTEXT
+serverless env --attribute $NAME --value $PLAINTEXT --stage $STAGE
+
+#shorthand:
+sls env -a $NAME -v $PLAINTEXT
+sls env --a $NAME -v $PLAINTEXT --s $STAGE
+```
+
+### Set and encrypt a variable
+
+```sh
+serverless env --attribute $NAME --value $PLAINTEXT --encrypt
+serverless env --attribute $NAME --value $PLAINTEXT --stage $STAGE --encrypt
+
+#shorthand:
+sls env -a $NAME -v $PLAINTEXT -e
+sls env -a $NAME -v $PLAINTEXT -s $STAGE -e
+```
