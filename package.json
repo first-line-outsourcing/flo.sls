@@ -1,5 +1,5 @@
 {
-  "name": "hello-sls",
+  "name": "template-sls",
   "version": "1.0.0",
   "description": "Serverless API",
   "main": "index.js",
@@ -8,19 +8,26 @@
     "deploy:prod": "sls deploy --stage prod",
     "deploy:local": "sls offline start --stage local --v",
     "lint": "tslint --project tsconfig.json \"**/*.ts\"",
-    "test": "CI=true jest --watchAll --colors --coverage",
+    "test": "jest --watchAll --colors --coverage",
     "test:ci": "CI=true jest --ci --colors --coverage --passWithNoTests",
-    "sqs:up": "docker-compose -f docker-compose.yml up -d sqs"
+    "sqs:up": "docker-compose -f docker-compose.yml up -d sqs",
+    "postgres:up": "docker-compose -f docker-compose.yml up -d postgres",
+    "dynamodb:up": "docker-compose -f docker-compose.yml up -d dynamodb"
   },
   "engines": {
     "node": ">=12.0.0"
   },
   "repository": {
     "type": "git",
-    "url": "<repoUrl>"
+    "url": "https://github.com/anastasia-a-zhivaeva/template.sls"
   },
-  "author": "First Line Outsourcing",
+  "author": "Anastasia Zhivaeva",
   "contributors": [
+    {
+      "name": "Anastasia Zhivaeva",
+      "email": "anastasia.a.zhivaeva@gmail.com",
+      "url": "https://github.com/anastasia-a-zhivaeva"
+    },
     {
       "name": "Andrey Zaikin",
       "email": "azaikin@flo.team",
@@ -29,9 +36,9 @@
   ],
   "license": "ISC",
   "bugs": {
-    "url": "<repoUrl>/issues"
+    "url": "https://github.com/anastasia-a-zhivaeva/template.sls/issues"
   },
-  "homepage": "<<repoUrl>>#readme",
+  "homepage": "https://github.com/anastasia-a-zhivaeva/template.sls#readme",
   "devDependencies": {
     "@types/jest": "^25.1.1",
     "@types/js-yaml": "3.12.2",

@@ -35,7 +35,8 @@
         "static-method-regex": "^[a-z$][\\w\\d]+$"
       }
     ],
-    "max-line-length": [true, 160],
+    "max-line-length": [true, 120],
+    "variable-name": false,
     "align": false
   }
 }

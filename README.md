@@ -1,4 +1,4 @@
-# Serverless API for Toolset Service
+# Serverless API for your application
 
 ## NPM commands
 

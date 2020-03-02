@@ -17,5 +17,4 @@ kms_key.yml
 .build/
 typings/
 documentation/
-package-lock.json
 coverage

@@ -2,7 +2,7 @@
 version: '3.1'
 
 services:
-  db:
+  postgres:
     image: postgres
     restart: always
     ports:
@@ -15,3 +15,8 @@ services:
     restart: always
     ports:
       - '9324:9324'
+  dynamodb:
+    image: amazon/dynamodb-local
+    restart: always
+    ports:
+      - '8000:8000'

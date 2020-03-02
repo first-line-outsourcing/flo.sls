@@ -15,7 +15,7 @@
     "paths": {
       "@models/*": ["./models/*"],
       "@services/*": ["./services/*"],
-      "@helper/*": ["./api/helper/*"]
+      "@helper/*": ["./helper/*"]
     }
   },
   "exclude": ["node_modules", "coverage", "build", ".git", "typings"]

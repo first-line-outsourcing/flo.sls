@@ -12,7 +12,7 @@
 #          AttributeName: id
 #          KeyType: HASH
 #      BillingMode: PAY_PER_REQUEST
-#      TableName: ${self:provider.environment.USERS_TABLE}
+#      TableName: ${file(env.yml):${opt:stage, self:provider.stage}.USERS_TABLE}
 #      StreamSpecification:
 #        StreamViewType: NEW_AND_OLD_IMAGES
 
@@ -35,7 +35,7 @@
 #      ProvisionedThroughput:
 #        ReadCapacityUnits: 4
 #        WriteCapacityUnits: 2
-#      TableName: ${self:provider.environment.JOBS_TABLE}
+#      TableName: ${file(env.yml):${opt:stage, self:provider.stage}.JOBS_TABLE}
 #      GlobalSecondaryIndexes:
 #        - IndexName: ProducerIdGlobalIndex
 #          KeySchema:
