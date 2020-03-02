@@ -10,21 +10,21 @@ hello:
         path: api/hello
         method: get
         integration: lambda
-        #        tags:
-        #            client: ${file(env.yml):${opt:stage, self:provider.stage}.CLIENT}
-        #        timeout: 30
-        #        memorySize: 512
+        #tags:
+        #  client: ${file(env.yml):${opt:stage, self:provider.stage}.CLIENT}
+        #timeout: 30
+        #memorySize: 512
         cors: true
-        #          origin: '*'
-        #          headers:
-        #            - Content-Type
-        #            - X-Amz-Date
-        #            - Authorization
-        #            - X-Api-Key
-        #            - X-Amz-Security-Token
-        #            - X-Amz-User-Agent
-        #            - Auth-Token
-        #          allowCredentials: false
+        #  origin: '*'
+        #  headers:
+        #    - Content-Type
+        #    - X-Amz-Date
+        #    - Authorization
+        #    - X-Api-Key
+        #    - X-Amz-Security-Token
+        #    - X-Amz-User-Agent
+        #    - Auth-Token
+        #  allowCredentials: false
         response:
           headers:
             Access-Control-Allow-Origin: "'*'"
