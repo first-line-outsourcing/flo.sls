@@ -1,33 +1,53 @@
-// import { CloudFormation } from 'aws-sdk';
-// import { DescribeStacksOutput, Output } from 'aws-sdk/clients/cloudformation';
-//
-// import { arrayToObject } from '@helper/helper';
-// import { log } from '@helper/logger';
-//
-// export interface OutputsMap {
-//   [key: string]: Output;
-// }
-//
-// export class CloudFormationService {
-//   private cloudFormation: CloudFormation = new CloudFormation();
-//
-//   public async getOutputs(keys: string[] = [], cloudFormationName: string = process.env.CLOUDFORMATION_NAME): Promise<OutputsMap> {
-//     const params = {
-//       StackName: cloudFormationName,
-//     };
-//
-//     return this.cloudFormation.describeStacks(params)
-//       .promise()
-//       .then((stack: DescribeStacksOutput) => stack && stack.Stacks && stack.Stacks[0].Outputs)
-//       .then((outputs) => {
-//         log('Stack outputs', cloudFormationName, outputs);
-//         if (!outputs || !outputs.length) {
-//           return {};
-//         }
-//         if (!keys.length) {
-//           return arrayToObject(outputs, 'OutputKey');
-//         }
-//         return arrayToObject(outputs.filter((output: Output) => keys.includes(output.OutputKey as string)), 'OutputKey');
-//       });
-//   }
-// }
+import { CloudFormation } from 'aws-sdk';
+import {
+  DescribeStacksOutput,
+  Output,
+  DescribeStacksInput,
+  Outputs,
+} from 'aws-sdk/clients/cloudformation';
+
+import { arrayToObject } from '@helper/helper';
+import { log } from '@helper/logger';
+
+export interface OutputsMap {
+  [key: string]: Output;
+}
+
+export class CloudFormationService {
+  private cloudFormation: CloudFormation = new CloudFormation();
+  async getOutputs(
+    keys: string[] = [],
+    stackName = process.env.CLOUDFORMATION_STACK_NAME
+  ): Promise<OutputsMap> {
+    const params: DescribeStacksInput = {
+      StackName: stackName,
+    };
+
+    const describeStacksOutput: DescribeStacksOutput = await this.cloudFormation
+      .describeStacks(params)
+      .promise();
+    const stack = describeStacksOutput.Stacks?.find(stack => stack.StackName === stackName);
+    if (!stack) {
+      return {};
+    }
+
+    const outputs: Outputs = stack.Outputs!;
+    log('Stack outputs', stackName, outputs);
+    if (!outputs?.length) {
+      return {};
+    }
+
+    if (!keys.length) {
+      return arrayToObject(outputs, 'OutputKey');
+    }
+    return arrayToObject(
+      outputs.filter((output: Output) => keys.includes(output.OutputKey!)),
+      'OutputKey'
+    );
+  }
+
+  async getServiceEndpoint() {
+    const outputs = await this.getOutputs(['ServiceEndpoint']);
+    return outputs.ServiceEndpoint.OutputValue;
+  }
+}
