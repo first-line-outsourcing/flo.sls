@@ -3,6 +3,7 @@ node_modules
 offline
 jspm_packages
 .idea/
+.vscode/
 .webpack
 **/.webpack
 .tmp
