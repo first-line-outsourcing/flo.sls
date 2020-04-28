@@ -13,7 +13,7 @@ export class CloudFormationService {
 
   async getOutputs(
     keys: string[] = [],
-    stackName      = process.env.CLOUDFORMATION_STACK_NAME,
+    stackName = process.env.CLOUDFORMATION_STACK_NAME,
   ): Promise<OutputsMap> {
     const params: DescribeStacksInput = {
       StackName: stackName,
