@@ -2,7 +2,7 @@
 version: '3.1'
 
 services:
-  db:
+  postgres:
     image: postgres
     restart: always
     ports:
@@ -10,6 +10,11 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: example
+  dynamodb:
+    image: amazon/dynamodb-local
+    restart: always
+    ports:
+      - '8000:8000'
   sqs:
     image: softwaremill/elasticmq
     restart: always

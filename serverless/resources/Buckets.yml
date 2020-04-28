@@ -2,5 +2,5 @@
 #  MyBucket:
 #    Type: AWS::S3::Bucket
 #    Properties:
-#      BucketName: ${self:provider.environment.BUCKET}
+#      BucketName: ${file(env.yml):${opt:stage, self:provider.stage}.BUCKET}
 #      AccessControl: PublicReadWrite

@@ -11,7 +11,7 @@ export class SQSService {
   public deleteMessage(receiptHandle: string): Promise<any> {
     const params = {
       QueueUrl: this.queueUrl,
-      ReceiptHandle: receiptHandle
+      ReceiptHandle: receiptHandle,
     };
 
     return this.sqs.deleteMessage(params).promise();
@@ -20,7 +20,7 @@ export class SQSService {
   public sendMessage(body: string): Promise<SendMessageResult> {
     const params = {
       QueueUrl: this.queueUrl,
-      MessageBody: body
+      MessageBody: body,
     };
 
     return this.sqs.sendMessage(params).promise();

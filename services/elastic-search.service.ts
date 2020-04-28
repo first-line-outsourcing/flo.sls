@@ -13,17 +13,20 @@
 //     this.elasticSearch = new ES();
 //   }
 //
-//   public async putDocument(index: string, type: string, id: string, document: any, domainName: string = process.env.ELASTIC_SEARCH_DOMAIN): Promise<any> {
+//   public async putDocument(index: string, type: string, id: string, document: any,
+//   domainName: string = process.env.ELASTIC_SEARCH_DOMAIN): Promise<any> {
 //     const request = await this.getRequest(JSON.stringify(document), 'POST', `/${index}/${type}/${id}`, domainName);
 //     return this.sendRequest(request);
 //   }
 //
-//   public async removeDocument(index: string, type: string, id: string, domainName: string = process.env.ELASTIC_SEARCH_DOMAIN): Promise<any> {
+//   public async removeDocument(index: string, type: string, id: string,
+//   domainName: string = process.env.ELASTIC_SEARCH_DOMAIN): Promise<any> {
 //     const request = await this.getRequest(null, 'DELETE', `/${index}/${type}/${id}`, domainName);
 //     return this.sendRequest(request);
 //   }
 //
-//   public async search(index: string, type: string, query: string, domainName: string = process.env.ELASTIC_SEARCH_DOMAIN): Promise<any> {
+//   public async search(index: string, type: string, query: string,
+//   domainName: string = process.env.ELASTIC_SEARCH_DOMAIN): Promise<any> {
 //     /**
 //      * Request scroll result
 //      */
@@ -36,13 +39,15 @@
 //     /**
 //      * While we haven't error and have records
 //      */
-//     while (!intermediateResult.error && (intermediateResult.hits && intermediateResult.hits.hits && intermediateResult.hits.hits.length)) {
+//     while (!intermediateResult.error &&
+//     (intermediateResult.hits && intermediateResult.hits.hits && intermediateResult.hits.hits.length)) {
 //       const intermediateRequest = await this.getRequest(JSON.stringify({
 //         scroll: "10m",
 //         scroll_id: totalResult._scroll_id,
 //       }), 'POST', `/_search/scroll`, domainName);
 //       intermediateResult = await this.sendRequest(intermediateRequest);
-//       totalResult.hits.hits.push(...intermediateResult.hits && intermediateResult.hits.hits ? intermediateResult.hits.hits : []);
+//       totalResult.hits.hits.push(...intermediateResult.hits &&
+//       intermediateResult.hits.hits ? intermediateResult.hits.hits : []);
 //       totalResult.error = intermediateResult.error;
 //     }
 //
@@ -71,14 +76,16 @@
 //   }
 //
 //   /**
-//    * Method for setting mapping for index with some type, should be used after first deploy for each index if you have some
+//    * Method for setting mapping for index with some type,
+//    * should be used after first deploy for each index if you have some
 //    * special types of data
 //    * @param {string} index
 //    * @param {string} type
 //    * @param {string} mapping
 //    * @returns {Promise<any>}
 //    */
-//   public async setMapping(index: string, type: string, mapping: string, domainName: string = process.env.ELASTIC_SEARCH_DOMAIN): Promise<any> {
+//   public async setMapping(index: string, type: string, mapping: string,
+//   domainName: string = process.env.ELASTIC_SEARCH_DOMAIN): Promise<any> {
 //     const request = await this.getRequest(mapping, 'PUT', `/${index}/_mapping/${type}`, domainName);
 //     return this.sendRequest(request);
 //   }

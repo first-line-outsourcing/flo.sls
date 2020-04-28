@@ -6,7 +6,7 @@ const Dotenv = require('dotenv-webpack');
 
 const entries = {};
 Object.keys(slsw.lib.entries).forEach(
-  key => (entries[key] = ['./source-map-install.js', slsw.lib.entries[key]])
+  key => (entries[key] = ['./source-map-install.js', slsw.lib.entries[key]]),
 );
 
 const destPath = path.join(__dirname, '.webpack');

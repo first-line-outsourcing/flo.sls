@@ -1,14 +1,37 @@
-# Serverless API for Toolset Service
+# Serverless API for your application
 
 ## NPM commands
 
 - **deploy:dev**: deploy to the AWS dev environment
 - **deploy:prod**: deploy to the AWS prod environment
 - **deploy:local**: start local development environment
+- **lint**: start tslint for project files
+- **test**: start unit tests
+- **test:ci**: start test in CI environment
+- **sqs:up**: start Docker SQS container for local development
+- **postgres:up**: start Docker Postgres container for local development
+- **dynamodb:up**: start Docker DynamoDB container for local development
 
+## Project information
+
+It is a skeleton for your Serverless applications. It uses typescript,
+webpack dir-config plugin for Serverless function and resources and env
+plugin for encrypted environment variables.
+
+### It contains:
+
+- The basic Lambda function Hello with examples of triggers
+- Examples of offline plugins and docker-compose file for working
+  with AWS resources offline
+- Examples of IAM Role Statements
+- Example of different AWS resources
+- Examples of models for dynamoose library
+- Examples of services for working with AWS resources
+- Simple CircleCI configuration
 ## How to add evn variable
 
 Read this https://github.com/DieProduktMacher/serverless-env-generator
+Add kms_key.yml file with `key` field and your KMS Id to the root.
 
 ## In short:
 

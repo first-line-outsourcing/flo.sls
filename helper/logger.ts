@@ -7,7 +7,7 @@ export function log(...args) {
   } else {
     console.log.apply(
       console,
-      args.map(arg => JSON.stringify(arg))
+      args.map(arg => JSON.stringify(arg)),
     );
   }
 }

@@ -1,6 +1,6 @@
-import { log } from '@helper/logger';
 import { readFile, writeFile } from 'fs';
 import { promisify } from 'util';
+import { log } from '@helper/logger';
 
 export async function hello(event) {
   log('hello', event);

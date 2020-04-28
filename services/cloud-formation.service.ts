@@ -1,10 +1,5 @@
 import { CloudFormation } from 'aws-sdk';
-import {
-  DescribeStacksOutput,
-  Output,
-  DescribeStacksInput,
-  Outputs,
-} from 'aws-sdk/clients/cloudformation';
+import { DescribeStacksInput, DescribeStacksOutput, Output, Outputs } from 'aws-sdk/clients/cloudformation';
 
 import { arrayToObject } from '@helper/helper';
 import { log } from '@helper/logger';
@@ -15,9 +10,10 @@ export interface OutputsMap {
 
 export class CloudFormationService {
   private cloudFormation: CloudFormation = new CloudFormation();
+
   async getOutputs(
     keys: string[] = [],
-    stackName = process.env.CLOUDFORMATION_STACK_NAME
+    stackName      = process.env.CLOUDFORMATION_STACK_NAME,
   ): Promise<OutputsMap> {
     const params: DescribeStacksInput = {
       StackName: stackName,
@@ -42,7 +38,7 @@ export class CloudFormationService {
     }
     return arrayToObject(
       outputs.filter((output: Output) => keys.includes(output.OutputKey!)),
-      'OutputKey'
+      'OutputKey',
     );
   }
 

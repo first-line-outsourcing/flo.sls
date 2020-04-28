@@ -12,7 +12,7 @@ export class SESService {
     emails: string[],
     body: string,
     subject: string,
-    source: string
+    source: string,
   ): Promise<SendEmailResponse> {
     const params = {
       Destination: {

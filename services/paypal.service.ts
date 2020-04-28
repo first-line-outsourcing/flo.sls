@@ -1,7 +1,7 @@
 // import { PaymentResponse, RefundResource } from 'paypal-rest-sdk';
 // import * as paypal from 'paypal-rest-sdk';
 //
-// import { Job } from '@models/Job';
+// import { JobModel } from '@models/JobModel';
 //
 // export class PaypalService {
 //   constructor() {
@@ -12,7 +12,7 @@
 //     });
 //   }
 //
-//   public payout(job: Job): Promise<any> {
+//   public payout(job: JobModel): Promise<any> {
 //     const createPayoutData = {
 //       sender_batch_header: {
 //         email_subject: `Payment from CRW for job with ${job.producer.companyName}`

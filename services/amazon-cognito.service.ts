@@ -98,7 +98,8 @@
 //     });
 //   }
 //
-//   public changePassword(id: string, oldPassword: string, newPassword: string, idToken: string, refreshToken: string, accessToken: string): Promise<void> {
+//   public changePassword(id: string, oldPassword: string, newPassword: string, idToken: string,
+//   refreshToken: string, accessToken: string): Promise<void> {
 //     const user = new CognitoUser({
 //       Username: id,
 //       Pool: this.cognitoUserPool,
