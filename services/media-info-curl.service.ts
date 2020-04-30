@@ -10,6 +10,7 @@ export class MediaInfoCurlService {
     const mediaInfoXML = await execPromise(this.mediaInfoCurl, ['--Output=XML', '-f', url], {});
 
     const parserPromise = promisify(parser.parseString);
-    return parserPromise(mediaInfoXML.stdout);
+    const mediaInfo = await parserPromise(mediaInfoXML.stdout);
+    return mediaInfo?.MediaInfo?.media[0]?.track?.[0];
   }
 }

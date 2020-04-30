@@ -1,4 +1,4 @@
-# ================== Hello =====================
+# ================== MediaInfo =====================
 
 getMediaInfo:
   handler: api/media-info/handler.getMediaInfo
