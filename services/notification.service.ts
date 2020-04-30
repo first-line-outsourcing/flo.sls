@@ -30,7 +30,8 @@
 //
 //     if (invalidEndpoints.length) {
 //       log('with invalid notifications', user);
-//       user.pushNotifications = user.pushNotifications.filter((notification: PushNotification) => !invalidEndpoints.includes(notification.endpointArn));
+//       user.pushNotifications = user.pushNotifications.filter((notification: PushNotification) =>
+//       !invalidEndpoints.includes(notification.endpointArn));
 //       log('without invalid notifications', user);
 //       await UserModel.update(user.id, user);
 //

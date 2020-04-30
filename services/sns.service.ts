@@ -11,7 +11,8 @@
 //
 //   public createPlatformEndpoint(registrationId: string, registrationType: 'FCM' | 'APNS'): Promise<string> {
 //     const params: CreatePlatformEndpointInput = {
-//       PlatformApplicationArn: registrationType === 'FCM' ? process.env.SNS_ANDROID_APPLICATION_ARN : process.env.SNS_IOS_APPLICATION_ARN,
+//       PlatformApplicationArn: registrationType === 'FCM' ?
+//       process.env.SNS_ANDROID_APPLICATION_ARN : process.env.SNS_IOS_APPLICATION_ARN,
 //       Token: registrationId,
 //     };
 //     return this.sns.createPlatformEndpoint(params).promise()

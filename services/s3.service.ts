@@ -1,11 +1,12 @@
+import { S3 } from 'aws-sdk';
 import {
   DeleteObjectOutput,
-  DeleteObjectRequest, GetObjectOutput,
+  DeleteObjectRequest,
+  GetObjectOutput,
   GetObjectRequest,
   PutObjectOutput,
   PutObjectRequest,
 } from 'aws-sdk/clients/s3';
-import * as S3 from 'aws-sdk/clients/s3';
 
 export class S3Service {
   public s3 = new S3();
@@ -14,11 +15,8 @@ export class S3Service {
     const params = {
       Bucket: bucket,
       Key: key,
-      ContentType: 'image/jpeg',
-      ACL: 'public-read',
     };
-    // return this.s3.getSignedUrl('putObject', params); TODO: should be use for private bucket in the future
-    return `https://s3.amazonaws.com/${bucket}/`;
+    return this.s3.getSignedUrl('putObject', params);
   }
 
   public getPreSignedGetUrl(key: string, bucket: string): string {
@@ -26,8 +24,7 @@ export class S3Service {
       Bucket: bucket,
       Key: key,
     };
-    // return this.s3.getSignedUrl('getObject', params); TODO: should be use for private bucket in the future
-    return `https://s3.amazonaws.com/${bucket}/${key}`;
+    return this.s3.getSignedUrl('getObject', params);
   }
 
   public remove(key: string, bucket: string): Promise<DeleteObjectOutput> {
@@ -38,12 +35,17 @@ export class S3Service {
     return this.s3.deleteObject(params).promise();
   }
 
-  public put(key: string, body: string, bucket: string): Promise<PutObjectOutput> {
+  public put(
+    key: string,
+    body: string,
+    bucket: string,
+    acl = 'public-read',
+  ): Promise<PutObjectOutput> {
     const params: PutObjectRequest = {
-      ACL: 'public-read',
+      ACL: acl,
       Bucket: bucket,
       Key: key,
-      Body: body
+      Body: body,
     };
     return this.s3.putObject(params).promise();
   }

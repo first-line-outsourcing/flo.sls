@@ -4,11 +4,11 @@ provider:
   name: aws
   runtime: nodejs12.x
   environment:
-    hello: world
-  region: us-west-2
-  #  profile: flo
+    hello: world # this is a hack for env plugin
+  region: ${file(env.yml):${opt:stage, self:provider.stage}.REGION}
+  profile: ${file(env.yml):${opt:stage, self:provider.stage}.PROFILE}
   tags:
-    client: 'client'
+    client: ${file(env.yml):${opt:stage, self:provider.stage}.CLIENT}
 #  iamRoleStatements:
 #    - Effect: Allow
 #      Action:
@@ -22,7 +22,7 @@ provider:
 #        - dynamodb:BatchGetItem
 #        - dynamodb:BatchWriteItem
 #      Resource:
-#        - arn:aws:dynamodb:*:*:table/${self:provider.environment.USERS_TABLE}
+#        - arn:aws:dynamodb:*:*:table/${file(env.yml):${opt:stage, self:provider.stage}.USERS_TABLE}
 #    - Effect: Allow
 #      Action:
 #        - dynamodb:DescribeTable
@@ -35,20 +35,20 @@ provider:
 #        - dynamodb:BatchGetItem
 #        - dynamodb:BatchWriteItem
 #      Resource:
-#        - arn:aws:dynamodb:*:*:table/${self:provider.environment.JOBS_TABLE}
-#        - arn:aws:dynamodb:*:*:table/${self:provider.environment.JOBS_TABLE}/index/*
+#        - arn:aws:dynamodb:*:*:table/${file(env.yml):${opt:stage, self:provider.stage}.JOBS_TABLE}
+#        - arn:aws:dynamodb:*:*:table/${file(env.yml):${opt:stage, self:provider.stage}.JOBS_TABLE}/index/*
 #    - Effect: Allow
 #      Action:
 #        - s3:*
 #      Resource:
-#        - arn:aws:s3:::${self:provider.environment.BUCKET}
-#        - arn:aws:s3:::${self:provider.environment.BUCKET}/*
+#        - arn:aws:s3:::${file(env.yml):${opt:stage, self:provider.stage}.BUCKET}
+#        - arn:aws:s3:::${file(env.yml):${opt:stage, self:provider.stage}.BUCKET}/*
 #    - Effect: Allow
 #      Action:
 #        - es:*
 #      Resource:
-#        - arn:aws:es:*:*:domain/${self:provider.environment.ELASTIC_SEARCH_DOMAIN}
-#        - arn:aws:es:*:*:domain/${self:provider.environment.ELASTIC_SEARCH_DOMAIN}/*
+#        - arn:aws:es:*:*:domain/${file(env.yml):${opt:stage, self:provider.stage}.ELASTIC_SEARCH_DOMAIN}
+#        - arn:aws:es:*:*:domain/${file(env.yml):${opt:stage, self:provider.stage}.ELASTIC_SEARCH_DOMAIN}/*
 #    - Effect: Allow
 #      Action:
 #        - ses:SendEmail
@@ -58,22 +58,22 @@ provider:
 #        - sqs:DeleteMessage
 #        - sqs:ReceiveMessage
 #        - sqs:SendMessage
-#      Resource: arn:aws:sqs:*:*:${self:provider.environment.SQS}
+#      Resource: arn:aws:sqs:*:*:${file(env.yml):${opt:stage, self:provider.stage}.SQS}
 #    - Effect: Allow
 #      Action:
 #        - sns:CreatePlatformEndpoint
 #        - sns:DeleteEndpoint
 #        - sns:Publish
 #      Resource:
-#        - ${self:provider.environment.SNS_ANDROID_APPLICATION_ARN}
-#        - ${self:provider.environment.SNS_IOS_APPLICATION_ARN}
+#        - ${file(env.yml):${opt:stage, self:provider.stage}.SNS_ANDROID_APPLICATION_ARN}
+#        - ${file(env.yml):${opt:stage, self:provider.stage}.SNS_IOS_APPLICATION_ARN}
 
 #resources:
 #  Resources:
 #    UserPool:
 #      Type: AWS::Cognito::UserPool
 #      Properties:
-#        UserPoolName: ${self:provider.environment.USER_POOL}
+#        UserPoolName: ${file(env.yml):${opt:stage, self:provider.stage}.USER_POOL}
 #        UsernameAttributes: [email]
 #        AutoVerifiedAttributes:
 #          - email
@@ -120,18 +120,9 @@ custom:
     #        forceExclude:
     #          - aws-sdk
     packager: 'npm' # Packager that will be used to package your external modules
-  #  output:
-  #    handler: api/helper/output.handler
-  #    file: stack.yml
   #  serverless-offline-sns:
   #    port: 4002 # a free port for the sns server to run on
   #    debug: false
-  #  serverless-offline-sqs:
-  #    apiVersion: '2012-11-05'
-  #    endpoint: http://0.0.0.0:9324
-  #    region: us-east-1
-  #    accessKeyId: root
-  #    secretAccessKey: root
   #  dynamodb:
   #    start:
   #      port: 8000
@@ -176,7 +167,7 @@ custom:
     autoCreate: true # create queue if not exists
     apiVersion: '2012-11-05'
     endpoint: http://0.0.0.0:9324
-    region: us-west-2
+    region: ${file(env.yml):${opt:stage, self:provider.stage}.REGION}
     accessKeyId: root
     secretAccessKey: root
     skipCacheInvalidation: false
@@ -187,7 +178,6 @@ plugins: # order matters!
   - serverless-webpack
   - serverless-offline-sqs
   - serverless-offline
-  #  - serverless-stack-output
   #  - serverless-offline-sns
   #  - serverless-dynamodb-local
   #  - serverless-s3-local

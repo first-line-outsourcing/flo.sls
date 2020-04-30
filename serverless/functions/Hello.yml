@@ -3,17 +3,13 @@
 hello:
   handler: api/hello/handler.hello
   tags:
-    client: client
-  timeout: 30
+    client: ${file(env.yml):${opt:stage, self:provider.stage}.CLIENT}
+  timeout: 28
   events:
     - http:
         path: api/hello
         method: get
         integration: lambda
-#        tags:
-#            client: client-name
-#        timeout: 30
-#        memorySize: 512
         cors: true
 #          origin: '*'
 #          headers:
@@ -41,11 +37,11 @@ hello:
 #            - Arn
 #        batchSize: 1
 #    - s3:
-#        bucket: ${self:provider.environment.BUCKET}
+#        bucket: ${file(env.yml):${opt:stage, self:provider.stage}.BUCKET}
 #        events:
 #          - s3:ObjectCreated:*
 #    - schedule: rate(3 minutes)
-#    - sns: ${self:provider.environment.SNS}
+#    - sns: ${file(env.yml):${opt:stage, self:provider.stage}.SNS}
 #    - stream:
 #        type: dynamodb
 #        arn:
@@ -56,5 +52,5 @@ hello:
 #authorizer:
 #  handler: api/auth/handler.authentication
 #  tags:
-#    client: client
+#    client: ${file(env.yml):${opt:stage, self:provider.stage}.CLIENT}
 #  timeout: 30

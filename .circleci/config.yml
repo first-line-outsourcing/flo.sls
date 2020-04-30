@@ -1,45 +1,56 @@
-# Javascript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
-version: 2
+version: 2.1
 jobs:
-  lint:
-    docker:
-      - image: circleci/node:10.13.0
+  lint_and_build:
     working_directory: ~/repo
+    docker:
+      - image: circleci/node:latest
     steps:
       - checkout
+      - run:
+          name: Update npm
+          command: 'sudo npm install -g npm@latest'
       - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
-      - run: npm i -s
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install npm
+          command: npm install
       - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-      - run: npm run lint
+      - run:
+          name: Lint
+          command: npm run lint
+      - run:
+          name: Build
+          command: npm run build
   test:
-    docker:
-      - image: circleci/node:10.13.0
     working_directory: ~/repo
+    docker:
+      - image: circleci/node:latest
     steps:
       - checkout
+      - run:
+          name: Update npm
+          command: 'sudo npm install -g npm@latest'
       - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
-      - run: npm i -s
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install npm
+          command: npm install
       - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-      - run: npm run test:ci
+      - run:
+          name: Test
+          command: npm test:ci
 
 workflows:
-  version: 2
-  lint_and_test:
+  version: 2.1
+  build_and_test:
     jobs:
-      - lint
-      - test
+      - lint_and_build
+      - test:
+          requires:
+            - lint_and_build

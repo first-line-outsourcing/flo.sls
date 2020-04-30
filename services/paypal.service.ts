@@ -1,7 +1,7 @@
 // import { PaymentResponse, RefundResource } from 'paypal-rest-sdk';
 // import * as paypal from 'paypal-rest-sdk';
 //
-// import { Job } from '@models/Job';
+// import { Job } from '@models/DynamoDB/job.model';
 //
 // export class PaypalService {
 //   constructor() {

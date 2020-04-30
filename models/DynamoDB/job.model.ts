@@ -1,4 +1,4 @@
-import { User } from '@models/User';
+import { User } from '@models/DynamoDB/user.model';
 import * as dynamoose from 'dynamoose';
 import * as uuid from 'node-uuid';
 
@@ -13,27 +13,7 @@ export type JobStatus =
   | 'disputed'
   | 'expired';
 
-export interface Payment {
-  id: string;
-  state: string;
-  create_time: string;
-  intent: string;
-}
-
-export interface Payout {
-  payout_batch_id: string;
-  transaction_id?: string;
-  transaction_status?: string;
-  time_processed?: string;
-}
-
-export interface Refund {
-  id: string;
-  state: string;
-  create_time: string;
-}
-
-export interface JobBody {
+export interface JobSchema {
   id?: string;
   producerId: string;
   crewId: string;
@@ -49,14 +29,11 @@ export interface JobBody {
   optional: string;
   producer?: User;
   crew?: User;
-  fund?: Payment;
-  payout?: Payout;
-  refund?: Refund;
   lat: number;
   lon: number;
 }
 
-export class Job implements JobBody {
+export class Job implements JobSchema {
   public id?: string;
   public producerId: string;
   public crewId: string;
@@ -72,13 +49,10 @@ export class Job implements JobBody {
   public optional: string;
   public producer?: User;
   public crew?: User;
-  public fund?: Payment;
-  public payout?: Payout;
-  public refund?: Refund;
   public lat: number;
   public lon: number;
 
-  constructor(job: JobBody) {
+  constructor(job: JobSchema) {
     this.id = job.id;
     this.producerId = job.producerId;
     this.crewId = job.crewId;
@@ -92,15 +66,12 @@ export class Job implements JobBody {
     this.duration = job.duration;
     this.requirements = job.requirements;
     this.optional = job.optional;
-    this.fund = job.fund;
-    this.payout = job.payout;
-    this.refund = job.refund;
     this.lat = job.lat;
     this.lon = job.lon;
   }
 
   public static update(oldJob: Job, newJob: Job): Job {
-    const job: Job = new Job(oldJob);
+    const job: Job = new JobModel(oldJob);
     if (newJob.producerId !== undefined) {
       job.producerId = newJob.producerId;
     }
@@ -137,15 +108,6 @@ export class Job implements JobBody {
     if (newJob.optional !== undefined) {
       job.optional = newJob.optional;
     }
-    if (newJob.fund !== undefined) {
-      job.fund = newJob.fund;
-    }
-    if (newJob.payout !== undefined) {
-      job.payout = newJob.payout;
-    }
-    if (newJob.refund !== undefined) {
-      job.refund = newJob.refund;
-    }
     if (newJob.lat !== undefined) {
       job.lat = newJob.lat;
     }
@@ -181,17 +143,6 @@ export const jobSchema = new dynamoose.Schema(
     },
     status: {
       type: String,
-      enum: [
-        'offer',
-        'declined',
-        'active',
-        'accepted',
-        'pending',
-        'pending_payout',
-        'paid',
-        'disputed',
-        'expired',
-      ],
     },
     startDate: {
       type: String,
@@ -220,32 +171,6 @@ export const jobSchema = new dynamoose.Schema(
     optional: {
       type: String,
     },
-    // fund: {
-    //   type: 'map',
-    //   map: {
-    //     id: String,
-    //     state: String,
-    //     create_time: String,
-    //     intent: String,
-    //   },
-    // },
-    // payout: {
-    //   type: 'map',
-    //   map: {
-    //     payout_batch_id: String,
-    //     transaction_id: String,
-    //     transaction_status: String,
-    //     time_processed: String,
-    //   },
-    // },
-    // refund: {
-    //   type: 'map',
-    //   map: {
-    //     id: String,
-    //     state: String,
-    //     create_time: String,
-    //   },
-    // },
     lat: {
       type: Number,
     },
@@ -256,14 +181,14 @@ export const jobSchema = new dynamoose.Schema(
   {
     useNativeBooleans: true,
     useDocumentTypes: true,
-  }
+  },
 );
 
-export const JobModel = dynamoose.model<JobBody, string>(
+export const JobModel = dynamoose.model<JobSchema, string>(
   process.env.JOBS_TABLE as string,
   jobSchema,
   {
     create: false,
     update: false,
-  }
+  },
 );
