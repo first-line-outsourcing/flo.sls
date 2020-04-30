@@ -3,10 +3,12 @@ export type ErrorTypes = 'BadRequest' | 'Unauthorized' | 'Forbidden' | 'NotFound
   'TooManyRequests' | 'InternalServerError' | 'BadGateway' | 'ServiceUnavailable' | 'GatewayTimeout';
 
 export type CommonErrorsSchema = Readonly<{
-  [type in ErrorTypes]: Readonly<{
-    name: string;
-    statusCode: ErrorStatusCode;
-  }>;
+  [type in ErrorTypes]: CommonErrorSchema;
+}>;
+
+export type CommonErrorSchema = Readonly<{
+  name: string;
+  statusCode: ErrorStatusCode;
 }>;
 
 export const CommonErrors: CommonErrorsSchema = {
@@ -62,11 +64,11 @@ export const CommonErrors: CommonErrorsSchema = {
 export class AppError extends Error {
   public readonly name: string;
   public readonly statusCode: ErrorStatusCode;
-  constructor(name: string, statusCode: ErrorStatusCode, message: string) {
+  constructor(error: CommonErrorSchema, message: string) {
     super(message);
     Object.setPrototypeOf(this, new.target.prototype); // Restore prototype chain
-    this.name = name;
-    this.statusCode = statusCode;
+    this.name = error.name;
+    this.statusCode = error.statusCode;
     Error.captureStackTrace(this);
   }
 }
@@ -76,4 +78,4 @@ export class AppError extends Error {
  */
 
 // if (!user)
-//   throw new AppError(commonErrors.NotFound.name, commonErrors.NotFound.statusCode, 'User does not exist');
+//   throw new AppError(commonErrors.NotFound, 'User does not exist');

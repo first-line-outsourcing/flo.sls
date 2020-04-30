@@ -20,12 +20,13 @@ plugin for encrypted environment variables.
 
 ### It contains:
 
-- The basic Lambda function Hello with examples of triggers
+- The Media Info feature that uses mediainfo binary file and returns media info by url
 - Examples of offline plugins and docker-compose file for working
   with AWS resources offline
 - Examples of IAM Role Statements
 - Example of different AWS resources
 - Examples of models for dynamoose library
+- Examples of models for sequelize library
 - Examples of services for working with AWS resources
 - Simple CircleCI configuration
 ## How to add evn variable

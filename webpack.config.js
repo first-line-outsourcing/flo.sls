@@ -1,12 +1,14 @@
 const path = require('path');
 const slsw = require('serverless-webpack');
+const WebpackShellPlugin = require('webpack-shell-plugin-next');
 const nodeExternals = require('webpack-node-externals');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 
 const entries = {};
 Object.keys(slsw.lib.entries).forEach(
-  key => (entries[key] = ['./source-map-install.js', slsw.lib.entries[key]]),
+  key => (entries[key] = ['./source-map-install.js', slsw.lib.entries[key]])
 );
 
 const destPath = path.join(__dirname, '.webpack');
@@ -37,7 +39,19 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
-    plugins: [new TsconfigPathsPlugin({ configFile: path.resolve(__dirname, './tsconfig.json') })],
+    plugins: [new TsconfigPathsPlugin.TsconfigPathsPlugin({ configFile: path.resolve(__dirname, './tsconfig.json') })],
   },
-  plugins: [new Dotenv()],
+  plugins: [
+    new Dotenv(),
+    new CopyWebpackPlugin([
+      {
+        from: path.join(__dirname, 'mediainfo-curl'),
+      },
+    ]),
+    new WebpackShellPlugin({
+      onBuildEnd: [`chmod 755 ${destPath}/mediainfo-curl`],
+      blocking: false,
+      parallel: true,
+    }),
+  ],
 };

@@ -37,11 +37,10 @@
   "homepage": "https://github.com/first-line-outsourcing/flo.sls#readme",
   "devDependencies": {
     "@types/jest": "^25.1.1",
-    "@types/js-yaml": "3.12.2",
+    "copy-webpack-plugin": "^5.1.1",
     "dotenv-webpack": "^1.7.0",
     "husky": "^4.2.1",
     "jest": "^25.1.0",
-    "js-yaml": "3.13.1",
     "prettier": "1.19.1",
     "pretty-quick": "^2.0.1",
     "serverless": "^1.63.0",
@@ -61,13 +60,11 @@
     "typescript": "^3.8.3",
     "typings": "2.1.1",
     "webpack": "4.41.5",
-    "webpack-node-externals": "1.7.2"
+    "webpack-node-externals": "1.7.2",
+    "webpack-shell-plugin-next": "^1.1.8"
   },
   "dependencies": {
-    "@types/bluebird": "^3.5.29",
-    "@types/jsonwebtoken": "^8.3.7",
     "@types/node": "^13.7.0",
-    "@types/validator": "^12.0.1",
     "alai": "1.0.3",
     "aws-sdk": "2.612.0",
     "axios": "^0.19.2",
@@ -78,7 +75,8 @@
     "reflect-metadata": "^0.1.13",
     "sequelize": "^5.21.7",
     "sequelize-typescript": "^1.1.0",
-    "source-map-support": "^0.5.16"
+    "source-map-support": "^0.5.16",
+    "xml2js": "^0.4.23"
   },
   "husky": {
     "hooks": {

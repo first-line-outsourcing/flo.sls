@@ -1,4 +1,4 @@
-service: hello-sls
+service: template-sls
 
 provider:
   name: aws
@@ -158,13 +158,15 @@ custom:
   #        usage: 0.5       # Targeted usage percentage
   prune:
     automatic: true
-    number: 2
-  envFiles: #YAML files used to create .env file
+    number: 3
+  envFiles: # YAML files used to create .env file
     - env.yml
-  envEncryptionKeyId: #KMS Key used for encrypting values
-    dev: ${file(kms_key.yml):key} #Key used for development-stage
+  envEncryptionKeyId: # KMS Key used for encrypting values
+    local: ${file(kms_key.yml):key} # Key used for local-stage
+    dev: ${file(kms_key.yml):key} # Key used for development-stage
+    prod: ${file(kms_key.yml):key} # Key used for prod-stage
   serverless-offline-sqs:
-    autoCreate: true # create queue if not exists
+    autoCreate: true # create queue if not exists, it doesn't work for FIFO SQS
     apiVersion: '2012-11-05'
     endpoint: http://0.0.0.0:9324
     region: ${file(env.yml):${opt:stage, self:provider.stage}.REGION}
@@ -176,7 +178,7 @@ plugins: # order matters!
   - serverless-env-generator
   - serverless-dir-config-plugin
   - serverless-webpack
-  - serverless-offline-sqs
+  #  - serverless-offline-sqs
   - serverless-offline
   #  - serverless-offline-sns
   #  - serverless-dynamodb-local
