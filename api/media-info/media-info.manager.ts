@@ -1,20 +1,42 @@
 import { AppError, CommonErrors } from '@helper/app-error';
 import { MediaInfoCurlService } from '@services/media-info-curl.service';
+import { MediaInfoUrl } from './media-info.inteface';
 import { MediaInfoService } from './media-info.service';
 
+/**
+ * It's the feature manager
+ * Its methods should implement some feature's functionality
+ */
 export class MediaInfoManager {
   private readonly service: MediaInfoService;
 
   constructor() {
+    /**
+     * The feature service should be created in the constructor of the feature manager
+     * Other services should be provided in the feature manager's methods
+     */
     this.service = new MediaInfoService();
   }
 
-  getMediaInfo(url: string) {
-    if (!url) {
+  /**
+   * This method implements some feature's functionality
+   * It should validate required data
+   * It should display the main steps of the algorithm without implementation
+   * All implementation should be placed in the feature service's methods
+   * @param mediaInfoUrl - required data
+   * @param mediaInfoCurlService - required services
+   */
+  getMediaInfo(mediaInfoUrl: MediaInfoUrl, mediaInfoCurlService: MediaInfoCurlService) {
+    /**
+     * Validate required data -> Check if url exists
+     */
+    if (!mediaInfoUrl.url) {
       throw new AppError(CommonErrors.BadRequest, "The param 'url' is required.");
     }
 
-    const mediaInfoCurlService = new MediaInfoCurlService();
-    return this.service.getMediaInfo(mediaInfoCurlService, url);
+    /**
+     * Display the main step of the algorithm and call the feature service's method -> Return Media Info
+     */
+    return this.service.getMediaInfo(mediaInfoUrl.url, mediaInfoCurlService);
   }
 }

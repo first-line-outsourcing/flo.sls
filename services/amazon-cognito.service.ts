@@ -11,7 +11,7 @@
 // } from 'amazon-cognito-identity-js';
 //
 // import { log } from '@helper/logger';
-// import { SignInUser, User } from '@models/User';
+// import { SignInUser, User } from '@models/DynamoDB/User';
 //
 // export interface AuthTokens {
 //   idToken: string;

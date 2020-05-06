@@ -171,17 +171,11 @@ export const userSchema = new dynamoose.Schema(
     },
   },
   {
-    useNativeBooleans: true,
-    useDocumentTypes: true,
     timestamps: true,
-  },
+  }
 );
 
-export const UserModel = dynamoose.model<UserSchema, string>(
-  process.env.USERS_TABLE as string,
-  userSchema,
-  {
-    create: false,
-    update: false,
-  },
-);
+export const UserModel = dynamoose.model(process.env.USERS_TABLE as string, userSchema, {
+  create: true,
+  update: false,
+});
