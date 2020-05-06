@@ -1,5 +1,5 @@
 // import { SNSService } from '@services/sns.service';
-// import { PushNotification, User, UserModel } from '@models/User';
+// import { PushNotification, User, UserModel } from '@models/DynamoDB/User';
 // import { log } from '@helper/logger';
 //
 // export class NotificationService {
@@ -12,26 +12,25 @@
 //     await Promise.all(
 //       user.pushNotifications
 //         .map(async (notification: PushNotification) => {
-//             log('arn', notification.endpointArn);
-//             try {
-//               await this.snsService.publish(
-//                 notification.endpointArn,
-//                 notification.registrationType,
-//                 message,
-//               );
-//             } catch (e) {
-//               log('Cannot send notification');
-//               console.log(e);
-//               invalidEndpoints.push(notification.endpointArn);
-//             }
-//           },
-//         ),
+//           log('arn', notification.endpointArn);
+//           try {
+//             await this.snsService.publish(
+//               notification.endpointArn,
+//               notification.registrationType,
+//               message,
+//             );
+//           } catch (e) {
+//             log('Cannot send notification');
+//             console.log(e);
+//             invalidEndpoints.push(notification.endpointArn);
+//           }
+//         }),
 //     );
 //
 //     if (invalidEndpoints.length) {
 //       log('with invalid notifications', user);
 //       user.pushNotifications = user.pushNotifications.filter((notification: PushNotification) =>
-//       !invalidEndpoints.includes(notification.endpointArn));
+//         !invalidEndpoints.includes(notification.endpointArn));
 //       log('without invalid notifications', user);
 //       await UserModel.update(user.id, user);
 //
@@ -43,7 +42,7 @@
 //             log('Cannot delete endpoint');
 //             console.log(e);
 //           }
-//         })
+//         }),
 //       );
 //     }
 //

@@ -71,7 +71,7 @@ export class Job implements JobSchema {
   }
 
   public static update(oldJob: Job, newJob: Job): Job {
-    const job: Job = new JobModel(oldJob);
+    const job: Job = new Job(oldJob);
     if (newJob.producerId !== undefined) {
       job.producerId = newJob.producerId;
     }
@@ -179,16 +179,11 @@ export const jobSchema = new dynamoose.Schema(
     },
   },
   {
-    useNativeBooleans: true,
-    useDocumentTypes: true,
-  },
+    timestamps: true,
+  }
 );
 
-export const JobModel = dynamoose.model<JobSchema, string>(
-  process.env.JOBS_TABLE as string,
-  jobSchema,
-  {
-    create: false,
-    update: false,
-  },
-);
+export const JobModel = dynamoose.model(process.env.JOBS_TABLE as string, jobSchema, {
+  create: true,
+  update: false,
+});

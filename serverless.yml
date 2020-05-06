@@ -115,10 +115,10 @@ custom:
     quiet: true
   webpack:
     webpackConfig: 'webpack.config.js' # Name of webpack configuration file
-    includeModules: true
-    #      packagePath: '../package.json'
-    #        forceExclude:
-    #          - aws-sdk
+    includeModules:
+      packagePath: 'package.json'
+      forceExclude:
+        - aws-sdk
     packager: 'npm' # Packager that will be used to package your external modules
   #  serverless-offline-sns:
   #    port: 4002 # a free port for the sns server to run on
@@ -165,14 +165,14 @@ custom:
     local: ${file(kms_key.yml):key} # Key used for local-stage
     dev: ${file(kms_key.yml):key} # Key used for development-stage
     prod: ${file(kms_key.yml):key} # Key used for prod-stage
-  serverless-offline-sqs:
-    autoCreate: true # create queue if not exists, it doesn't work for FIFO SQS
-    apiVersion: '2012-11-05'
-    endpoint: http://0.0.0.0:9324
-    region: ${file(env.yml):${opt:stage, self:provider.stage}.REGION}
-    accessKeyId: root
-    secretAccessKey: root
-    skipCacheInvalidation: false
+  #  serverless-offline-sqs:
+  #    autoCreate: true # create queue if not exists, it doesn't work for FIFO SQS
+  #    apiVersion: '2012-11-05'
+  #    endpoint: http://0.0.0.0:9324
+  #    region: ${file(env.yml):${opt:stage, self:provider.stage}.REGION}
+  #    accessKeyId: root
+  #    secretAccessKey: root
+  #    skipCacheInvalidation: false
 
 plugins: # order matters!
   - serverless-env-generator
