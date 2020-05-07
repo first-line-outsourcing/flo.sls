@@ -7,9 +7,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 
 const entries = {};
-Object.keys(slsw.lib.entries).forEach(
-  key => (entries[key] = ['./source-map-install.js', slsw.lib.entries[key]])
-);
+Object.keys(slsw.lib.entries).forEach((key) => (entries[key] = ['./source-map-install.js', slsw.lib.entries[key]]));
 
 const destPath = path.join(__dirname, '.webpack');
 module.exports = {
@@ -45,11 +43,11 @@ module.exports = {
     new Dotenv(),
     new CopyWebpackPlugin([
       {
-        from: path.join(__dirname, 'mediainfo-curl'),
+        from: path.join(__dirname, 'bin', 'mediainfo-curl'),
       },
     ]),
     new WebpackShellPlugin({
-      onBuildEnd: [`chmod 755 ${destPath}/mediainfo-curl`],
+      onBuildEnd: [`chmod +x ${destPath}/mediainfo-curl`],
       blocking: false,
       parallel: true,
     }),

@@ -1,6 +1,3 @@
-import { DynamoDB } from 'aws-sdk';
-import { AttributeMap } from 'aws-sdk/clients/dynamodb';
-
 export function arrayToObject(array: any[], field: string): any {
   if (!array || !array.length) {
     return {};
@@ -17,7 +14,3 @@ export const messages = {
     invalidSearchOptions: 'Search options must have one or more options',
   },
 };
-
-export function convertDynamoDBRecord(record: AttributeMap): { [p: string]: any } {
-  return DynamoDB.Converter.unmarshall(record);
-}
