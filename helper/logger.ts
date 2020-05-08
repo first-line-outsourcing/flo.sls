@@ -1,5 +1,11 @@
+import { AxiosError } from 'axios';
+
 export function log(...args) {
-  if (process.env.CI === 'true') {
+  /**
+   * Don't show the logs in CI for faster testing
+   * Sometimes we turn off the logs in production environment for better performance
+   */
+  if (process.env.CI === 'true' || process.env.HIDE_LOGS === 'true') {
     return;
   }
   if (process.env.IS_OFFLINE === 'true') {
@@ -8,6 +14,9 @@ export function log(...args) {
     console.log.apply(
       console,
       args.map((arg) => {
+        /**
+         * Axios error has complicated structure that doesn't allow debugging it easily
+         */
         if (arg.isAxiosError) {
           return JSON.stringify(shortAxiosError(arg));
         }
@@ -17,10 +26,10 @@ export function log(...args) {
   }
 }
 
-function shortAxiosError(error) {
+export function shortAxiosError(error: AxiosError) {
   const { config, response } = error;
   const { url, headers, method, data } = config;
-  const { status, statusText } = response;
+  const { status, statusText } = response!;
   return {
     error: {
       status,
