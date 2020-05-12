@@ -1,4 +1,4 @@
-# Serverless API for your application
+# AWS + Serverless API for your application
 
 ## NPM commands
 
@@ -14,8 +14,8 @@
 
 ## Project information
 
-It is a skeleton for your Serverless applications. It uses typescript,
-webpack dir-config plugin for Serverless function and resources and env
+It is a skeleton for your AWS + Serverless applications. It uses typescript,
+webpack, dir-config plugin for Serverless function and resources and env
 plugin for encrypted environment variables.
 
 ### It contains:
@@ -29,9 +29,52 @@ plugin for encrypted environment variables.
 - Examples of models for sequelize library
 - Examples of services for working with AWS resources
 - Simple CircleCI configuration
+
+### Project structure
+
+- .circleci - Configuration for CI/CD
+- api - Code of the features or CRUD operations of entities
+  - feature_name - Code of one feature or CRUD operations of one entity.
+    It should cover the area of one responsibility. For example, Media Info feature,
+    CRUD operations (create, remove, update, delete) for user entity
+    - handler.ts - This is a handler file. It should contain Lambda functions for one feature.
+      For example, Media Info feature or CRUD operations for the user entity.
+    - feature_name.manager.ts - It's the feature manager. Its methods should implement some feature's functionality
+    - feature_name.service.ts - It's the feature service. Its methods should implement one of the main steps of some feature's functionality
+    - feature_name.interface.ts - This file should contain all required interfaces for the feature
+- bin - Executable files (third party libraries that can be used inside a Lambda function)
+- helper - All auxiliary code
+  - app-errors.ts - This file contains the class that derives from Node.js Error class.
+    It should be used for providing custom errors with the proper structure
+  - error-handler.ts - This file contains the class that helps handle errors
+  - helper.ts - This file contains auxiliary functions
+  - logger.ts - This file contains log function that helps log data in the proper way
+- models - Models for the databases
+  - user.model.ts
+  - job.model.ts
+- serverless - YAML files for description Serverless resources
+  - functions - YAML files for description Lambda function with their triggers
+    - FeatureName.yml - YAML file for description Lambda functions with their triggers for one feature
+  - resources - YAML files for description resources like S3 buckets, SQS, DynamoDB tables, etc.
+    - APIGateway.yml
+    - Buckets.yml
+    - ElasticSearch.yml
+    - SQS.yml
+    - Tables.yml
+- services - Classes for working with third party libraries, APIs, services, etc.
+  - cloud-formation.service.ts
+  - email.service.ts
+  - s3.service.ts
+- env.yml - Environment variables
+- package.json
+- README.md
+- serverless.yml - Contains the main description of the service
+- webpack.config.json
+
 ## How to add evn variable
 
 Read this https://github.com/DieProduktMacher/serverless-env-generator
+
 Add kms_key.yml file with `key` field and your KMS Id to the root.
 
 ## In short:
