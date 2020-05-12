@@ -1,7 +1,7 @@
 {
-  "name": "template-sls",
+  "name": "template-aws-sls",
   "version": "1.0.0",
-  "description": "Serverless API for your application",
+  "description": "AWS + Serverless API for your application",
   "main": "index.js",
   "scripts": {
     "deploy:dev": "sls deploy --stage dev",
@@ -43,7 +43,7 @@
     "jest": "^25.5.4",
     "prettier": "^2.0.5",
     "pretty-quick": "^2.0.1",
-    "serverless": "^1.69.0",
+    "serverless": "^1.70.1",
     "serverless-dir-config-plugin": "0.1.5",
     "serverless-env-generator": "1.4.1",
     "serverless-offline": "5.12.1",
