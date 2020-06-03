@@ -42,9 +42,7 @@ jobs:
 
 workflows:
   version: 2.1
-  build_and_test:
+  lint_and_test:
     jobs:
-      - lint_and_build
-      - test:
-          requires:
-            - lint_and_build
+      - lint
+      - test
