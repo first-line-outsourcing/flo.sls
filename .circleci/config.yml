@@ -2,7 +2,6 @@ version: 2.1
 
 orbs:
   aws-cli: circleci/aws-cli@1.0.0
-  sonarcloud: socialtables/sonarcloud@1.1.1
 
 executors:
   node:
@@ -40,10 +39,6 @@ jobs:
             npm i
       - run: npm run test:ci
       - run: npm run build
-      - sonarcloud/scan-on-branch-commit:
-          github-project-slug: first-line-outsourcing/flo.sls
-          project-key: first-line-outsourcing_flo.sls
-          covered-code-language: typescript
 
 workflows:
   version: 2.1
