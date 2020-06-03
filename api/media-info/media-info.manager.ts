@@ -1,5 +1,5 @@
 import { AppError, CommonErrors } from '@helper/app-error';
-import { MediaInfoCurlService } from '@services/media-info-curl.service';
+import { MediaInfoCurlService, Track } from '@services/media-info-curl.service';
 import { MediaInfoUrl } from './media-info.inteface';
 import { MediaInfoService } from './media-info.service';
 
@@ -26,7 +26,7 @@ export class MediaInfoManager {
    * @param mediaInfoUrl - required data
    * @param mediaInfoCurlService - required services
    */
-  getMediaInfo(mediaInfoUrl: MediaInfoUrl, mediaInfoCurlService: MediaInfoCurlService) {
+  getMediaInfo(mediaInfoUrl: MediaInfoUrl, mediaInfoCurlService: MediaInfoCurlService): Promise<Track> {
     /**
      * Validate required data -> Check if url exists
      */

@@ -8,7 +8,7 @@ export class SQSService {
     this.sqs = new SQS();
   }
 
-  public deleteMessage(receiptHandle: string): Promise<any> {
+  public deleteMessage(receiptHandle: string): Promise<Record<string, unknown>> {
     const params = {
       QueueUrl: this.queueUrl,
       ReceiptHandle: receiptHandle,

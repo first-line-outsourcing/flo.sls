@@ -4,18 +4,19 @@ offline
 jspm_packages
 .idea/
 .vscode/
-.webpack
+.webpack/
 **/.webpack
 .tmp
+.scannerwork/
 
 # Serverless directories
 .serverless/
+.build/
 kms_key.yml
 .env
 **/.env
 **/api/**.js
 .nyc_output/
-.build/
 typings/
 documentation/
-coverage
+coverage/

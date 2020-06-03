@@ -1,6 +1,19 @@
-import { AxiosError } from 'axios';
+import { AxiosError, Method } from 'axios';
 
-export function log(...args) {
+export interface ShortAxiosError {
+  error: {
+    status: number;
+    statusText: string;
+  };
+  requestConfig: {
+    url?: string;
+    headers?: any;
+    method?: Method;
+    data?: any;
+  };
+}
+
+export function log(...args): undefined {
   /**
    * Don't show the logs in CI for faster testing
    * Sometimes we turn off the logs in production environment for better performance
@@ -9,11 +22,10 @@ export function log(...args) {
     return;
   }
   if (process.env.IS_OFFLINE === 'true') {
-    args.map((i) => console.dir(i));
+    args.forEach((i) => console.dir(i));
   } else {
-    console.log.apply(
-      console,
-      args.map((arg) => {
+    console.log(
+      ...args.map((arg) => {
         /**
          * Axios error has complicated structure that doesn't allow debugging it easily
          */
@@ -26,7 +38,7 @@ export function log(...args) {
   }
 }
 
-export function shortAxiosError(error: AxiosError) {
+export function shortAxiosError(error: AxiosError): ShortAxiosError {
   const { config, response } = error;
   const { url, headers, method, data } = config;
   const { status, statusText } = response!;

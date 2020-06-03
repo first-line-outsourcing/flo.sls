@@ -11,23 +11,18 @@ export interface OutputsMap {
 export class CloudFormationService {
   private cloudFormation: CloudFormation = new CloudFormation();
 
-  async getOutputs(
-    keys: string[] = [],
-    stackName = process.env.CLOUDFORMATION_STACK_NAME,
-  ): Promise<OutputsMap> {
+  async getOutputs(keys: string[] = [], stackName = process.env.CLOUDFORMATION_STACK_NAME): Promise<OutputsMap> {
     const params: DescribeStacksInput = {
       StackName: stackName,
     };
 
-    const describeStacksOutput: DescribeStacksOutput = await this.cloudFormation
-      .describeStacks(params)
-      .promise();
-    const stack = describeStacksOutput.Stacks?.find(stack => stack.StackName === stackName);
-    if (!stack) {
+    const describeStacksOutput: DescribeStacksOutput = await this.cloudFormation.describeStacks(params).promise();
+    const describeStack = describeStacksOutput.Stacks?.find((stack) => stack.StackName === stackName);
+    if (!describeStack) {
       return {};
     }
 
-    const outputs: Outputs = stack.Outputs!;
+    const outputs: Outputs = describeStack.Outputs!;
     log('Stack outputs', stackName, outputs);
     if (!outputs?.length) {
       return {};
@@ -38,7 +33,7 @@ export class CloudFormationService {
     }
     return arrayToObject(
       outputs.filter((output: Output) => keys.includes(output.OutputKey!)),
-      'OutputKey',
+      'OutputKey'
     );
   }
 
