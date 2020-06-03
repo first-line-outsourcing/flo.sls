@@ -11,7 +11,7 @@ export class MediaInfoService {
    * @param url - required data
    * @param mediaInfoCurlService - required services
    */
-  async getMediaInfo(url: string, mediaInfoCurlService: MediaInfoCurlService) {
+  async getMediaInfo(url: string, mediaInfoCurlService: MediaInfoCurlService): Promise<Track> {
     /**
      * Try to catch unexpected errors
      */
