@@ -11,9 +11,11 @@
     "lint": "eslint . --ext .ts",
     "test": "jest --watchAll --colors --coverage",
     "test:ci": "CI=true jest --ci --colors --coverage --passWithNoTests",
+    "sonar": "sonarqube-verify",
     "sqs:up": "docker-compose -f docker-compose.yml up -d sqs",
     "postgres:up": "docker-compose -f docker-compose.yml up -d postgres",
-    "dynamodb:up": "docker-compose -f docker-compose.yml up -d dynamodb"
+    "dynamodb:up": "docker-compose -f docker-compose.yml up -d dynamodb",
+    "sonarqube:up": "docker-compose -f docker-compose.yml up -d sonarqube"
   },
   "engines": {
     "node": ">=12.0.0"
@@ -58,6 +60,8 @@
     "serverless-prune-plugin": "1.4.2",
     "serverless-s3-local": "0.6.1",
     "serverless-webpack": "5.3.2",
+    "sonarqube-scanner": "^2.6.0",
+    "sonarqube-verify": "^1.0.2",
     "ts-jest": "^25.5.0",
     "ts-loader": "^7.0.2",
     "tsconfig-paths-webpack-plugin": "^3.2.0",

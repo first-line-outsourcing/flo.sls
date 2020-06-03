@@ -22,7 +22,7 @@ export function log(...args): undefined {
     return;
   }
   if (process.env.IS_OFFLINE === 'true') {
-    args.map((i) => console.dir(i));
+    args.forEach((i) => console.dir(i));
   } else {
     console.log(
       ...args.map((arg) => {
