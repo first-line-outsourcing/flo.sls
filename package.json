@@ -74,7 +74,7 @@
   "dependencies": {
     "@types/node": "^13.13.6",
     "alai": "^1.0.3",
-    "aws-sdk": "^2.674.0",
+    "aws-sdk": "^2.676.0",
     "axios": "^0.19.2",
     "dotenv": "^8.2.0",
     "dynamoose": "^2.2.0",
