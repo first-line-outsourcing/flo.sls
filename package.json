@@ -11,11 +11,22 @@
     "lint": "eslint . --ext .ts",
     "test": "jest --watchAll --colors --coverage",
     "test:ci": "CI=true jest --ci --colors --coverage --passWithNoTests",
-    "sonar": "sonarqube-verify",
     "sqs:up": "docker-compose -f docker-compose.yml up -d sqs",
-    "postgres:up": "docker-compose -f docker-compose.yml up -d postgres",
+    "sqs:down": "docker-compose -f docker-compose.yml down -d sqs",
+    "sqs:list-queues": "aws sqs list-queues --endpoint-url http://localhost:9324 --profile profile_name --region region",
+    "sqs:create-queue": "aws sqs create-queue --endpoint-url http://localhost:9324 --profile profile_name --region region --queue-name queue_name[.fifo] [--attributes FifoQueue=true,ContentBasedDeduplication=true]",
+    "sqs:receive-messages": "aws sqs receive-message --endpoint-url http://localhost:9324 --profile profile_name --region region --queue-url http://localhost:9324/queue/queue_name[.fifo] --max-number-of-messages 10 --visibility-timeout 0",
+    "sqs:delete-queue": "aws sqs delete-queue --endpoint-url http://localhost:9324 --profile profile_name --region region --queue-url http://localhost:9324/queue/queue_name[.fifo]",
+    "db:up": "docker-compose -f docker-compose.yml up -d postgres",
+    "db:down": "docker-compose -f docker-compose.yml down -d postgres",
+    "db:drop": "npx sequelize-cli db:drop",
+    "db:create": "npx sequelize-cli db:create",
+    "db:migrate": "npx sequelize-cli db:migrate",
     "dynamodb:up": "docker-compose -f docker-compose.yml up -d dynamodb",
-    "sonarqube:up": "docker-compose -f docker-compose.yml up -d sonarqube"
+    "dynamodb:down": "docker-compose -f docker-compose.yml down -d dynamodb",
+    "sonarqube:up": "docker-compose -f docker-compose.yml up -d sonarqube",
+    "sonarqube:down": "docker-compose -f docker-compose.yml down -d sonarqube",
+    "sonarqube-verify": "sonarqube-verify"
   },
   "engines": {
     "node": ">=12.0.0"

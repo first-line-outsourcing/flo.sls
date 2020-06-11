@@ -5,12 +5,26 @@
 - **deploy:dev**: deploy to the AWS dev environment
 - **deploy:prod**: deploy to the AWS prod environment
 - **deploy:local**: start local development environment
+- **build**: build the application with webpack but without deploy,
 - **lint**: start tslint for project files
 - **test**: start unit tests
 - **test:ci**: start test in CI environment
 - **sqs:up**: start Docker SQS container for local development
-- **postgres:up**: start Docker Postgres container for local development
+- **sqs:down**: stop Docker SQS container for local development
+- **sqs:list-queues**: list local queues
+- **sqs:create-queue**: create local queue (remove square brackets for FIFO queue)
+- **sqs:receive-messages**: receive messages from local queue (remove square brackets for FIFO queue)
+- **sqs:delete-queue**: delete local queue (remove square brackets for FIFO queue)
+- **db:up**: start Docker Postgres container for local development
+- **db:down**: stop Docker Postgres container for local development
+- **db:drop**: drop Postgres database
+- **db:create**: create Postgres database
+- **db:migrate**: migrate Postgres database
 - **dynamodb:up**: start Docker DynamoDB container for local development
+- **dynamodb:down**: stop Docker DynamoDB container for local development
+- **sonarqube:up**: start Docker SonarQube container for local static code analysis
+- **sonarqube:down**: stop Docker SonarQube container for local static code analysis
+- **sonarqube-verify**: start static code analysis
 
 ## Project information
 
@@ -70,6 +84,16 @@ plugin for encrypted environment variables.
 - README.md
 - serverless.yml - Contains the main description of the service
 - webpack.config.json
+- sonar-project.properties - Contains the configuration for static code analysis
+
+## Static code analysis
+
+- Start SonarQube docker container with command `npm run sonarqube:up`
+- Start tests with command `npm run test`
+- Start analysis with command `npm run sonarqube-verify`
+- Go to http://localhost:9000
+- Log in with _admin/admin_ credentials
+- Now you can see the project's report
 
 ## How to add evn variable
 
@@ -77,20 +101,20 @@ Read this https://github.com/DieProduktMacher/serverless-env-generator
 
 Add kms_key.yml file with `key` field and your KMS Id to the root.
 
-## In short:
+### In short:
 
-### Viewing environment variables
+#### Viewing environment variables
 
 Use the following commands to read and decrypt variables from your YAML environment files:
 
-### List variables
+#### List variables
 
 ```sh
 serverless env
 serverless env --stage $STAGE
 ```
 
-### View one variable
+#### View one variable
 
 ```sh
 serverless env --attribute $NAME
@@ -101,7 +125,7 @@ sls env -a $NAME
 sls env -a $NAME -s $STAGE
 ```
 
-### Decrypt variables
+#### Decrypt variables
 
 ```sh
 serverless env --decrypt
@@ -113,13 +137,13 @@ sls env -a $NAME --decrypt
 sls env -a $NAME -s $STAGE -d
 ```
 
-### Setting environment variables
+#### Setting environment variables
 
 Use the following commands to store and encrypt variables in your YAML environment files:
 
 Note that variables are stored to the first file listed in _envFiles_.
 
-### Set a variable
+#### Set a variable
 
 ```sh
 serverless env --attribute $NAME --value $PLAINTEXT
@@ -130,7 +154,7 @@ sls env -a $NAME -v $PLAINTEXT
 sls env --a $NAME -v $PLAINTEXT --s $STAGE
 ```
 
-### Set and encrypt a variable
+#### Set and encrypt a variable
 
 ```sh
 serverless env --attribute $NAME --value $PLAINTEXT --encrypt
