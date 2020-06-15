@@ -4,7 +4,7 @@ import * as models from '../models/PostgreSQL';
 const connection: { isConnected?: boolean } = {};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export const connect = async context => {
+export const connect = async (context) => {
   context.callbackWaitsForEmptyEventLoop = false;
   if (connection.isConnected) {
     return models;

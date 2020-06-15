@@ -8,12 +8,7 @@ export class SESService {
     this.ses = new SES();
   }
 
-  public sendEmail(
-    emails: string[],
-    body: string,
-    subject: string,
-    source: string,
-  ): Promise<SendEmailResponse> {
+  public sendEmail(emails: string[], body: string, subject: string, source: string): Promise<SendEmailResponse> {
     const params = {
       Destination: {
         ToAddresses: [...emails],
