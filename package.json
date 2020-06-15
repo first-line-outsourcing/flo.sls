@@ -84,6 +84,7 @@
   },
   "dependencies": {
     "@types/node": "^13.13.9",
+    "@workflowwin/iconik-api": "^2.0.54",
     "alai": "^1.0.3",
     "aws-sdk": "^2.682.0",
     "axios": "^0.19.2",
