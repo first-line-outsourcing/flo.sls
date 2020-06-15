@@ -44,5 +44,7 @@ workflows:
   version: 2.1
   lint_and_test:
     jobs:
-      - lint
-      - test
+      - lint:
+          context: NPM_TOKEN
+      - test:
+          context: NPM_TOKEN
