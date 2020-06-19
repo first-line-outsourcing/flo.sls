@@ -21,7 +21,7 @@ export function errorHandler(caughtError: Error | AppError | AxiosError): undefi
         name: '',
       };
     } else {
-      error = { statusCode: 500, ...error };
+      error = { statusCode: 500, message: error.message, name: error.name };
     }
   }
 
