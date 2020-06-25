@@ -35,12 +35,7 @@ export class S3Service {
     return this.s3.deleteObject(params).promise();
   }
 
-  public put(
-    key: string,
-    body: string,
-    bucket: string,
-    acl = 'public-read',
-  ): Promise<PutObjectOutput> {
+  public put(key: string, body: string, bucket: string, acl = 'public-read'): Promise<PutObjectOutput> {
     const params: PutObjectRequest = {
       ACL: acl,
       Bucket: bucket,
