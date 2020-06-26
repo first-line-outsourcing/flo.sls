@@ -81,7 +81,7 @@
     "webpack-shell-plugin-next": "^1.1.9"
   },
   "dependencies": {
-    "@types/node": "^13.13.9",
+    "@types/node": "^13.13.10",
     "alai": "^1.0.3",
     "aws-sdk": "^2.682.0",
     "axios": "^0.19.2",
