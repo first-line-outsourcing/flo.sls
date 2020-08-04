@@ -1,5 +1,5 @@
 import { messages } from '@helper/helper';
-import * as dynamoose from 'dynamoose';
+import { dynamoose } from '@services/dynamoose';
 
 export interface UserSchema {
   id?: string;

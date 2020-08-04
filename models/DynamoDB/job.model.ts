@@ -1,5 +1,5 @@
 import { User } from '@models/DynamoDB/user.model';
-import * as dynamoose from 'dynamoose';
+import { dynamoose } from '@services/dynamoose';
 import * as uuid from 'node-uuid';
 
 export type JobStatus =
