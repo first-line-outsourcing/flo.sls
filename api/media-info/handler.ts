@@ -3,15 +3,14 @@ import { Handler } from 'aws-lambda';
 import { errorHandler } from '@helper/error-handler';
 import { log } from '@helper/logger';
 import { MediaInfoCurlService, Track } from '@services/media-info-curl.service';
+import { APIGatewayLambdaEvent } from '@interfaces/api-gateway-lambda.interface';
 import { MediaInfoUrl } from './media-info.inteface';
 import { MediaInfoManager } from './media-info.manager';
 
 /**
  * aws-lambda doesn't have interfaces and types for API-Gateway LAMBDA integration
  */
-interface MediaInfoEvent {
-  body: MediaInfoUrl;
-}
+type MediaInfoEvent = APIGatewayLambdaEvent<MediaInfoUrl>;
 
 type MediaInfoResult = Track | undefined;
 
