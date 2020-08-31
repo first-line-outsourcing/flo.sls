@@ -1,8 +1,20 @@
+import { Handler } from 'aws-lambda';
+
 import { errorHandler } from '@helper/error-handler';
 import { log } from '@helper/logger';
-import { MediaInfoCurlService } from '@services/media-info-curl.service';
+import { MediaInfoCurlService, Track } from '@services/media-info-curl.service';
+import { APIGatewayLambdaEvent } from '@interfaces/api-gateway-lambda.interface';
 import { MediaInfoUrl } from './media-info.inteface';
 import { MediaInfoManager } from './media-info.manager';
+
+/**
+ * aws-lambda doesn't have interfaces and types for API-Gateway LAMBDA integration
+ */
+type MediaInfoEvent = APIGatewayLambdaEvent<MediaInfoUrl>;
+
+type MediaInfoResult = Track | undefined;
+
+type MediaInfoHandler = Handler<MediaInfoEvent, MediaInfoResult>;
 
 /**
  * This is a handler file
@@ -25,7 +37,7 @@ import { MediaInfoManager } from './media-info.manager';
  * @param event - APIGateway, SQS Trigger, SNS Trigger, etc. event object
  * @param context
  */
-export async function getMediaInfo(event, context) {
+export const getMediaInfo: MediaInfoHandler = async (event, context) => {
   log(event);
 
   try {
@@ -54,4 +66,4 @@ export async function getMediaInfo(event, context) {
      */
     errorHandler(e);
   }
-}
+};
