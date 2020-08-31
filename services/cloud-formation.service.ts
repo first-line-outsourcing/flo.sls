@@ -37,7 +37,7 @@ export class CloudFormationService {
     );
   }
 
-  async getServiceEndpoint() {
+  async getServiceEndpoint(): Promise<string | undefined> {
     const outputs = await this.getOutputs(['ServiceEndpoint']);
     return outputs.ServiceEndpoint.OutputValue;
   }
