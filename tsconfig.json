@@ -9,15 +9,29 @@
     "target": "es2017",
     "outDir": ".build",
     "moduleResolution": "node",
-    "lib": ["es2017", "esnext.asynciterable"],
+    "lib": [
+      "es2017",
+      "esnext.asynciterable"
+    ],
     "rootDir": "./",
     "baseUrl": ".",
     "paths": {
-      "@models/*": ["./models/*"],
-      "@services/*": ["./services/*"],
-      "@helper/*": ["./helper/*"],
-      "@interfaces/*": ["./interfaces/*"]
+      "@models/*": [
+        "./models/*"
+      ],
+      "@services/*": [
+        "./services/*"
+      ],
+      "@helper/*": [
+        "./helper/*"
+      ]
     }
   },
-  "exclude": ["node_modules", "coverage", "build", ".git", "typings"]
+  "exclude": [
+    "node_modules",
+    "coverage",
+    "build",
+    ".git",
+    "typings"
+  ]
 }
