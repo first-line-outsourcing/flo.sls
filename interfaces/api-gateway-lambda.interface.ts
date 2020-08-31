@@ -2,19 +2,25 @@ import { APIGatewayEventIdentity } from 'aws-lambda';
 
 export type ObjectType = { [name: string]: string };
 
-export interface APIGatewayLambdaEvent<BodyType, PathType = ObjectType, QueryType = ObjectType> {
+export interface APIGatewayLambdaEvent<
+  BodyType,
+  PathType = ObjectType,
+  QueryType = ObjectType,
+  HeadersType = ObjectType,
+  AuthContextType = ObjectType
+> {
   body: BodyType;
   method: string;
   principalId: string;
   enhancedAuthContext: {
     principalId: string;
     integrationLatency: string;
-  };
+  } & AuthContextType;
   stage: string;
   cognitoPoolClaims: {
     sub: string;
   };
-  headers: APIGatewayLambdaEventHeaders & ObjectType;
+  headers: APIGatewayLambdaEventHeaders & HeadersType;
   path: PathType;
   query: QueryType;
   identity: APIGatewayEventIdentity;
