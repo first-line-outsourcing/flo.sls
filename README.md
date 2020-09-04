@@ -16,15 +16,13 @@
 - **sqs:receive-messages**: receive messages from local queue (remove square brackets for FIFO queue)
 - **sqs:delete-queue**: delete local queue (remove square brackets for FIFO queue)
 - **db:up**: start Docker Postgres container for local development
-- **db:down**: stop Docker Postgres container for local development
 - **db:drop**: drop Postgres database
 - **db:create**: create Postgres database
 - **db:migrate**: migrate Postgres database
 - **dynamodb:up**: start Docker DynamoDB container for local development
-- **dynamodb:down**: stop Docker DynamoDB container for local development
 - **sonarqube:up**: start Docker SonarQube container for local static code analysis
-- **sonarqube:down**: stop Docker SonarQube container for local static code analysis
 - **sonarqube-verify**: start static code analysis
+- **containers:down**: stop all containers
 
 ## Project information
 
