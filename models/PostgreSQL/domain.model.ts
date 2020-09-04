@@ -1,13 +1,11 @@
 import { Account } from '@models/PostgreSQL/account.model';
 import { Column, HasMany, Model, PrimaryKey, Table, Unique } from 'sequelize-typescript';
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-interface DomainSchema {
+export interface DomainSchema {
   id: string;
   accounts: Account[];
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
 @Table({ timestamps: true, modelName: 'Domain' })
 export class Domain extends Model<DomainSchema> {
   @Unique

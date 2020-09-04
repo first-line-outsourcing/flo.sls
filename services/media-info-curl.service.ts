@@ -25,7 +25,7 @@ export interface Track {
  * This services works with some third party library, API, etc.
  */
 export class MediaInfoCurlService {
-  private readonly mediaInfoCurl = './mediainfo-curl';
+  private readonly mediaInfoCurl = 'mediainfo-curl';
 
   async getMediaInfo(url: string): Promise<Track | undefined> {
     /**

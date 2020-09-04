@@ -1,5 +1,6 @@
 import { User } from '@models/DynamoDB/user.model';
-import * as dynamoose from 'dynamoose';
+import { dynamoose } from '@services/dynamoose';
+import { Document } from 'dynamoose/dist/Document';
 import * as uuid from 'node-uuid';
 
 export type JobStatus =
@@ -33,7 +34,7 @@ export interface JobSchema {
   lon: number;
 }
 
-export class Job implements JobSchema {
+export class Job extends Document implements JobSchema {
   public id?: string;
   public producerId: string;
   public crewId: string;
@@ -53,6 +54,8 @@ export class Job implements JobSchema {
   public lon: number;
 
   constructor(job: JobSchema) {
+    super(JobModel);
+
     this.id = job.id;
     this.producerId = job.producerId;
     this.crewId = job.crewId;
@@ -183,7 +186,7 @@ export const jobSchema = new dynamoose.Schema(
   }
 );
 
-export const JobModel = dynamoose.model(process.env.JOBS_TABLE as string, jobSchema, {
+export const JobModel = dynamoose.model<Job>(process.env.JOBS_TABLE as string, jobSchema, {
   create: true,
   update: false,
 });

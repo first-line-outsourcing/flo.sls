@@ -110,6 +110,9 @@ provider:
 #      Export:
 #        Name: ${opt:stage, self:provider.stage}UserPoolClient::Id
 
+package:
+  include:
+    - bin/*
 custom:
   dirconfig:
     quiet: true
@@ -123,13 +126,6 @@ custom:
   #  serverless-offline-sns:
   #    port: 4002 # a free port for the sns server to run on
   #    debug: false
-  #  dynamodb:
-  #    start:
-  #      port: 8000
-  #      inMemory: true
-  #      migrate: true
-  #      seed: true
-  #      convertEmptyValues: true
   #  s3:
   #    host: 0.0.0.0
   #    port: 8001
@@ -181,6 +177,5 @@ plugins: # order matters!
   #  - serverless-offline-sqs
   - serverless-offline
   #  - serverless-offline-sns
-  #  - serverless-dynamodb-local
   #  - serverless-s3-local
   - serverless-prune-plugin

@@ -1,5 +1,6 @@
 import { messages } from '@helper/helper';
-import * as dynamoose from 'dynamoose';
+import { dynamoose } from '@services/dynamoose';
+import { Document } from 'dynamoose/dist/Document';
 
 export interface UserSchema {
   id?: string;
@@ -22,7 +23,7 @@ export interface UserSchema {
   termsOfServiceAccepted: boolean;
 }
 
-export class User implements UserSchema {
+export class User extends Document implements UserSchema {
   public id?: string;
   public password?: string;
   public confirmPassword?: string;
@@ -43,6 +44,8 @@ export class User implements UserSchema {
   public termsOfServiceAccepted: boolean;
 
   constructor(user: UserSchema) {
+    super(UserModel);
+
     if (user.password && user.confirmPassword && user.password !== user.confirmPassword) {
       throw {
         message: messages.error.forbiddenPasswords,
@@ -175,7 +178,7 @@ export const userSchema = new dynamoose.Schema(
   }
 );
 
-export const UserModel = dynamoose.model(process.env.USERS_TABLE as string, userSchema, {
+export const UserModel = dynamoose.model<User>(process.env.USERS_TABLE as string, userSchema, {
   create: true,
   update: false,
 });
