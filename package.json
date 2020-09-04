@@ -83,7 +83,7 @@
     "webpack-shell-plugin-next": "^1.1.9"
   },
   "dependencies": {
-    "@workflowwin/iconik-api": "^2.0.54",
+    "@workflowwin/iconik-api": "^2.1.2",
     "alai": "^1.0.3",
     "aws-sdk": "^2.732.0",
     "axios": "^0.19.2",
