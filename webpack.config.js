@@ -1,7 +1,6 @@
 const path = require('path');
 const slsw = require('serverless-webpack');
-const WebpackShellPlugin = require('webpack-shell-plugin-next');
-const WebpackBinPermission = require('./webpack-bin-permissions');
+const WebpackPermission = require('./webpack-permissions');
 const nodeExternals = require('webpack-node-externals');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -52,6 +51,6 @@ module.exports = {
         to: 'bin/',
       },
     ]),
-    new WebpackBinPermission(),
+    new WebpackPermission(),
   ],
 };
