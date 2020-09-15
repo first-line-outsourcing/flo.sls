@@ -2,6 +2,10 @@ import { APIGatewayEventIdentity } from 'aws-lambda';
 
 export type ObjectType = { [name: string]: string };
 
+/**
+ * aws-lambda doesn't have interfaces and types for API-Gateway LAMBDA integration
+ */
+
 export interface APIGatewayLambdaEvent<
   BodyType,
   PathType = ObjectType,

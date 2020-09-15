@@ -15,15 +15,6 @@ if (process.env.LAMBDA_TASK_ROOT) {
 }
 
 /**
- * aws-lambda doesn't have interfaces and types for API-Gateway LAMBDA integration
- */
-type MediaInfoEvent = APIGatewayLambdaEvent<MediaInfoUrl>;
-
-type MediaInfoResult = Track | undefined;
-
-type MediaInfoHandler = Handler<MediaInfoEvent, MediaInfoResult>;
-
-/**
  * This is a handler file
  * It should contain Lambda functions for one feature
  * For example, Media Info feature
@@ -44,6 +35,12 @@ type MediaInfoHandler = Handler<MediaInfoEvent, MediaInfoResult>;
  * @param event - APIGateway, SQS Trigger, SNS Trigger, etc. event object
  * @param context
  */
+type MediaInfoEvent = APIGatewayLambdaEvent<MediaInfoUrl>;
+
+type MediaInfoResult = Track | undefined;
+
+type MediaInfoHandler = Handler<MediaInfoEvent, MediaInfoResult>;
+
 export const getMediaInfo: MediaInfoHandler = async (event, context) => {
   log(event);
 
