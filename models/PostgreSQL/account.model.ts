@@ -11,7 +11,6 @@ import {
   Unique,
 } from 'sequelize-typescript';
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
 export interface AccountSchema {
   id: number;
   domainId?: string;
@@ -24,7 +23,6 @@ export interface AccountSchema {
   picture?: string;
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
 @Table({ timestamps: true, modelName: 'Account' })
 export class Account extends Model<AccountSchema> {
   @PrimaryKey

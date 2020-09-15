@@ -110,6 +110,9 @@ provider:
 #      Export:
 #        Name: ${opt:stage, self:provider.stage}UserPoolClient::Id
 
+package:
+  include:
+    - bin/*
 custom:
   dirconfig:
     quiet: true

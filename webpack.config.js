@@ -1,6 +1,6 @@
 const path = require('path');
 const slsw = require('serverless-webpack');
-const WebpackShellPlugin = require('webpack-shell-plugin-next');
+const WebpackPermission = require('./webpack-permissions');
 const nodeExternals = require('webpack-node-externals');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -39,17 +39,18 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js'],
     plugins: [new TsconfigPathsPlugin.TsconfigPathsPlugin({ configFile: path.resolve(__dirname, './tsconfig.json') })],
   },
+  optimization: {
+    minimize: false,
+  },
   plugins: [
     new Dotenv(),
     new CopyWebpackPlugin([
       {
-        from: path.join(__dirname, 'bin', 'mediainfo-curl'),
+        copyPermission: true,
+        from: 'bin/',
+        to: 'bin/',
       },
     ]),
-    new WebpackShellPlugin({
-      onBuildEnd: [`chmod +x ${destPath}/mediainfo-curl`],
-      blocking: false,
-      parallel: true,
-    }),
+    new WebpackPermission(),
   ],
 };
