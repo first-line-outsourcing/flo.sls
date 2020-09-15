@@ -11,7 +11,7 @@ import { MediaInfoManager } from './media-info.manager';
  * It's required if you use any external executable files like mediainfo-curl
  */
 if (process.env.LAMBDA_TASK_ROOT) {
-  process.env.PATH = `${process.env.PATH};${process.env.LAMBDA_TASK_ROOT}/bin`;
+  process.env.PATH = `${process.env.PATH}:${process.env.LAMBDA_TASK_ROOT}/bin`;
 }
 
 /**
