@@ -17,7 +17,6 @@ WebpackPermission.prototype.apply = function (compiler) {
     const directoryPath = this.options.directoryPath || 'bin';
     const permissionPath = path.join(compiler.outputPath, directoryPath);
     fs.readdirSync(permissionPath).map((item) => {
-      console.log(item);
       fs.chmodSync(path.join(permissionPath, item), permissions);
     });
   });
