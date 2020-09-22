@@ -1,5 +1,11 @@
 # AWS + Serverless API for your application
 
+## Project information
+
+It is a skeleton for your AWS + Serverless applications. It uses typescript,
+webpack, dir-config plugin for Serverless function and resources and env
+plugin for encrypted environment variables.
+
 ## NPM commands
 
 - **deploy:dev**: deploy to the AWS dev environment
@@ -21,16 +27,59 @@
 - **db:migrate**: migrate Postgres database
 - **dynamodb:up**: start Docker DynamoDB container for local development
 - **sonarqube:up**: start Docker SonarQube container for local static code analysis
-- **sonarqube-verify**: start static code analysis
+- **sonarqube-verify**: start Static Code Analysis
 - **containers:down**: stop all containers
 
-## Project information
+## Deployment information
 
-It is a skeleton for your AWS + Serverless applications. It uses typescript,
-webpack, dir-config plugin for Serverless function and resources and env
-plugin for encrypted environment variables.
+1. Preparation
+   - Install `nvm` Lunix, OSX: https://github.com/nvm-sh/nvm
+     Windows: https://github.com/coreybutler/nvm-windows
+   - Install `Node.js` _Recommended For Most Users_ version (12.18.4 for now) using nvm (see nvm documentation)
+   - Install `aws-cli` version 2
+     https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
+   - Install `Serverless framework` globally via npm
+     https://serverless.com/framework/docs/getting-started/
+   - Set up `AWS credentials` according to `Serverless framework` documentation.
+     Name the profile as it named in the `env.yml -> PROFILE` field.
+     https://serverless.com/framework/docs/providers/aws/cli-reference/config-credentials/
+     Will be better to use a user with the Admin access.
+   - Install `git` https://git-scm.com/downloads
+   - Clone repository
+   - Install node_modules running the command in the root of the project `npm i`
+2. Set up environment variables
+   - Open env.yml file, you can see stage sections here. For example, `local`, `dev`, and `prod`.
+     If you deploy on production use `prod` section and do not touch other sections.
+   - Input your AWS region, for example, `us-east-1`
+   - Go to AWS Console `Key Management Service` and create Symmetric key in your region
+   - In the root folder of the project create kms_key.yml file and copy your key here like
+     ```yaml
+     key: your_key_here (Key ID)
+     ```
+   - You can add any environment variables. If you need to secure them, encrypt them.
+   - Copy the value of variable and run the command in the root of the project
+     `sls env --attribute VARIABLE_NAME --value variable_value --stage your_stage --encrypt`
+   - If you use some common variables, like
 
-### It contains:
+     ```yaml
+     common: &common
+       REGION: us-east-1
+       PROFILE: default
+       CLIENT: FLO
+
+     local:
+       <<: *common
+     ```
+
+     The plugin will add this variables to all stages, but we don't want it.
+     So after encrypting, copy encrypted value of the new variable,
+     revert changes and paste it to the right place.
+
+   - You are ready for deploying
+3. Deploy
+   - Run the command in the root of the project `npm run deploy:your_stage`
+
+### The project contains:
 
 - The Media Info feature that uses mediainfo binary file and returns media info by url
 - Examples of offline plugins and docker-compose file for working
