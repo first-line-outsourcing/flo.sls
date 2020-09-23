@@ -39,6 +39,11 @@
       "name": "Andrey Zaikin",
       "email": "azaikin@flo.team",
       "url": "https://github.com/zaikin-andrew"
+    },
+    {
+      "name": "Anastasia Zhivaeva",
+      "email": "azhivaeva@flo.team",
+      "url": "https://github.com/azhivaeva-flo"
     }
   ],
   "license": "ISC",
@@ -86,7 +91,7 @@
   "dependencies": {
     "@workflowwin/iconik-api": "^2.1.4",
     "alai": "^1.0.3",
-    "aws-sdk": "^2.736.0",
+    "aws-sdk": "^2.739.0",
     "axios": "^0.20.0",
     "dotenv": "^8.2.0",
     "dynamoose": "^2.3.0",
