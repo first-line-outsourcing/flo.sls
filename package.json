@@ -31,9 +31,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/first-line-outsourcing/flo.sls"
+    "url": "https://github.com/workflow-intelligence-nexus/win.sls"
   },
-  "author": "First Line Outsourcing",
+  "author": "Workflow Intelligence Nexus",
   "contributors": [
     {
       "name": "Andrey Zaikin",
@@ -48,9 +48,9 @@
   ],
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/first-line-outsourcing/flo.sls/issues"
+    "url": "https://github.com/workflow-intelligence-nexus/win.sls/issues"
   },
-  "homepage": "https://github.com/first-line-outsourcing/flo.sls#readme",
+  "homepage": "https://github.com/workflow-intelligence-nexus/win.sls#readme",
   "devDependencies": {
     "@types/aws-lambda": "^8.10.61",
     "@types/bluebird": "^3.5.32",
