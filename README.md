@@ -33,33 +33,55 @@ plugin for encrypted environment variables.
 ## Deployment information
 
 1. Preparation
-   - Install `nvm` Lunix, OSX: https://github.com/nvm-sh/nvm
+   - Install `nvm`\
+     Linux, OSX: https://github.com/nvm-sh/nvm \
      Windows: https://github.com/coreybutler/nvm-windows
-   - Install `Node.js` _Recommended For Most Users_ version (12.18.4 for now) using nvm (see nvm documentation)
-   - Install `aws-cli` version 2
-     https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-   - Install `Serverless framework` globally via npm
+   - Install `Node.js` _Recommended For Most Users_ version (12.18.4 for now) using nvm \
+     Linux, OSX: https://github.com/nvm-sh/nvm#usage \
+     Windows: https://github.com/coreybutler/nvm-windows#usage
+     ```
+     nvm install 12.18.4
+     nvm use 12.18.4
+     ```
+   - Install `aws-cli` version 2 \
+     Linux: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html \
+     Windows: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-windows.html \
+     OSX: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-mac.html
+   - Install `Serverless framework` globally via npm \
      https://serverless.com/framework/docs/getting-started/
-   - Set up `AWS credentials` according to `Serverless framework` documentation.
-     Name the profile as it named in the `env.yml -> PROFILE` field.
+     ```
+     npm install -g serverless
+     ```
+   - Create AWS user with at least programmatic access. It will be better to use a user with the Admin access.
+     Download user's credentials.\
+     Set up `AWS credentials` according to `Serverless framework` documentation. \
+     Name the profile as it named in the `env.yml -> PROFILE` field. \
      https://serverless.com/framework/docs/providers/aws/cli-reference/config-credentials/
-     Will be better to use a user with the Admin access.
+     ```
+     serverless config credentials --provider aws --key ACCESS_KEY_ID --secret SECRET_ACCESS_KEY --profile PROFILE
+     ```
    - Install `git` https://git-scm.com/downloads
-   - Clone repository
-   - Install node_modules running the command in the root of the project `npm i`
+   - If the repository is private you should set up SSH key or use HTTPS for cloning it
+   - Clone the repository
+   - Install node_modules running the command in the root of the project
+     ```
+     npm i
+     ```
 2. Set up environment variables
 
    - Open env.yml file, you can see stage sections here. For example, `local`, `dev`, and `prod`.
      If you deploy on production use `prod` section and do not touch other sections.
    - Input your AWS region, for example, `us-east-1`
    - Go to AWS Console `Key Management Service` and create Symmetric key in your region
-   - In the root folder of the project create kms_key.yml file and copy your key here like
-     ```yaml
-     key: your_key_here (Key ID)
+   - In the root folder of the project create kms_key.yml file and copy your key (Key ID) here like
+     ```
+     key: your_key_here
      ```
    - You can add any environment variables. If you need to secure them, encrypt them.
    - Copy the value of variable and run the command in the root of the project
-     `sls env --attribute VARIABLE_NAME --value variable_value --stage your_stage --encrypt`
+     ```
+     sls env --attribute VARIABLE_NAME --value variable_value --stage your_stage --encrypt
+     ```
    - If you use some common variables, like
 
      ```yaml
@@ -79,7 +101,10 @@ plugin for encrypted environment variables.
    - You are ready for deploying
 
 3. Deploy
-   - Run the command in the root of the project `npm run deploy:your_stage`
+   - Run the command in the root of the project
+     ```
+     npm run deploy:your_stage
+     ```
 
 ### The project contains:
 
