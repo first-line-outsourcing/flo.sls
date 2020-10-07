@@ -56,6 +56,7 @@ plugin for encrypted environment variables.
      Download user's credentials.\
      Set up `AWS credentials` according to `Serverless framework` documentation. \
      Name the profile as it named in the `env.yml -> PROFILE` field. \
+     (For `local` and `dev` stages it should be `win`, for `prod` stage - name of the client) \
      https://serverless.com/framework/docs/providers/aws/cli-reference/config-credentials/
      ```
      serverless config credentials --provider aws --key ACCESS_KEY_ID --secret SECRET_ACCESS_KEY --profile PROFILE
@@ -63,6 +64,7 @@ plugin for encrypted environment variables.
    - Install `git` https://git-scm.com/downloads
    - If the repository is private you should set up SSH key or use HTTPS for cloning it
    - Clone the repository
+   - Login to WIN's private npm account `npm login` with account from Notion `Accounts` page or https://damiam.atlassian.net/wiki/spaces/ICS/pages/723255313/Working+with+private+NPM+for+iconik-api
    - Install node_modules running the command in the root of the project
      ```
      npm i
