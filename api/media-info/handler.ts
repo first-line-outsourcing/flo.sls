@@ -35,13 +35,8 @@ if (process.env.LAMBDA_TASK_ROOT) {
  * @param event - APIGateway, SQS Trigger, SNS Trigger, etc. event object
  * @param context
  */
-type MediaInfoEvent = APIGatewayLambdaEvent<MediaInfoUrl>;
 
-type MediaInfoResult = Track | undefined;
-
-type MediaInfoHandler = Handler<MediaInfoEvent, MediaInfoResult>;
-
-export const getMediaInfo: MediaInfoHandler = async (event, context) => {
+export const getMediaInfo: Handler<APIGatewayLambdaEvent<MediaInfoUrl>, Track | undefined> = async (event, context) => {
   log(event);
 
   try {
