@@ -65,6 +65,10 @@ plugin for encrypted environment variables.
    - If the repository is private you should set up SSH key or use HTTPS for cloning it
    - Clone the repository
    - Login to WIN's private npm account `npm login` with account from Notion `Accounts` page or https://damiam.atlassian.net/wiki/spaces/ICS/pages/723255313/Working+with+private+NPM+for+iconik-api
+   - FOR CLIENTS PERFORMING INSTALL - They can add `.npmrc` file with following info:
+     ```
+     //registry.npmjs.org/:_authToken=5c2a9f90-081e-459e-9400-46b5228dfe56
+     ```
    - Install node_modules running the command in the root of the project
      ```
      npm i
