@@ -13,7 +13,7 @@ class WebpackPermissionsPlugin {
   }
 
   apply(compiler) {
-    compiler.hooks.done.tap('Webpack Permissions Plugin', (stats) => {
+    compiler.hooks.afterEmit.tap('Webpack Permissions Plugin', (stats) => {
       const permissions = this.options.permissions || '755';
       const directoryPath = this.options.directoryPath || 'bin';
       const permissionPath = path.join(compiler.outputPath, directoryPath);
