@@ -2,9 +2,8 @@
 
 ## Project information
 
-It is a skeleton for your AWS + Serverless applications. It uses typescript,
-webpack, dir-config plugin for Serverless function and resources and env
-plugin for encrypted environment variables.
+It is a skeleton for your AWS + Serverless applications. It uses typescript, webpack, dir-config plugin for Serverless
+function and resources and env plugin for encrypted environment variables.
 
 ## NPM commands
 
@@ -52,8 +51,8 @@ plugin for encrypted environment variables.
      ```
      npm install -g serverless
      ```
-   - Create AWS user with at least programmatic access. It will be better to use a user with the Admin access.
-     Download user's credentials.\
+   - Create AWS user with at least programmatic access. It will be better to use a user with the Admin access. Download
+     user's credentials.\
      Set up `AWS credentials` according to `Serverless framework` documentation. \
      Name the profile as it named in the `env.yml -> PROFILE` field. \
      https://serverless.com/framework/docs/providers/aws/cli-reference/config-credentials/
@@ -69,8 +68,8 @@ plugin for encrypted environment variables.
      ```
 2. Set up environment variables
 
-   - Open env.yml file, you can see stage sections here. For example, `local`, `dev`, and `prod`.
-     If you deploy on production use `prod` section and do not touch other sections.
+   - Open env.yml file, you can see stage sections here. For example, `local`, `dev`, and `prod`. If you deploy on
+     production use `prod` section and do not touch other sections.
    - Input your AWS region, for example, `us-east-1`
    - Go to AWS Console `Key Management Service` and create Symmetric key in your region
    - In the root folder of the project create kms_key.yml file and copy your key (Key ID) here like
@@ -94,9 +93,8 @@ plugin for encrypted environment variables.
        <<: *common
      ```
 
-     The plugin will add this variables to all stages, but we don't want it.
-     So after encrypting, copy encrypted value of the new variable,
-     revert changes and paste it to the right place.
+     The plugin will add this variables to all stages, but we don't want it. So after encrypting, copy encrypted value
+     of the new variable, revert changes and paste it to the right place.
 
    - You are ready for deploying
 
@@ -109,8 +107,7 @@ plugin for encrypted environment variables.
 ### The project contains:
 
 - The Media Info feature that uses mediainfo binary file and returns media info by url
-- Examples of offline plugins and docker-compose file for working
-  with AWS resources offline
+- Examples of offline plugins and docker-compose file for working with AWS resources offline
 - Examples of IAM Role Statements
 - Example of different AWS resources
 - Examples of models for dynamoose library
@@ -122,18 +119,18 @@ plugin for encrypted environment variables.
 
 - .circleci - Configuration for CI/CD
 - api - Code of the features or CRUD operations of entities
-  - feature_name - Code of one feature or CRUD operations of one entity.
-    It should cover the area of one responsibility. For example, Media Info feature,
-    CRUD operations (create, remove, update, delete) for user entity
-    - handler.ts - This is a handler file. It should contain Lambda functions for one feature.
-      For example, Media Info feature or CRUD operations for the user entity.
+  - feature_name - Code of one feature or CRUD operations of one entity. It should cover the area of one
+    responsibility. For example, Media Info feature, CRUD operations (create, remove, update, delete) for user entity
+    - handler.ts - This is a handler file. It should contain Lambda functions for one feature. For example, Media
+      Info feature or CRUD operations for the user entity.
     - feature_name.manager.ts - It's the feature manager. Its methods should implement some feature's functionality
-    - feature_name.service.ts - It's the feature service. Its methods should implement one of the main steps of some feature's functionality
+    - feature_name.service.ts - It's the feature service. Its methods should implement one of the main steps of some
+      feature's functionality
     - feature_name.interface.ts - This file should contain all required interfaces for the feature
 - bin - Executable files (third party libraries that can be used inside a Lambda function)
 - helper - All auxiliary code
-  - app-errors.ts - This file contains the class that derives from Node.js Error class.
-    It should be used for providing custom errors with the proper structure
+  - app-errors.ts - This file contains the class that derives from Node.js Error class. It should be used for
+    providing custom errors with the proper structure
   - error-handler.ts - This file contains the class that helps handle errors
   - helper.ts - This file contains auxiliary functions
   - logger.ts - This file contains log function that helps log data in the proper way

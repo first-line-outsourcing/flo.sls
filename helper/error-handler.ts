@@ -37,14 +37,14 @@ export function errorHandler(caughtError: Error | AppError | AxiosError): undefi
 
   /**
    * Serverless supports following status codes:
-   * 400	Bad Request
-   * 401	Unauthorized
-   * 403	Forbidden
-   * 404	Not Found
-   * 422	Unprocessable Entity
-   * 500	Internal Server Error
-   * 502	Bad Gateway
-   * 504	Gateway Timeout
+   * 400  Bad Request
+   * 401  Unauthorized
+   * 403  Forbidden
+   * 404  Not Found
+   * 422  Unprocessable Entity
+   * 500  Internal Server Error
+   * 502  Bad Gateway
+   * 504  Gateway Timeout
    */
 
   /**

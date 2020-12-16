@@ -111,6 +111,7 @@ export const CommonErrors: CommonErrorsSchema = {
 export class AppError extends Error {
   public readonly name: string;
   public readonly statusCode: ErrorStatusCode;
+
   constructor(error: CommonErrorSchema, message: string) {
     super(message);
     Object.setPrototypeOf(this, new.target.prototype); // Restore prototype chain

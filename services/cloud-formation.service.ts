@@ -1,8 +1,7 @@
-import { CloudFormation } from 'aws-sdk';
-import { DescribeStacksInput, DescribeStacksOutput, Output, Outputs } from 'aws-sdk/clients/cloudformation';
-
 import { arrayToObject } from '@helper/helper';
 import { log } from '@helper/logger';
+import { CloudFormation } from 'aws-sdk';
+import { DescribeStacksInput, DescribeStacksOutput, Output, Outputs } from 'aws-sdk/clients/cloudformation';
 
 export interface OutputsMap {
   [key: string]: Output;
