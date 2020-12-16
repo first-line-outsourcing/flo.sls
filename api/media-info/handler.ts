@@ -1,9 +1,8 @@
-import { Handler } from 'aws-lambda';
-
 import { errorHandler } from '@helper/error-handler';
 import { log } from '@helper/logger';
-import { MediaInfoCurlService, Track } from '@services/media-info-curl.service';
 import { APIGatewayLambdaEvent } from '@interfaces/api-gateway-lambda.interface';
+import { MediaInfoCurlService, Track } from '@services/media-info-curl.service';
+import { Handler } from 'aws-lambda';
 import { MediaInfoUrl } from './media-info.inteface';
 import { MediaInfoManager } from './media-info.manager';
 
