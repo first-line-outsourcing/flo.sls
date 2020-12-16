@@ -1,6 +1,6 @@
-import * as models from '../models/PostgreSQL';
 import 'pg';
 import { Sequelize } from 'sequelize-typescript';
+import * as models from '../models/PostgreSQL';
 
 const sequelize = new Sequelize({
   dialect: 'postgres',

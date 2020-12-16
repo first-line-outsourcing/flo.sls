@@ -8,6 +8,7 @@ const path = require('path');
  */
 class WebpackPermissionsPlugin {
   options;
+
   constructor(options = {}) {
     this.options = options;
   }
