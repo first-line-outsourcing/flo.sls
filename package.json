@@ -90,7 +90,7 @@
   "dependencies": {
     "alai": "^1.0.3",
     "aws-sdk": "^2.780.0",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "dynamoose": "^2.4.0",
     "node-uuid": "^1.4.8",
