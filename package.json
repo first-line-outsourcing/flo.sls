@@ -94,7 +94,7 @@
     "dotenv": "^8.2.0",
     "dynamoose": "^2.4.0",
     "node-uuid": "^1.4.8",
-    "nodemailer": "^6.4.16",
+    "nodemailer": "^6.4.17",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^5.22.3",
     "sequelize-typescript": "^1.1.0",
