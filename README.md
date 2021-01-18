@@ -127,7 +127,7 @@ function and resources and env plugin for encrypted environment variables.
 - After successful deployment you will see the API URLs. Copy the URLs that ends on `/initialization`, post them to
   the browser URL input and click enter. They will create all needed stuff in your iconik account.
 
-### The project contains:
+## The project contains:
 
 - The Media Info feature that uses mediainfo binary file and returns media info by url
 - Examples of offline plugins and docker-compose file for working with AWS resources offline
@@ -138,7 +138,45 @@ function and resources and env plugin for encrypted environment variables.
 - Examples of services for working with AWS resources
 - Simple CircleCI configuration
 
-### Project structure
+## iconik Resources
+
+### Feature Name
+
+#### Metadata Views
+
+- **View Name** - Metadata for the collection/asset/Custom Action for saving some data. \
+  Also, it's used in iconik search. \
+  Fields:
+
+  - win_FieldName - Description
+  - win_FieldName2 - Field for saving the asset's status
+
+- **View Name 2** - Metadata for the collection/asset/Custom Action for saving some data. \
+  Fields:
+
+  - win_FieldName3 - Description
+  - win_FieldName4 - Field for saving the asset's job ID
+
+#### Metadata Fields (aren't included in any views)
+
+- win_FieldName - It's used for saving some settings
+
+#### Webhooks
+
+- **Webhook Name** `api/webhook-url` - It triggers when the asset is added to iconik. \
+  It adds information about the asset to the DynamoDB table that is scanned by WINTrayToolset.
+
+#### Custom Actions
+
+- **Custom Action Name** `api/custom-action-url` - Description
+
+### Feature Name 2
+
+#### Custom Actions
+
+- **Custom Action Name 2** `api/custom-action-url-2` - It starts transcription process
+
+## Project structure
 
 - .circleci - Configuration for CI/CD
 - api - Code of the features or CRUD operations of entities
