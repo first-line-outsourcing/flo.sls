@@ -1,8 +1,7 @@
-import { log } from '@helper/logger';
+import { isStage } from '@helper/environment';
 import * as dynamoose from 'dynamoose';
 
-if (process.env.IS_OFFLINE === 'true') {
-  log('Local DynamoDB');
+if (isStage('local')) {
   dynamoose.aws.ddb.local('http://localhost:8000');
 }
 

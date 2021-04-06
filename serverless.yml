@@ -4,7 +4,9 @@ provider:
   name: aws
   runtime: nodejs12.x
   environment:
-    hello: world # this is a hack for env plugin
+    STAGE: ${opt:stage, self:provider.stage}
+    USERS_TABLE_NAME: ${self:custom.tablesNames.Packages.${opt:stage, self:provider.stage}}
+    JOBS_TABLE_NAME: ${self:custom.tablesNames.Emails.${opt:stage, self:provider.stage}}
   region: ${file(env.yml):${opt:stage, self:provider.stage}.REGION}
   profile: ${file(env.yml):${opt:stage, self:provider.stage}.PROFILE}
   tags:
@@ -114,6 +116,50 @@ package:
   include:
     - bin/*
 custom:
+  queuesUrls:
+    SubscribeQueue:
+      local: ''
+      dev: !Ref SubscribeQueue
+      test: !Ref SubscribeQueue
+      prod: !Ref SubscribeQueue
+  queuesNames:
+    SubscribeQueue:
+      local: 'flo-local-subscribe'
+      dev: 'flo-dev-subscribe'
+      test: 'flo-test-subscribe'
+      prod: 'flo-prod-subscribe'
+  tablesNames:
+    UsersTable:
+      local: 'Users-local'
+      dev: 'Users-dev'
+      test: 'Users-test'
+      prod: 'Users'
+    JobsTable:
+      local: 'Jobs-local'
+      dev: 'Jobs-dev'
+      test: 'Jobs-test'
+      prod: 'Jobs'
+  customActionsURLs:
+    GetMediaInfo:
+      local: '${file(env.yml):local.OFFLINE_API_BASE_URL}api/media-info'
+      dev: !Sub
+        - 'https://${gatewayId}.execute-api.${region}.${suffix}/${opt:stage, self:provider.stage}/${path}'
+        - gatewayId: !Ref ApiGatewayRestApi
+          region: !Ref AWS::Region
+          suffix: !Ref AWS::URLSuffix
+          path: 'api/media-info'
+      test: !Sub
+        - 'https://${gatewayId}.execute-api.${region}.${suffix}/${opt:stage, self:provider.stage}/${path}'
+        - gatewayId: !Ref ApiGatewayRestApi
+          region: !Ref AWS::Region
+          suffix: !Ref AWS::URLSuffix
+          path: 'api/media-info'
+      prod: !Sub
+        - 'https://${gatewayId}.execute-api.${region}.${suffix}/${opt:stage, self:provider.stage}/${path}'
+        - gatewayId: !Ref ApiGatewayRestApi
+          region: !Ref AWS::Region
+          suffix: !Ref AWS::URLSuffix
+          path: 'api/media-info'
   dirconfig:
     quiet: true
   webpack:
@@ -160,6 +206,7 @@ custom:
   envEncryptionKeyId: # KMS Key used for encrypting values
     local: ${file(kms_key.yml):key} # Key used for local-stage
     dev: ${file(kms_key.yml):key} # Key used for development-stage
+    test: ${file(kms_key.yml):key} # Key used for test-stage
     prod: ${file(kms_key.yml):key} # Key used for prod-stage
   #  serverless-offline-sqs:
   #    autoCreate: true # create queue if not exists, it doesn't work for FIFO SQS
@@ -171,7 +218,7 @@ custom:
   #    skipCacheInvalidation: false
 
 plugins: # order matters!
-  - serverless-env-generator
+  - '@redtea/serverless-env-generator'
   - serverless-dir-config-plugin
   - serverless-webpack
   #  - serverless-offline-sqs

@@ -1,11 +1,12 @@
 #Resources:
-#  Queue:
+#  SubscribeQueue:
 #    Type: AWS::SQS::Queue
 #    Properties:
-#      QueueName: ${file(env.yml):${opt:stage, self:provider.stage}.SQS}
+#      QueueName: ${self:custom.queuesNames.SubscribeQueue.${opt:stage, self:provider.stage}}
 #      MessageRetentionPeriod: 1209600
-#      VisibilityTimeout: 60
+#      VisibilityTimeout: 30
 #      FifoQueue: true
+#      DelaySeconds: 5
 #      ContentBasedDeduplication: true
 #      RedrivePolicy:
 #        deadLetterTargetArn:
@@ -36,7 +37,6 @@
 #      ComparisonOperator: GreaterThanOrEqualToThreshold
 #      AlarmActions:
 #      - { "Fn::Join" : ["", ["arn:aws:sns:${self:provider.region}:", { "Ref" : "AWS::AccountId" }, ":${self:provider.environment.SNS}" ] ]  }
-
 
 #  Queue2:
 #    Type: AWS::SQS::Queue
