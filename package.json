@@ -88,7 +88,7 @@
     "webpack-node-externals": "^2.5.2"
   },
   "dependencies": {
-    "@workflowwin/iconik-api": "^2.1.53",
+    "@workflowwin/iconik-api": "^2.1.60",
     "alai": "^1.0.3",
     "aws-sdk": "^2.850.0",
     "axios": "^0.21.1",
