@@ -168,9 +168,22 @@ function and resources and env plugin for encrypted environment variables.
 
 ## How to add evn variable
 
-Read this https://github.com/DieProduktMacher/serverless-env-generator
+In project used https://github.com/org-redtea/serverless-env-generator that fork of https://github.com/DieProduktMacher/serverless-env-generator.
 
-Add kms_key.yml file with `key` field and your KMS Id to the root.
+Some caveats:
+
+- Shorthand `-v` does not work for both original plugin and forked.
+- Shorthand `-c` does not work
+
+Add kms_key.yml file with `${stage}` field and your KMS Id to the root.
+For example:
+
+```YAML
+local: xxx
+dev: xxx
+test: xxx
+prod: xxx
+```
 
 ### In short:
 
@@ -221,8 +234,8 @@ serverless env --attribute $NAME --value $PLAINTEXT
 serverless env --attribute $NAME --value $PLAINTEXT --stage $STAGE
 
 #shorthand:
-sls env -a $NAME -v $PLAINTEXT
-sls env --a $NAME -v $PLAINTEXT --s $STAGE
+sls env -a $NAME --value $PLAINTEXT
+sls env -a $NAME --value $PLAINTEXT --s $STAGE
 ```
 
 #### Set and encrypt a variable
@@ -232,6 +245,59 @@ serverless env --attribute $NAME --value $PLAINTEXT --encrypt
 serverless env --attribute $NAME --value $PLAINTEXT --stage $STAGE --encrypt
 
 #shorthand:
-sls env -a $NAME -v $PLAINTEXT -e
-sls env -a $NAME -v $PLAINTEXT -s $STAGE -e
+sls env -a $NAME --value $PLAINTEXT -e
+sls env -a $NAME --value $PLAINTEXT -s $STAGE -e
+```
+
+#### Set value of attribute in anchor
+
+```sh
+serverless env --anchor $ANHOR --attribute $NAME --value $PLAINTEXT
+
+#shorthand:
+sls env --anchor $ANHOR -a $NAME --value $PLAINTEXT
+```
+
+Let\`s assume we have the following `env.yml`:
+
+```YAML
+common:
+  &common
+  VAR: "1"
+
+local:
+  <<: *common
+dev:
+  <<: *common
+
+test:
+  <<: *common
+
+prod:
+  <<: *common
+```
+
+The result of the command:
+
+```bash
+$ sls env --attribute VAR --anchor common --value 2
+```
+
+will be:
+
+```YAML
+common:
+  &common
+  VAR: "2"
+
+local:
+  <<: *common
+dev:
+  <<: *common
+
+test:
+  <<: *common
+
+prod:
+  <<: *common
 ```

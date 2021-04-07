@@ -52,6 +52,7 @@
   },
   "homepage": "https://github.com/first-line-outsourcing/flo.sls#readme",
   "devDependencies": {
+    "@redtea/serverless-env-generator": "^1.5.3",
     "@types/aws-lambda": "^8.10.63",
     "@types/bluebird": "^3.5.32",
     "@types/jest": "^26.0.14",
@@ -71,7 +72,6 @@
     "pretty-quick": "^3.0.2",
     "serverless": "^2.6.0",
     "serverless-dir-config-plugin": "^0.1.5",
-    "serverless-env-generator": "^1.4.1",
     "serverless-offline": "^6.8.0",
     "serverless-offline-sns": "^0.68.0",
     "serverless-offline-sqs": "^4.1.1",
@@ -88,6 +88,7 @@
     "webpack-node-externals": "^2.5.2"
   },
   "dependencies": {
+    "@redtea/format-axios-error": "^2.0.2",
     "alai": "^1.0.3",
     "aws-sdk": "^2.850.0",
     "axios": "^0.21.1",

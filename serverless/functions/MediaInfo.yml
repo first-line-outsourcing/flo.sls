@@ -2,6 +2,7 @@
 
 getMediaInfo:
   handler: api/media-info/handler.getMediaInfo
+  description: Return Media Info by video URL
   tags:
     client: ${file(env.yml):${opt:stage, self:provider.stage}.CLIENT}
   timeout: 28

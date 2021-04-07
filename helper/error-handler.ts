@@ -1,10 +1,11 @@
 import { AppError, ErrorStatusCode } from '@helper/app-error';
-import { log, shortAxiosError } from '@helper/logger';
+import { log } from '@helper/logger';
+import { format } from '@redtea/format-axios-error';
 import { AxiosError } from 'axios';
 
 export function errorHandler(caughtError: Error | AppError | AxiosError): undefined {
   let error = caughtError;
-  const axiosError = (caughtError as AxiosError).isAxiosError && shortAxiosError(caughtError as AxiosError);
+  const axiosError = (caughtError as AxiosError).isAxiosError && format(caughtError as AxiosError);
 
   if (!(error instanceof AppError)) {
     /**
@@ -16,8 +17,8 @@ export function errorHandler(caughtError: Error | AppError | AxiosError): undefi
 
     if (axiosError) {
       error = {
-        statusCode: axiosError.error.status as ErrorStatusCode,
-        message: axiosError.error.statusText,
+        statusCode: axiosError.response?.status as ErrorStatusCode,
+        message: axiosError.response?.statusText || axiosError.message,
         name: '',
       };
     } else {

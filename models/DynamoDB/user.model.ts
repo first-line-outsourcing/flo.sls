@@ -1,3 +1,4 @@
+import { getEnv, isStage } from '@helper/environment';
 import { messages } from '@helper/helper';
 import { dynamoose } from '@services/dynamoose';
 import { Document } from 'dynamoose/dist/Document';
@@ -178,7 +179,7 @@ export const userSchema = new dynamoose.Schema(
   }
 );
 
-export const UserModel = dynamoose.model<User>(process.env.USERS_TABLE as string, userSchema, {
-  create: true,
+export const UserModel = dynamoose.model<User>(getEnv('USERS_TABLE_NAME'), userSchema, {
+  create: isStage('local'),
   update: false,
 });
