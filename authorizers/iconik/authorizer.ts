@@ -8,7 +8,7 @@ import { IconikContext } from './context';
 type Payload = CustomActionPayload & { auth_token?: string };
 
 /**
- * iconik doesn't send Auth-Token in headers but sends it in the body
+ * Iconik provides the auth token in request body, but custom authorizers don`t support request body.
  * So we need to check it in the Lambda function instead using API Gateway authorizers
  * How to use this authorizer:
  * const authContext = await authorizeWithIconikCustomAction(event.body);
