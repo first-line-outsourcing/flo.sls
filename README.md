@@ -175,7 +175,15 @@ Some caveats:
 - Shorthand `-v` does not work for both original plugin and forked.
 - Shorthand `-c` does not work
 
-Add kms_key.yml file with `key` field and your KMS Id to the root.
+Add kms_key.yml file with `${stage}` field and your KMS Id to the root.
+For example:
+
+```YAML
+local: xxx
+dev: xxx
+test: xxx
+prod: xxx
+```
 
 ### In short:
 

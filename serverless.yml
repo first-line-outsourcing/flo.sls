@@ -204,10 +204,10 @@ custom:
   envFiles: # YAML files used to create .env file
     - env.yml
   envEncryptionKeyId: # KMS Key used for encrypting values
-    local: ${file(kms_key.yml):key} # Key used for local-stage
-    dev: ${file(kms_key.yml):key} # Key used for development-stage
-    test: ${file(kms_key.yml):key} # Key used for test-stage
-    prod: ${file(kms_key.yml):key} # Key used for prod-stage
+    local: ${file(kms_key.yml):local} # Key used for local-stage
+    dev: ${file(kms_key.yml):dev} # Key used for development-stage
+    test: ${file(kms_key.yml):test} # Key used for test-stage
+    prod: ${file(kms_key.yml):prod} # Key used for prod-stage
   #  serverless-offline-sqs:
   #    autoCreate: true # create queue if not exists, it doesn't work for FIFO SQS
   #    apiVersion: '2012-11-05'
