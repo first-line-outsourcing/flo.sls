@@ -1,3 +1,4 @@
+import { getEnv, isStage } from '@helper/environment';
 import { User } from '@models/DynamoDB/user.model';
 import { dynamoose } from '@services/dynamoose';
 import { Document } from 'dynamoose/dist/Document';
@@ -186,7 +187,7 @@ export const jobSchema = new dynamoose.Schema(
   }
 );
 
-export const JobModel = dynamoose.model<Job>(process.env.JOBS_TABLE as string, jobSchema, {
-  create: true,
+export const JobModel = dynamoose.model<Job>(getEnv('JOBS_TABLE_NAME'), jobSchema, {
+  create: isStage('local'),
   update: false,
 });
