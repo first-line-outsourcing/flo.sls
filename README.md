@@ -5,6 +5,19 @@
 It is a skeleton for your AWS + Serverless applications. It uses typescript, webpack, dir-config plugin for Serverless
 function and resources and env plugin for encrypted environment variables.
 
+It is forked from https://github.com/first-line-outsourcing/flo.sls and all changes from parent repository can be pulled here. \
+Follow these steps:
+
+- Add `upstream` remote
+  ```shell
+  git remote add upstream https://github.com/first-line-outsourcing/flo.sls.git
+  ```
+- Pull from `upstream`
+  ```shell
+  git pull upstream master
+  ```
+- Resolve conflicts if there are some
+
 ## NPM commands
 
 - **deploy:dev**: deploy to the AWS dev environment
@@ -83,7 +96,7 @@ function and resources and env plugin for encrypted environment variables.
 - Go to AWS Console `Key Management Service` and create Symmetric key in your region
 - In the root folder of the project create kms_key.yml file and copy your key (Key ID) here like
   ```
-  key: your_key_here
+  prod: your_key_here
   ```
 - You can add any environment variables. If you need to secure them, encrypt them.
 - Copy the value of variable and run the command in the root of the project
