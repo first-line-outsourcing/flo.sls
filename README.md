@@ -201,6 +201,7 @@ Follow these steps:
     - feature_name.service.ts - It's the feature service. Its methods should implement one of the main steps of some
       feature's functionality
     - feature_name.interface.ts - This file should contain all required interfaces for the feature
+- authorizers - authorizers for iconik requests or any other requests
 - bin - Executable files (third party libraries that can be used inside a Lambda function)
 - helper - All auxiliary code
   - app-errors.ts - This file contains the class that derives from Node.js Error class. It should be used for providing
