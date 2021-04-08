@@ -1,6 +1,9 @@
 import { AppError, CommonErrors } from './app-error';
 
-// Extract substitutable envs, because we use webpack-dotenv plugin.
+/**
+ * Extract substitutable envs, because we use webpack-dotenv plugin
+ * which have these limitations https://github.com/mrsteele/dotenv-webpack#limitations
+ */
 const envs: Record<string, string | undefined> = {
   STAGE: process.env.STAGE,
   REGION: process.env.REGION,
@@ -10,6 +13,8 @@ const envs: Record<string, string | undefined> = {
   OFFLINE_API_BASE_URL: process.env.OFFLINE_API_BASE_URL,
   CI: process.env.CI,
   HIDE_LOGS: process.env.HIDE_LOGS,
+  USERS_TABLE_NAME: process.env.USERS_TABLE_NAME,
+  JOBS_TABLE_NAME: process.env.JOBS_TABLE_NAME,
 };
 
 export type Stage = 'local' | 'dev' | 'test' | 'prod';
