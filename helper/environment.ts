@@ -13,6 +13,10 @@ const envs: Record<string, string | undefined> = {
   OFFLINE_API_BASE_URL: process.env.OFFLINE_API_BASE_URL,
   CI: process.env.CI,
   HIDE_LOGS: process.env.HIDE_LOGS,
+  ICONIK_DOMAIN_ID: process.env.ICONIK_DOMAIN_ID,
+  ICONIK_URL: process.env.ICONIK_URL,
+  ICONIK_APP_ID: process.env.ICONIK_APP_ID,
+  ICONIK_APP_AUTH_TOKEN: process.env.ICONIK_APP_AUTH_TOKEN,
   USERS_TABLE_NAME: process.env.USERS_TABLE_NAME,
   JOBS_TABLE_NAME: process.env.JOBS_TABLE_NAME,
 };
