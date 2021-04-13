@@ -1,5 +1,5 @@
 import { MediaInfoCurlService, Track } from '@services/media-info-curl.service';
-import { HttpBadRequestError } from '@errors/http';
+import { HttpBadRequestError } from '@errors';
 import { MediaInfoUrl } from './media-info.inteface';
 import { MediaInfoService } from './media-info.service';
 

@@ -17,7 +17,7 @@
       "@services/*": ["./services/*"],
       "@helper/*": ["./helper/*"],
       "@interfaces/*": ["./interfaces/*"],
-      "@errors/*": ["./errors/*"]
+      "@errors*": ["./errors"]
     }
   },
   "exclude": ["node_modules", "coverage", ".build", ".git"]
