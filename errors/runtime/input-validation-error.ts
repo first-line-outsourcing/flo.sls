@@ -1,3 +1,3 @@
-import { RuntimeError } from '@errors/runtime/runtime-error';
+import { RuntimeError } from './runtime-error';
 
 export class InputValidationError extends RuntimeError {}

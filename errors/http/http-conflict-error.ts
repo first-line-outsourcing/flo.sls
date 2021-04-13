@@ -1,7 +1,7 @@
 import { HttpError } from './http-error';
 
 export class HttpConflictError extends HttpError {
-  constructor(message: string = 'Conflict') {
+  constructor(message = 'Conflict') {
     super(409, 'Conflict', message);
   }
 }
