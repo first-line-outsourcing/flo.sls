@@ -12,7 +12,6 @@ export { HttpUnprocessableEntityError } from './http-unprocessable-entity-error'
 
 /**
  * Example of usage:
- *
  * if (!mediaInfoUrl.url)
       throw new HttpBadRequestError("The param 'url' is required.");
  * */
