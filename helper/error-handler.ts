@@ -1,10 +1,10 @@
 import { HttpError } from '@errors/http/http-error';
-import { AppError, ErrorStatusCode } from '@helper/app-error';
+import { ErrorStatusCode } from '@helper/app-error';
 import { log } from '@helper/logger';
 import { format } from '@redtea/format-axios-error';
 import { AxiosError } from 'axios';
 
-export function errorHandler(caughtError: Error | AppError | AxiosError): undefined {
+export function errorHandler(caughtError: Error | HttpError | AxiosError): undefined {
   let error = caughtError;
   const axiosError = (caughtError as AxiosError).isAxiosError && format(caughtError as AxiosError);
 
