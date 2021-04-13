@@ -1,4 +1,4 @@
-import { AppError, CommonErrors } from './app-error';
+import { HttpInternalServerError } from '@errors/http';
 
 /**
  * Extract substitutable envs, because we use webpack-dotenv plugin
@@ -33,7 +33,7 @@ export function getEnv(name: string, required = true): string | undefined {
   const v = envs[name] || process.env[name];
 
   if (required && !v) {
-    throw new AppError(CommonErrors.InternalServerError, `Missing environment variable ${name}`);
+    throw new HttpInternalServerError(`Missing environment variable ${name}`);
   }
 
   return v;
