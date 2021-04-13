@@ -16,8 +16,7 @@
       "@models/*": ["./models/*"],
       "@services/*": ["./services/*"],
       "@helper/*": ["./helper/*"],
-      "@interfaces/*": ["./interfaces/*"],
-      "@errors*": ["./errors"]
+      "@interfaces/*": ["./interfaces/*"]
     }
   },
   "exclude": ["node_modules", "coverage", ".build", ".git"]
