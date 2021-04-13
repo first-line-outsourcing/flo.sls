@@ -1,3 +1,4 @@
+import { HttpError } from '@errors/http/http-error';
 import { AppError, ErrorStatusCode } from '@helper/app-error';
 import { log } from '@helper/logger';
 import { format } from '@redtea/format-axios-error';
@@ -7,7 +8,7 @@ export function errorHandler(caughtError: Error | AppError | AxiosError): undefi
   let error = caughtError;
   const axiosError = (caughtError as AxiosError).isAxiosError && format(caughtError as AxiosError);
 
-  if (!(error instanceof AppError)) {
+  if (!(error instanceof HttpError)) {
     /**
      * It means that error was unexpected and can have unpredictable structure
      * For example, Axios errors have different structure
