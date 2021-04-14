@@ -1,5 +1,5 @@
 import { MediaInfoCurlService, Track } from '@services/media-info-curl.service';
-import { HttpBadRequestError, HttpServiceUnavailableError } from '@errors/http';
+import { HttpBadRequestError } from '@errors/http';
 import { MediaInfoUrl } from './media-info.inteface';
 import { MediaInfoService } from './media-info.service';
 
@@ -31,7 +31,7 @@ export class MediaInfoManager {
      * Validate required data -> Check if url exists
      */
     if (!mediaInfoUrl.url) {
-      throw new HttpServiceUnavailableError("The param 'url' is required.");
+      throw new HttpBadRequestError("The param 'url' is required.");
     }
 
     /**
