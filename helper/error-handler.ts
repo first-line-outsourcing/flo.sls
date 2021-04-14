@@ -72,10 +72,10 @@ function formatUnknownError(error: Error | HttpError | AxiosError | RuntimeError
 
 function formatUnsupportedError(error: AppError | HttpError): AppError {
   if (error.statusCode === 409 || error.statusCode === 429) {
-    return { ...error, statusCode: 400 };
+    return { statusCode: 400, message: error.message, name: error.name };
   }
   if (error.statusCode === 503) {
-    return { ...error, statusCode: 500 };
+    return { statusCode: 500, message: error.message, name: error.name };
   }
 
   return error;
