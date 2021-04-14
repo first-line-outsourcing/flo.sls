@@ -46,6 +46,7 @@ export function errorHandler(caughtError: Error | HttpError | AxiosError | Runti
    * 502  Bad Gateway
    * 504  Gateway Timeout
    */
+  error = formatUnsupportedError(error as HttpError | AppError);
 
   /**
    * The error message looks like: [404] Not Found. User does not exist
@@ -67,4 +68,15 @@ function formatUnknownError(error: Error | HttpError | AxiosError | RuntimeError
   }
 
   return { statusCode: 500, message: error.message, name: error.name };
+}
+
+function formatUnsupportedError(error: AppError | HttpError): AppError {
+  if (error.statusCode === 409 || error.statusCode === 429) {
+    return { ...error, statusCode: 400 };
+  }
+  if (error.statusCode === 503) {
+    return { ...error, statusCode: 500 };
+  }
+
+  return error;
 }
