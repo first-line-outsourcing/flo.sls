@@ -1,8 +1,6 @@
 export class RuntimeError extends Error {
-  constructor(message: string) {
+  constructor(message: string, public details?: Record<string, any>) {
     super(message);
-    if (Object.getPrototypeOf(this) === new.target.prototype) {
-      Object.setPrototypeOf(this, new.target.prototype); // Restore prototype chain
-    }
+    this.name = 'RuntimeError';
   }
 }
