@@ -8,7 +8,7 @@ import { AxiosError } from 'axios';
 
 export function errorHandler(caughtError: Error | HttpError | AxiosError | RuntimeError): undefined {
   let error = caughtError;
-  const axiosError = (caughtError as AxiosError).isAxiosError && format(caughtError as AxiosError);
+  const axiosError = (<AxiosError>caughtError).isAxiosError && format(<AxiosError>caughtError);
 
   if (!(error instanceof HttpError)) {
     /**
@@ -42,12 +42,12 @@ export function errorHandler(caughtError: Error | HttpError | AxiosError | Runti
    * 502  Bad Gateway
    * 504  Gateway Timeout
    */
-  error = formatUnsupportedError(error as HttpError);
+  const supportedHttpError = formatUnsupportedError(<HttpError>error);
 
   /**
    * The error message looks like: [404] Not Found. User does not exist
    */
-  throw `[${(error as HttpError).statusCode}] ${error.name}. ${error.message}`;
+  throw `[${supportedHttpError.statusCode}] ${supportedHttpError.name}. ${supportedHttpError.message}`;
 }
 
 function formatUnknownError(error: Error | AxiosError | RuntimeError, axiosError): HttpError {
