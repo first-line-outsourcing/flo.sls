@@ -1,5 +1,6 @@
-import { HttpInternalServerError } from '@errors/http';
+import { HttpBadRequestError, HttpInternalServerError } from '@errors/http';
 import { ErrorStatusCode, HttpError } from '@errors/http/http-error';
+import { InputValidationError } from '@errors/runtime';
 import { RuntimeError } from '@errors/runtime/runtime-error';
 import { log } from '@helper/logger';
 import { format } from '@redtea/format-axios-error';
@@ -56,6 +57,9 @@ export function errorHandler(caughtError: Error | HttpError | AxiosError | Runti
 }
 
 function formatUnknownError(error: Error | HttpError | AxiosError | RuntimeError, axiosError): AppError | HttpError {
+  if (error instanceof InputValidationError) {
+    return new HttpBadRequestError(error.message);
+  }
   if (error instanceof RuntimeError) {
     return new HttpInternalServerError(error.message);
   }
