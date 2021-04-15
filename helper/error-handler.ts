@@ -59,11 +59,11 @@ function formatUnknownError(error: Error | AxiosError | RuntimeError, axiosError
   }
 
   if (axiosError) {
-    return {
-      statusCode: axiosError.response?.status as ErrorStatusCode,
-      message: axiosError.message,
-      name: axiosError.response?.statusText || 'Internal Server Error',
-    };
+    return new HttpError(
+      axiosError.response?.status as ErrorStatusCode,
+      axiosError.response?.statusText || 'Internal Server Error',
+      axiosError.message
+    );
   }
 
   return new HttpInternalServerError(error.message);
