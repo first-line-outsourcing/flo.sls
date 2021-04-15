@@ -61,20 +61,20 @@ function formatUnknownError(error: Error | AxiosError | RuntimeError, axiosError
   if (axiosError) {
     return {
       statusCode: axiosError.response?.status as ErrorStatusCode,
-      message: axiosError.response?.statusText || axiosError.message,
+      message: axiosError.message,
       name: axiosError.response?.statusText || 'Internal Server Error',
     };
   }
 
-  return { statusCode: 500, message: error.message, name: error.name };
+  return new HttpInternalServerError(error.message);
 }
 
 function formatUnsupportedError(error: HttpError): HttpError {
   if (error.statusCode === 409 || error.statusCode === 429) {
-    return { statusCode: 400, message: error.message, name: error.name };
+    return new HttpBadRequestError(error.message);
   }
   if (error.statusCode === 503) {
-    return { statusCode: 500, message: error.message, name: error.name };
+    return new HttpInternalServerError(error.message);
   }
 
   return error;
