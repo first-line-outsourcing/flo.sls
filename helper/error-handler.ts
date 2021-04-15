@@ -6,12 +6,6 @@ import { log } from '@helper/logger';
 import { format } from '@redtea/format-axios-error';
 import { AxiosError } from 'axios';
 
-export interface AppError {
-  statusCode: number;
-  name: string;
-  message: string;
-}
-
 export function errorHandler(caughtError: Error | HttpError | AxiosError | RuntimeError): undefined {
   let error = caughtError;
   const axiosError = (caughtError as AxiosError).isAxiosError && format(caughtError as AxiosError);
@@ -48,15 +42,15 @@ export function errorHandler(caughtError: Error | HttpError | AxiosError | Runti
    * 502  Bad Gateway
    * 504  Gateway Timeout
    */
-  error = formatUnsupportedError(error as HttpError | AppError);
+  error = formatUnsupportedError(error as HttpError);
 
   /**
    * The error message looks like: [404] Not Found. User does not exist
    */
-  throw `[${(error as AppError).statusCode}] ${error.name}. ${error.message}`;
+  throw `[${(error as HttpError).statusCode}] ${error.name}. ${error.message}`;
 }
 
-function formatUnknownError(error: Error | HttpError | AxiosError | RuntimeError, axiosError): AppError | HttpError {
+function formatUnknownError(error: Error | AxiosError | RuntimeError, axiosError): HttpError {
   if (error instanceof InputValidationError) {
     return new HttpBadRequestError(error.message);
   }
@@ -75,7 +69,7 @@ function formatUnknownError(error: Error | HttpError | AxiosError | RuntimeError
   return { statusCode: 500, message: error.message, name: error.name };
 }
 
-function formatUnsupportedError(error: AppError | HttpError): AppError {
+function formatUnsupportedError(error: HttpError): HttpError {
   if (error.statusCode === 409 || error.statusCode === 429) {
     return { statusCode: 400, message: error.message, name: error.name };
   }
