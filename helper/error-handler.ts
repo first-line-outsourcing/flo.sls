@@ -1,3 +1,4 @@
+import { HttpInternalServerError } from '@errors/http';
 import { ErrorStatusCode, HttpError } from '@errors/http/http-error';
 import { RuntimeError } from '@errors/runtime/runtime-error';
 import { log } from '@helper/logger';
@@ -54,9 +55,9 @@ export function errorHandler(caughtError: Error | HttpError | AxiosError | Runti
   throw `[${(error as AppError).statusCode}] ${error.name}. ${error.message}`;
 }
 
-function formatUnknownError(error: Error | HttpError | AxiosError | RuntimeError, axiosError): AppError {
+function formatUnknownError(error: Error | HttpError | AxiosError | RuntimeError, axiosError): AppError | HttpError {
   if (error instanceof RuntimeError) {
-    return { statusCode: 500, name: 'Bad request', message: error.message };
+    return new HttpInternalServerError(error.message);
   }
 
   if (axiosError) {
