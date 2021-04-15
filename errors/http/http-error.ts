@@ -8,6 +8,5 @@ export class HttpError extends Error {
     public details?: Record<string, any>
   ) {
     super(message);
-    Error.captureStackTrace(this);
   }
 }

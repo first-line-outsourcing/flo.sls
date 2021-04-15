@@ -1,6 +1,6 @@
 export class RuntimeError extends Error {
   constructor(message: string, public details?: Record<string, any>) {
     super(message);
-    this.name = 'RuntimeError';
+    this.name = this.constructor.name;
   }
 }

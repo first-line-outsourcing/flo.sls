@@ -1,4 +1,4 @@
-import { HttpInternalServerError } from '@errors/http';
+import { RuntimeError } from '@errors/runtime/runtime-error';
 
 /**
  * Extract substitutable envs, because we use webpack-dotenv plugin
@@ -33,7 +33,7 @@ export function getEnv(name: string, required = true): string | undefined {
   const v = envs[name] || process.env[name];
 
   if (required && !v) {
-    throw new HttpInternalServerError(`Missing environment variable ${name}`);
+    throw new RuntimeError(`Missing environment variable ${name}`);
   }
 
   return v;
