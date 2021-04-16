@@ -1,4 +1,4 @@
-import { AppError, CommonErrors } from '@helper/app-error';
+import { HttpBadRequestError, HttpInternalServerError } from '@errors/http';
 import { MediaInfoCurlService, Track } from '@services/media-info-curl.service';
 
 /**
@@ -19,13 +19,13 @@ export class MediaInfoService {
     try {
       mediaInfo = await mediaInfoCurlService.getMediaInfo(url);
     } catch (e) {
-      throw new AppError(CommonErrors.InternalServerError, e.message);
+      throw new HttpInternalServerError(e.message);
     }
     /**
      * If !mediaInfo it means that the URL is broken or doesn't have access
      */
     if (!mediaInfo) {
-      throw new AppError(CommonErrors.BadRequest, "Can't extract media info. Please, check your URL");
+      throw new HttpBadRequestError("Can't extract media info. Please, check your URL");
     }
     return mediaInfo;
   }
