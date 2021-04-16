@@ -1,7 +1,10 @@
 import { AppError, CommonErrors } from '@helper/app-error';
+import { getEnv } from '@helper/environment';
 import { CloudFormationService } from '@services/cloud-formation.service';
 import { IconikService } from '@workflowwin/iconik-api';
 import { MetadataFieldSchema } from '@workflowwin/iconik-api/dist/src/metadata/metadata-methods';
+import { CustomActionSchema } from '@workflowwin/iconik-api/src/assets/assets-methods';
+import { WebhookResponseSchema } from '@workflowwin/iconik-api/src/notifications/notifications-methods';
 import { SecurityService } from './security.service';
 
 const refreshHoursField: MetadataFieldSchema = {
@@ -50,5 +53,20 @@ export class SecurityManager {
     } catch (error) {
       throw new AppError(CommonErrors.BadRequest, 'Cannot initialize Security. Connect WIN Support team.');
     }
+  }
+
+  async refreshToken(iconikService: IconikService): Promise<void> {
+    const customActions: CustomActionSchema[] = (await iconikService.assets.getCustomActions()).objects.filter(
+      (CA) => CA.type !== 'OPEN'
+    );
+    const webHooks: WebhookResponseSchema[] = (await iconikService.notifications.getWebhooks()).objects;
+
+    const invalidationTokens: string[] = this.service.getTokensFromWHandCA(webHooks, customActions);
+
+    const newToken: string = (await iconikService.auth.createAppToken(getEnv('ICONIK_APP_ID'))).token;
+    await this.service.updateTokensInWHandCA(iconikService, webHooks, customActions, newToken);
+
+    // TODO: send invalidationTokens to invalidate lambda
+    console.log(invalidationTokens);
   }
 }

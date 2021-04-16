@@ -17,3 +17,21 @@ initialization:
             Access-Control-Allow-Origin: "'*'"
             Content-Type: "'application/json'"
           template: $input.json('$')
+
+refreshToken:
+  handler: security/handler.refreshToken
+  description: refresh tokens in CA and WH every N hours
+  tags:
+    client: ${file(env.yml):${opt:stage, self:provider.stage}.CLIENT}
+  timeout: 28
+  events:
+    - http:
+        path: api/security/refresh-token
+        method: get
+        integration: lambda
+        cors: true
+        response:
+          headers:
+            Access-Control-Allow-Origin: "'*'"
+            Content-Type: "'application/json'"
+          template: $input.json('$')

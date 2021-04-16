@@ -6,7 +6,7 @@ import { IconikService } from '@workflowwin/iconik-api';
 import { Handler } from 'aws-lambda';
 import { SecurityManager } from './security.manager';
 
-export const initialization: Handler<null> = async (event) => {
+export const initialization: Handler<{ message: string }> = async (event) => {
   log('[security] initialization', event);
   try {
     const cloudFormation: CloudFormationService = new CloudFormationService();
@@ -27,9 +27,13 @@ export const changeRefreshTokenPeriod: Handler<unknown> = async (event) => {
   }
 };
 
-export const refreshToken: Handler<unknown> = async (event) => {
+export const refreshToken: Handler<void> = async (event) => {
   log('[security] refresh token', event);
   try {
+    const iconikService: IconikService = createIconikClient();
+
+    const manager: SecurityManager = new SecurityManager();
+    return await manager.refreshToken(iconikService);
   } catch (error) {
     errorHandler(error);
   }
