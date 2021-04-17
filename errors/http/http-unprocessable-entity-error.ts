@@ -1,7 +1,7 @@
 import { HttpError } from './http-error';
 
 export class HttpUnprocessableEntityError extends HttpError {
-  constructor(message = 'Unauthorized', details?: Record<string, any>) {
-    super(401, 'Unauthorized', message, details);
+  constructor(message = 'Unprocessable Entity', details?: Record<string, any>) {
+    super(422, 'Unprocessable Entity', message, details);
   }
 }
