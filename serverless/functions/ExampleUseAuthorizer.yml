@@ -2,7 +2,7 @@
 
 exampleOfUseAuthorizer:
   handler: api/example-of-use-authorizer/handler.exampleOfUseAuthorizer
-  description: exmaple lambda with Iconik Authorizer
+  description: example lambda with Iconik Authorizer
   tags:
     client: ${file(env.yml):${opt:stage, self:provider.stage}.CLIENT}
   timeout: 28
