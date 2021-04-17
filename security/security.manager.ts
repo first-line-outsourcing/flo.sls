@@ -69,4 +69,10 @@ export class SecurityManager {
     // TODO: send invalidationTokens to invalidate lambda
     console.log(invalidationTokens);
   }
+
+  async invalidateTokens(iconikService: IconikService, tokens: string[]): Promise<void> {
+    await Promise.all(
+      tokens.map(async (token) => await iconikService.auth.deleteToken(getEnv('ICONIK_APP_ID'), token))
+    );
+  }
 }

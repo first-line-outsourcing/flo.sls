@@ -35,3 +35,21 @@ refreshToken:
             Access-Control-Allow-Origin: "'*'"
             Content-Type: "'application/json'"
           template: $input.json('$')
+
+invalidateTokens:
+  handler: security/handler.invalidateTokens
+  description: invalidate tokens in from CA and WH
+  tags:
+    client: ${file(env.yml):${opt:stage, self:provider.stage}.CLIENT}
+  timeout: 28
+  events:
+    - http:
+        path: api/security/invalidate-tokens
+        method: post
+        integration: lambda
+        cors: true
+        response:
+          headers:
+            Access-Control-Allow-Origin: "'*'"
+            Content-Type: "'application/json'"
+          template: $input.json('$')
