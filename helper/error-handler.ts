@@ -36,6 +36,7 @@ export function errorHandler(caughtError: Error | HttpError | AxiosError | Runti
   /**
    * The error message looks like: [404] Not Found. User does not exist
    */
+
   throw `[${supportedHttpError.statusCode}] ${supportedHttpError.name}. ${supportedHttpError.message}`;
 }
 

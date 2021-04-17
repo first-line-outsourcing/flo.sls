@@ -1,0 +1,5 @@
+IconikAuthorizer:
+  handler: authorizers/iconik/headers-authorizer.iconikAuthorizer
+  timeout: 29
+  tags:
+    client: ${file(env.yml):${opt:stage, self:provider.stage}.CLIENT}

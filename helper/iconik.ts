@@ -1,6 +1,6 @@
 import { getEnv } from '@helper/environment';
 import { IconikService } from '@workflowwin/iconik-api';
-import { IconikContext } from '../authorizers/iconik/context';
+import { IconikContext } from '../authorizers/iconik/interfaces/context';
 
 export function createIconikClient(authContext?: IconikContext): IconikService {
   if (authContext) {

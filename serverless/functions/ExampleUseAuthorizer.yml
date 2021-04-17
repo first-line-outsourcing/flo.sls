@@ -1,0 +1,24 @@
+# ================== Example Of Use Authorizer =====================
+
+exampleOfUseAuthorizer:
+  handler: api/example-of-use-authorizer/handler.exampleOfUseAuthorizer
+  description: exmaple lambda with Iconik Authorizer
+  tags:
+    client: ${file(env.yml):${opt:stage, self:provider.stage}.CLIENT}
+  timeout: 28
+  events:
+    - http:
+        path: api/examples/use-authorizer
+        method: get
+        integration: lambda
+        cors: true
+        response:
+          headers:
+            Access-Control-Allow-Origin: "'*'"
+            Content-Type: "'application/json'"
+          template: $input.json('$')
+        authorizer:
+          name: IconikAuthorizer
+          resultTtlInSeconds: 0
+          type: request
+          identitySource: method.request.header.auth-token

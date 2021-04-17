@@ -3,7 +3,7 @@ import { IconikService } from '@workflowwin/iconik-api';
 import { CustomActionPayload } from '@workflowwin/iconik-api/dist/src/assets/assets-methods';
 import { getEnv } from '@helper/environment';
 import { log } from '@helper/logger';
-import { IconikContext } from './context';
+import { IconikContext } from './interfaces/context';
 
 type Payload = CustomActionPayload & { auth_token?: string };
 
