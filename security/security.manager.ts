@@ -1,4 +1,4 @@
-import { AppError, CommonErrors } from '@helper/app-error';
+import { HttpBadRequestError } from '@errors/http';
 import { getEnv } from '@helper/environment';
 import { CloudFormationService } from '@services/cloud-formation.service';
 import { IconikService } from '@workflowwin/iconik-api';
@@ -51,7 +51,7 @@ export class SecurityManager {
       );
       return { message: 'Security Workflow successfully initialize.' };
     } catch (error) {
-      throw new AppError(CommonErrors.BadRequest, 'Cannot initialize Security. Connect WIN Support team.');
+      throw new HttpBadRequestError('Cannot initialize Security. Connect WIN Support team.');
     }
   }
 
