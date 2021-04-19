@@ -4,7 +4,7 @@ import { APIGatewayLambdaEvent } from '@interfaces/api-gateway-lambda.interface'
 import { Handler } from 'aws-lambda';
 
 export const exampleOfUseAuthorizer: Handler<APIGatewayLambdaEvent<{ message: string }>> = async (event) => {
-  log('[examples] example of use Iconik Authorizer', event);
+  log('[Examples] Example of use Iconik Authorizer', event);
   try {
     return { message: 'test' };
   } catch (error) {

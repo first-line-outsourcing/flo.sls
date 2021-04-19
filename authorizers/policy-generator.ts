@@ -6,7 +6,7 @@ export function generatePolicy<Context extends APIGatewayAuthorizerResult['conte
   resource: string,
   context: Context
 ): APIGatewayAuthorizerResult & { context: Context } {
-  const authResponse: APIGatewayAuthorizerResult & { context: Context } = {
+  return {
     principalId,
     policyDocument: {
       Version: '2012-10-17',
@@ -20,6 +20,4 @@ export function generatePolicy<Context extends APIGatewayAuthorizerResult['conte
     },
     context,
   };
-
-  return authResponse;
 }

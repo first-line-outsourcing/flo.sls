@@ -9,9 +9,20 @@ exampleOfUseAuthorizer:
   events:
     - http:
         path: api/examples/use-authorizer
-        method: get
+        method: post
         integration: lambda
-        cors: true
+        cors:
+          origin: '*'
+          headers:
+            - Content-Type
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+            - X-Amz-User-Agent
+            - authToken
+            - domainId
+          allowCredentials: false
         response:
           headers:
             Access-Control-Allow-Origin: "'*'"
@@ -21,4 +32,4 @@ exampleOfUseAuthorizer:
           name: IconikAuthorizer
           resultTtlInSeconds: 0
           type: request
-          identitySource: method.request.header.auth-token
+          identitySource: method.request.header.auth-token, method.request.header.User-Id

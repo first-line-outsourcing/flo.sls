@@ -1,25 +1,24 @@
 import { getEnv } from '@helper/environment';
 import { errorHandler } from '@helper/error-handler';
 import { log } from '@helper/logger';
-import { IconikService } from '@workflowwin/iconik-api';
-import { APIGatewayAuthorizerResult, Handler } from 'aws-lambda';
+import { getCallerAndOwner } from '../helper';
+import { generatePolicy } from '../policy-generator';
+import { IconikContext } from './interfaces/context';
 
-// @ts-ignore
-export const iconikAuthorizer: Handler = async (event, context: APIGatewayAuthorizerResult<unknown>) => {
-  log('event, context', event, context);
+export const iconikAuthorizer = async (event) => {
+  log('[Iconik Authorizer]', event);
   try {
-    const authToken = event.headers['auth-token'];
-    const iconikUrl = getEnv('ICONIK_URL');
-    const appId = getEnv('ICONIK_APP_ID');
-    const systemDomainId = getEnv('ICONIK_DOMAIN_ID');
+    const authToken: string = event.headers['auth-token'];
+    const caller: string = event.headers['User-Id'];
 
-    const iconikService = new IconikService({
-      authToken,
-      iconikUrl,
-      appId,
-      systemDomainId,
-    });
-  } catch (e) {
-    errorHandler(e);
+    const iconikUrl: string = getEnv('ICONIK_URL');
+    const appId: string = getEnv('ICONIK_APP_ID');
+    const systemDomainId: string = getEnv('ICONIK_DOMAIN_ID');
+
+    const context: IconikContext = await getCallerAndOwner({ authToken, iconikUrl, appId, systemDomainId }, caller);
+
+    return generatePolicy<IconikContext | any>(`user|${context.caller.id}`, 'Allow', event.methodArn, context);
+  } catch (error) {
+    errorHandler(error);
   }
 };
