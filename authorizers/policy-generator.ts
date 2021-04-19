@@ -7,6 +7,7 @@ export function generatePolicy<Context extends APIGatewayAuthorizerResult['conte
   context: Context
 ): APIGatewayAuthorizerResult & { context: Context } {
   return {
+    context,
     principalId,
     policyDocument: {
       Version: '2012-10-17',
@@ -18,6 +19,5 @@ export function generatePolicy<Context extends APIGatewayAuthorizerResult['conte
         },
       ],
     },
-    context,
   };
 }

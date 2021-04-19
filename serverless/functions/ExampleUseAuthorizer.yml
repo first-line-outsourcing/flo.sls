@@ -11,18 +11,7 @@ exampleOfUseAuthorizer:
         path: api/examples/use-authorizer
         method: post
         integration: lambda
-        cors:
-          origin: '*'
-          headers:
-            - Content-Type
-            - X-Amz-Date
-            - Authorization
-            - X-Api-Key
-            - X-Amz-Security-Token
-            - X-Amz-User-Agent
-            - authToken
-            - domainId
-          allowCredentials: false
+        cors: true
         response:
           headers:
             Access-Control-Allow-Origin: "'*'"
