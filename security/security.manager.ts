@@ -40,13 +40,11 @@ export class SecurityManager {
         url: `${apiUrl}/api/security/change-refresh-token-period`,
         metadata_view: view.id,
       });
-      // @ts-ignore
-      const { groups_acl } = await iconikService.acls.getAclByObjectId(customAction.id, 'custom_actions');
+
+      const { groups_acl } = await iconikService.acls.getAclByObjectId(customAction.id!, 'custom_actions');
       await Promise.all(
         groups_acl.map(
-          async (acl) =>
-            // @ts-ignore
-            await iconikService.acls.removeGroupAcl(customAction.id, acl.group_id, 'custom_actions')
+          async (acl) => await iconikService.acls.removeGroupAcl(customAction.id!, acl.group_id, 'custom_actions')
         )
       );
       return { message: 'Security Workflow successfully initialize.' };
