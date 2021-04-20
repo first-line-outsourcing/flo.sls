@@ -1,7 +1,7 @@
 import { HttpBadRequestError, HttpInternalServerError, HttpUnauthorizedError } from '@errors/http';
 import { IconikService } from '@workflowwin/iconik-api';
 import { IconikParams } from '@workflowwin/iconik-api/src/index';
-import { IconikContext } from './iconik/interfaces/context';
+import { IconikContext } from './interfaces/context';
 
 export async function getCallerAndOwner(
   { authToken, iconikUrl, appId, systemDomainId }: IconikParams,

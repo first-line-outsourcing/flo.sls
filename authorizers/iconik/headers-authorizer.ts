@@ -2,16 +2,19 @@ import { getEnv } from '@helper/environment';
 import { errorHandler } from '@helper/error-handler';
 import { log } from '@helper/logger';
 import { IconikParams } from '@workflowwin/iconik-api';
-import { APIGatewayAuthorizerResult } from 'aws-lambda';
-import { getCallerAndOwner } from '../helper';
+import { APIGatewayAuthorizerEvent, APIGatewayAuthorizerResult, Handler } from 'aws-lambda';
+import { getCallerAndOwner } from './helper';
 import { generatePolicy } from '../policy-generator';
-import { IconikContext } from './interfaces/context';
+import { IconikContext, IconikEnhancedAuthContext } from './interfaces/context';
 
-export const iconikAuthorizer = async (event) => {
+export const iconikAuthorizer: Handler<
+  APIGatewayAuthorizerEvent,
+  (APIGatewayAuthorizerResult & { context: IconikEnhancedAuthContext }) | undefined
+> = async (event, context) => {
   log('[Iconik Authorizer]', event);
   try {
-    const callerId: string = event.headers['User-Id'];
-    const authToken: string = event.headers['auth-token'];
+    const callerId: string = event['headers']['User-Id'];
+    const authToken: string = event['headers']['auth-token'];
 
     const iconikParams: IconikParams = {
       authToken,
@@ -21,7 +24,7 @@ export const iconikAuthorizer = async (event) => {
     };
 
     const { caller, appOwner }: IconikContext = await getCallerAndOwner(iconikParams, callerId);
-    const context: APIGatewayAuthorizerResult['context'] = {
+    const context: IconikEnhancedAuthContext = {
       ...iconikParams,
       callerId: caller.id,
       callerEmail: caller.email,
@@ -29,7 +32,7 @@ export const iconikAuthorizer = async (event) => {
       ownerEmail: appOwner.email,
     };
 
-    return generatePolicy(`user|${caller.id}`, 'Allow', event.methodArn, context);
+    return generatePolicy<IconikEnhancedAuthContext | any>(`user|${caller?.id}`, 'Allow', event.methodArn, context);
   } catch (error) {
     errorHandler(error);
   }
