@@ -1,17 +1,39 @@
-service: template-sls
+service: template-win-sls
 
 provider:
   name: aws
   runtime: nodejs12.x
   environment:
     STAGE: ${opt:stage, self:provider.stage}
-    USERS_TABLE_NAME: ${self:custom.tablesNames.Packages.${opt:stage, self:provider.stage}}
-    JOBS_TABLE_NAME: ${self:custom.tablesNames.Emails.${opt:stage, self:provider.stage}}
+    ICONIK_TOKENS_TABLE_NAME: ${self:custom.tablesNames.IconikTokensTable.${opt:stage, self:provider.stage}}
+  #    USERS_TABLE_NAME: ${self:custom.tablesNames.UsersTable.${opt:stage, self:provider.stage}}
+  #    JOBS_TABLE_NAME: ${self:custom.tablesNames.JobsTable.${opt:stage, self:provider.stage}}
   region: ${file(env.yml):${opt:stage, self:provider.stage}.REGION}
   profile: ${file(env.yml):${opt:stage, self:provider.stage}.PROFILE}
   tags:
     client: ${file(env.yml):${opt:stage, self:provider.stage}.CLIENT}
-#  iamRoleStatements:
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - cloudformation:DescribeStacks
+      Resource:
+        - arn:aws:cloudformation:*:*:stack/${file(env.yml):${opt:stage, self:provider.stage}.CLOUDFORMATION_STACK_NAME}/*
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource:
+        - !GetAtt IconikTokensTable.Arn
+        - !Sub
+          - '${arn}/index/*'
+          - arn: !GetAtt IconikTokensTable.Arn
+#        - !GetAtt UsersTable.Arn
+#        - !Sub
+#          - '${arn}/index/*'
+#          - arn: !GetAtt UsersTable.Arn
+#        - !GetAtt JobsTable.Arn
+#        - !Sub
+#          - '${arn}/index/*'
+#          - arn: !GetAtt JobsTable.Arn
 #    - Effect: Allow
 #      Action:
 #        - dynamodb:DescribeTable
@@ -129,6 +151,11 @@ custom:
       test: 'win-test-subscribe'
       prod: 'win-prod-subscribe'
   tablesNames:
+    IconikTokensTable:
+      local: 'IconikTokens-local'
+      dev: 'IconikTokens-dev'
+      test: 'IconikTokens-test'
+      prod: 'IconikTokens'
     UsersTable:
       local: 'Users-local'
       dev: 'Users-dev'

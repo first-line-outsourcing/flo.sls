@@ -17,6 +17,8 @@ const envs: Record<string, string | undefined> = {
   ICONIK_URL: process.env.ICONIK_URL,
   ICONIK_APP_ID: process.env.ICONIK_APP_ID,
   ICONIK_APP_AUTH_TOKEN: process.env.ICONIK_APP_AUTH_TOKEN,
+  REFRESH_TOKEN_HOURS: process.env.REFRESH_TOKEN_HOURS,
+  ICONIK_TOKENS_TABLE_NAME: process.env.ICONIK_TOKENS_TABLE_NAME,
   USERS_TABLE_NAME: process.env.USERS_TABLE_NAME,
   JOBS_TABLE_NAME: process.env.JOBS_TABLE_NAME,
 };

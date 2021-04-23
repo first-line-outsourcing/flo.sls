@@ -2,7 +2,7 @@
 
 initialization:
   handler: security/handler.initialization
-  description: create CA for chage refresh token period
+  description: 'create CA for change refresh token period'
   tags:
     client: ${file(env.yml):${opt:stage, self:provider.stage}.CLIENT}
   timeout: 28
@@ -18,9 +18,30 @@ initialization:
             Content-Type: "'application/json'"
           template: $input.json('$')
 
+changeRefreshTokenPeriod:
+  handler: security/handler.changeRefreshTokenPeriod
+  description: 'CA for change refresh token period'
+  tags:
+    client: ${file(env.yml):${opt:stage, self:provider.stage}.CLIENT}
+  timeout: 28
+  environment:
+    REFRESH_TOKEN_LAMBDA_ARN: !GetAtt RefreshTokenLambdaFunction.Arn
+    INVALIDATE_TOKENS_LAMBDA_ARN: !GetAtt InvalidateTokensLambdaFunction.Arn
+  events:
+    - http:
+        path: api/security/change-refresh-token-period
+        method: post
+        integration: lambda
+        cors: true
+        response:
+          headers:
+            Access-Control-Allow-Origin: "'*'"
+            Content-Type: "'application/json'"
+          template: $input.json('$')
+
 refreshToken:
   handler: security/handler.refreshToken
-  description: refresh tokens in CA and WH every N hours
+  description: 'refresh tokens in CA and WH every N hours'
   tags:
     client: ${file(env.yml):${opt:stage, self:provider.stage}.CLIENT}
   timeout: 28
@@ -38,14 +59,14 @@ refreshToken:
 
 invalidateTokens:
   handler: security/handler.invalidateTokens
-  description: invalidate tokens in from CA and WH
+  description: 'invalidate tokens in CA and WH'
   tags:
     client: ${file(env.yml):${opt:stage, self:provider.stage}.CLIENT}
   timeout: 28
   events:
     - http:
         path: api/security/invalidate-tokens
-        method: post
+        method: get
         integration: lambda
         cors: true
         response:

@@ -1,3 +1,4 @@
+import { getEnv } from '@helper/environment';
 import { IconikService } from '@workflowwin/iconik-api';
 import { CustomActionSchema } from '@workflowwin/iconik-api/dist/src/assets/assets-methods';
 import { WebhookResponseSchema } from '@workflowwin/iconik-api/src/notifications/notifications-methods';
@@ -43,5 +44,15 @@ export class SecurityService {
     );
 
     await Promise.all([WH, CA]);
+  }
+
+  public isInvalidateIconikToken(createDate: Date) {
+    const hourInMilliseconds: number = 3600000;
+    const refreshTokenMilliseconds: number = parseFloat(getEnv('REFRESH_TOKEN_HOURS')) * hourInMilliseconds;
+
+    const nowTime = new Date().getTime();
+    const invalidationTime = createDate.getTime() + refreshTokenMilliseconds;
+
+    return nowTime > invalidationTime;
   }
 }

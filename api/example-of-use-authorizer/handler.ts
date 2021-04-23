@@ -4,6 +4,8 @@ import { APIGatewayLambdaEvent } from '@interfaces/api-gateway-lambda.interface'
 import { Handler } from 'aws-lambda';
 import { IconikEnhancedAuthContext } from '../../authorizers/iconik/interfaces/context';
 
+//TODO: create init examples: CA, WH
+
 export const exampleOfUseAuthorizer: Handler<APIGatewayLambdaEvent<
   null,
   null,
