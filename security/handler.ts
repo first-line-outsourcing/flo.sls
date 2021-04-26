@@ -7,7 +7,6 @@ import { CloudFormationService } from '@services/cloud-formation.service';
 import { IconikService } from '@workflowwin/iconik-api';
 import { CustomActionPayload } from '@workflowwin/iconik-api/dist/src/assets/assets-methods';
 import { Handler } from 'aws-lambda';
-import { InvalidateTokensBody } from './security.interface';
 import { SecurityManager } from './security.manager';
 
 export const initialization: Handler<APIGatewayLambdaEvent<null>> = async (event) => {
@@ -49,7 +48,7 @@ export const refreshToken: Handler<APIGatewayLambdaEvent<null>> = async (event) 
   }
 };
 
-export const invalidateTokens: Handler<APIGatewayLambdaEvent<InvalidateTokensBody>> = async (event) => {
+export const invalidateTokens: Handler<APIGatewayLambdaEvent<null>> = async (event) => {
   log('[security] invalidate token', event);
   try {
     const iconikService: IconikService = createIconikClient();
