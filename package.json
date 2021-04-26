@@ -53,7 +53,7 @@
   "homepage": "https://github.com/first-line-outsourcing/flo.sls#readme",
   "devDependencies": {
     "@commitlint/cli": "^12.1.1",
-    "@commitlint/config-conventional": "^12.1.1"
+    "@commitlint/config-conventional": "^12.1.1",
     "@redtea/serverless-env-generator": "^1.5.3",
     "@types/aws-lambda": "^8.10.63",
     "@types/bluebird": "^3.5.32",
