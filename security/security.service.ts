@@ -6,8 +6,6 @@ import { CustomActionSchema } from '@workflowwin/iconik-api/dist/src/assets/asse
 import { WebhookResponseSchema } from '@workflowwin/iconik-api/src/notifications/notifications-methods';
 
 export class SecurityService {
-  constructor() {}
-
   public async getCustomActions(iconikService: IconikService): Promise<CustomActionSchema[]> {
     return (await iconikService.assets.getCustomActions()).objects.filter((CA) => CA.type !== 'OPEN');
   }
@@ -67,12 +65,12 @@ export class SecurityService {
     await Promise.all([WH, CA]);
   }
 
-  public isInvalidateIconikToken(createDate: Date) {
-    const hourInMilliseconds: number = 3600000;
+  public isInvalidateIconikToken(dateOfCreation: Date) {
+    const hourInMilliseconds = 3600000;
     const refreshTokenMilliseconds: number = parseFloat(getEnv('REFRESH_TOKEN_HOURS')) * hourInMilliseconds;
 
     const nowTime = new Date().getTime();
-    const invalidationTime = createDate.getTime() + refreshTokenMilliseconds;
+    const invalidationTime = dateOfCreation.getTime() + refreshTokenMilliseconds;
 
     return nowTime > invalidationTime;
   }
