@@ -68,9 +68,9 @@ export class SecurityManager {
     log('info changeRefreshTokenPeriod: ', refreshHours, refreshTokenLambdaARN, invalidateTokensLambdaARN);
 
     const params = {
-      Name: 'DEMO_EVENT',
+      Name: 'refresh-token-event',
       RoleArn: refreshTokenLambdaARN,
-      ScheduleExpression: 'rate(2 minutes)',
+      ScheduleExpression: 'rate(5 minutes)',
       State: 'ENABLED',
     };
 
@@ -84,20 +84,15 @@ export class SecurityManager {
   }
 
   async refreshToken(iconikService: IconikService): Promise<{ message: string }> {
-    const customActions: CustomActionSchema[] = (await iconikService.assets.getCustomActions()).objects.filter(
-      (CA) => CA.type !== 'OPEN'
-    );
-    const webHooks: WebhookResponseSchema[] = (await iconikService.notifications.getWebhooks()).objects;
+    const customActions: CustomActionSchema[] = await this.service.getCustomActions(iconikService);
+    const webHooks: WebhookResponseSchema[] = await this.service.getWebHooks(iconikService);
 
-    const invalidationTokens: string[] = this.service.getTokensFromWHandCA(webHooks, customActions);
+    const invalidationTokens: IconikTokenSchema[] = this.service.getTokensFromWHandCA(webHooks, customActions);
+    const newToken: string = await this.service.createNewAppToken(iconikService);
 
-    const newToken: string = (await iconikService.auth.createAppToken(getEnv('ICONIK_APP_ID'))).token;
     await this.service.updateTokensInWHandCA(iconikService, webHooks, customActions, newToken);
 
-    const saveInvalidationTokens: IconikTokenSchema[] = invalidationTokens.map((token: string) => {
-      return { token };
-    });
-    const data = await IconikTokenModel.batchPut(saveInvalidationTokens);
+    const data = await IconikTokenModel.batchPut(invalidationTokens);
     log('IconikTokenModel.batchPut', data);
 
     return { message: 'Refresh tokens successfully!' };
@@ -111,7 +106,7 @@ export class SecurityManager {
     await Promise.all(
       invalidationTokens.map(async ({ token, createdAt }) => {
         if (this.service.isInvalidateIconikToken(createdAt)) {
-          await iconikService.auth.deleteToken(getEnv('ICONIK_APP_ID'), token);
+          await this.service.invalidateIconikToken(iconikService, token);
           await IconikTokenModel.delete({ token });
         }
       })

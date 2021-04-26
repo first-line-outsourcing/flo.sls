@@ -1,4 +1,6 @@
 import { getEnv } from '@helper/environment';
+import { log } from '@helper/logger';
+import { IconikTokenSchema } from '@models/DynamoDB/iconik-token.model';
 import { IconikService } from '@workflowwin/iconik-api';
 import { CustomActionSchema } from '@workflowwin/iconik-api/dist/src/assets/assets-methods';
 import { WebhookResponseSchema } from '@workflowwin/iconik-api/src/notifications/notifications-methods';
@@ -6,9 +8,28 @@ import { WebhookResponseSchema } from '@workflowwin/iconik-api/src/notifications
 export class SecurityService {
   constructor() {}
 
-  public getTokensFromWHandCA(webHooks: WebhookResponseSchema[], customActions: CustomActionSchema[]): string[] {
+  public async getCustomActions(iconikService: IconikService): Promise<CustomActionSchema[]> {
+    return (await iconikService.assets.getCustomActions()).objects.filter((CA) => CA.type !== 'OPEN');
+  }
+
+  public async getWebHooks(iconikService: IconikService): Promise<WebhookResponseSchema[]> {
+    return (await iconikService.notifications.getWebhooks()).objects;
+  }
+
+  public async createNewAppToken(iconikService: IconikService): Promise<string> {
+    return (await iconikService.auth.createAppToken(getEnv('ICONIK_APP_ID'))).token;
+  }
+
+  public getTokensFromWHandCA(
+    webHooks: WebhookResponseSchema[],
+    customActions: CustomActionSchema[]
+  ): IconikTokenSchema[] {
     const tokens = [...this.getTokensFromArray(customActions), ...this.getTokensFromArray(webHooks)];
-    return tokens.filter((token, index) => tokens.indexOf(token) === index);
+    return tokens
+      .filter((token, index) => tokens.indexOf(token) === index)
+      .map((token) => {
+        return { token };
+      });
   }
 
   public getTokensFromArray(array: CustomActionSchema[] | WebhookResponseSchema[]): string[] {
@@ -54,5 +75,13 @@ export class SecurityService {
     const invalidationTime = createDate.getTime() + refreshTokenMilliseconds;
 
     return nowTime > invalidationTime;
+  }
+
+  public async invalidateIconikToken(iconikService: IconikService, token: string) {
+    try {
+      await iconikService.auth.deleteToken(getEnv('ICONIK_APP_ID'), token);
+    } catch (error) {
+      log(error);
+    }
   }
 }
