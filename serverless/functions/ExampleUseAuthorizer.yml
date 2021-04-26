@@ -1,5 +1,23 @@
 # ================== Example Of Use Authorizer =====================
 
+exampleInitialization:
+  handler: api/example-of-use-authorizer/handler.exampleInitialization
+  description: example create CA and WH
+  tags:
+    client: ${file(env.yml):${opt:stage, self:provider.stage}.CLIENT}
+  timeout: 28
+  events:
+    - http:
+        path: api/examples/initialization
+        method: get
+        integration: lambda
+        cors: true
+        response:
+          headers:
+            Access-Control-Allow-Origin: "'*'"
+            Content-Type: "'application/json'"
+          template: $input.json('$')
+
 exampleOfUseAuthorizer:
   handler: api/example-of-use-authorizer/handler.exampleOfUseAuthorizer
   description: example lambda with Iconik Authorizer
