@@ -1,9 +1,10 @@
 import { getEnv } from '@helper/environment';
 import { log } from '@helper/logger';
-import { IconikTokenSchema } from '@models/DynamoDB/iconik-token.model';
+import { IconikTokenInterface, IconikTokenModel, IconikTokenSchema } from '@models/DynamoDB/iconik-token.model';
 import { IconikService } from '@workflowwin/iconik-api';
 import { CustomActionSchema } from '@workflowwin/iconik-api/dist/src/assets/assets-methods';
 import { WebhookResponseSchema } from '@workflowwin/iconik-api/src/notifications/notifications-methods';
+import { ScanResponse } from 'dynamoose/dist/DocumentRetriever';
 
 export class SecurityService {
   public async getCustomActions(iconikService: IconikService): Promise<CustomActionSchema[]> {
@@ -63,6 +64,10 @@ export class SecurityService {
     );
 
     await Promise.all([WH, CA]);
+  }
+
+  public async getTokensFromDynamoDB(): Promise<ScanResponse<IconikTokenInterface>> {
+    return (await IconikTokenModel.scan().exec()) as ScanResponse<any>;
   }
 
   public isInvalidateIconikToken(dateOfCreation: Date) {

@@ -1,5 +1,4 @@
 import { HttpBadRequestError } from '@errors/http';
-import { getEnv } from '@helper/environment';
 import { log } from '@helper/logger';
 import { IconikTokenInterface, IconikTokenModel, IconikTokenSchema } from '@models/DynamoDB/iconik-token.model';
 import { CloudFormationService } from '@services/cloud-formation.service';
@@ -9,7 +8,6 @@ import { CustomActionSchema } from '@workflowwin/iconik-api/src/assets/assets-me
 import { WebhookResponseSchema } from '@workflowwin/iconik-api/src/notifications/notifications-methods';
 import { ScanResponse } from 'dynamoose/dist/DocumentRetriever';
 import { SecurityService } from './security.service';
-import * as AWS from 'aws-sdk';
 
 const refreshHoursField: MetadataFieldSchema = {
   field_type: 'integer',
@@ -20,11 +18,9 @@ const refreshHoursField: MetadataFieldSchema = {
 
 export class SecurityManager {
   private readonly service: SecurityService;
-  private readonly cloudWatchEvents = new AWS.CloudWatchEvents({ apiVersion: '2015-10-07' });
 
   constructor() {
     this.service = new SecurityService();
-    AWS.config.update({ region: getEnv('REGION') });
   }
 
   async initialization(iconikService: IconikService, cloudFormation: CloudFormationService) {
@@ -67,20 +63,12 @@ export class SecurityManager {
   ) {
     log('info changeRefreshTokenPeriod: ', refreshHours, refreshTokenLambdaARN, invalidateTokensLambdaARN);
 
-    const params = {
-      Name: 'refresh-token-event',
-      RoleArn: refreshTokenLambdaARN,
-      ScheduleExpression: 'rate(5 minutes)',
-      State: 'ENABLED',
-    };
-
-    this.cloudWatchEvents.putRule(params, function (err, data) {
-      if (err) {
-        log('Error', err);
-      } else {
-        log('Success', data.RuleArn);
-      }
-    });
+    /**
+     * TODO:
+     * create 2 events:
+     * RefreshTokenEvent: replace tokens in CA and WH every N hours
+     * InvalidateTokensEvent: invalidate tokens from dynamoDB every N+REFRESH_TOKEN_HOURS hours
+     * */
   }
 
   async refreshToken(iconikService: IconikService): Promise<{ message: string }> {
@@ -88,20 +76,16 @@ export class SecurityManager {
     const webHooks: WebhookResponseSchema[] = await this.service.getWebHooks(iconikService);
 
     const invalidationTokens: IconikTokenSchema[] = this.service.getTokensFromWHandCA(webHooks, customActions);
+    await IconikTokenModel.batchPut(invalidationTokens);
+
     const newToken: string = await this.service.createNewAppToken(iconikService);
-
     await this.service.updateTokensInWHandCA(iconikService, webHooks, customActions, newToken);
-
-    const data = await IconikTokenModel.batchPut(invalidationTokens);
-    log('IconikTokenModel.batchPut', data);
 
     return { message: 'Refresh tokens successfully!' };
   }
 
   async invalidateTokens(iconikService: IconikService): Promise<{ message: string }> {
-    const invalidationTokens: ScanResponse<IconikTokenInterface> = (await IconikTokenModel.scan().exec()) as ScanResponse<
-      any
-    >;
+    const invalidationTokens: ScanResponse<IconikTokenInterface> = await this.service.getTokensFromDynamoDB();
 
     await Promise.all(
       invalidationTokens.map(async ({ token, createdAt }) => {
