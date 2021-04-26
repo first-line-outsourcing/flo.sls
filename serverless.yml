@@ -5,8 +5,8 @@ provider:
   runtime: nodejs12.x
   environment:
     STAGE: ${opt:stage, self:provider.stage}
-    USERS_TABLE_NAME: ${self:custom.tablesNames.Packages.${opt:stage, self:provider.stage}}
-    JOBS_TABLE_NAME: ${self:custom.tablesNames.Emails.${opt:stage, self:provider.stage}}
+    USERS_TABLE_NAME: ${self:custom.tablesNames.UsersTable.${opt:stage, self:provider.stage}}
+    JOBS_TABLE_NAME: ${self:custom.tablesNames.JobsTable.${opt:stage, self:provider.stage}}
   region: ${file(env.yml):${opt:stage, self:provider.stage}.REGION}
   profile: ${file(env.yml):${opt:stage, self:provider.stage}.PROFILE}
   tags:
