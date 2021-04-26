@@ -52,6 +52,8 @@
   },
   "homepage": "https://github.com/first-line-outsourcing/flo.sls#readme",
   "devDependencies": {
+    "@commitlint/cli": "^12.1.1",
+    "@commitlint/config-conventional": "^12.1.1",
     "@redtea/serverless-env-generator": "^1.5.3",
     "@types/aws-lambda": "^8.10.63",
     "@types/bluebird": "^3.5.32",
@@ -85,14 +87,12 @@
     "tsconfig-paths-webpack-plugin": "^3.3.0",
     "typescript": "^4.0.3",
     "webpack": "^4.43.0",
-    "webpack-node-externals": "^2.5.2",
-    "@commitlint/cli": "^12.1.1",
-    "@commitlint/config-conventional": "^12.1.1"
+    "webpack-node-externals": "^2.5.2"
   },
   "dependencies": {
     "@redtea/format-axios-error": "^2.0.2",
     "alai": "^1.0.3",
-    "aws-sdk": "^2.865.0",
+    "aws-sdk": "^2.866.0",
     "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "dynamoose": "^2.7.2",
