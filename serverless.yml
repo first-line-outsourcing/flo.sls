@@ -1,4 +1,4 @@
-service: template-win-sls
+service: template-sls
 
 provider:
   name: aws
@@ -6,8 +6,8 @@ provider:
   environment:
     STAGE: ${opt:stage, self:provider.stage}
     ICONIK_TOKENS_TABLE_NAME: ${self:custom.tablesNames.IconikTokensTable.${opt:stage, self:provider.stage}}
-  #    USERS_TABLE_NAME: ${self:custom.tablesNames.UsersTable.${opt:stage, self:provider.stage}}
-  #    JOBS_TABLE_NAME: ${self:custom.tablesNames.JobsTable.${opt:stage, self:provider.stage}}
+    USERS_TABLE_NAME: ${self:custom.tablesNames.UsersTable.${opt:stage, self:provider.stage}}
+    JOBS_TABLE_NAME: ${self:custom.tablesNames.JobsTable.${opt:stage, self:provider.stage}}
   region: ${file(env.yml):${opt:stage, self:provider.stage}.REGION}
   profile: ${file(env.yml):${opt:stage, self:provider.stage}.PROFILE}
   tags:

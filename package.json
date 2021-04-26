@@ -52,6 +52,8 @@
   },
   "homepage": "https://github.com/workflow-intelligence-nexus/win.sls#readme",
   "devDependencies": {
+    "@commitlint/cli": "^12.1.1",
+    "@commitlint/config-conventional": "^12.1.1",
     "@redtea/serverless-env-generator": "^1.5.3",
     "@types/aws-lambda": "^8.10.63",
     "@types/bluebird": "^3.5.32",
@@ -91,10 +93,10 @@
     "@redtea/format-axios-error": "^2.0.2",
     "@workflowwin/iconik-api": "^2.1.62",
     "alai": "^1.0.3",
-    "aws-sdk": "^2.865.0",
+    "aws-sdk": "^2.866.0",
     "axios": "^0.21.1",
     "dotenv": "^8.2.0",
-    "dynamoose": "^2.7.2",
+    "dynamoose": "^2.7.3",
     "node-uuid": "^1.4.8",
     "nodemailer": "^6.5.0",
     "reflect-metadata": "^0.1.13",
@@ -105,7 +107,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged"
+      "pre-commit": "pretty-quick --staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   }
 }
