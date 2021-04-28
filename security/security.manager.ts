@@ -1,4 +1,5 @@
 import { HttpBadRequestError } from '@errors/http';
+import { getEnv } from '@helper/environment';
 import { log } from '@helper/logger';
 import { IconikTokenInterface, IconikTokenModel, IconikTokenSchema } from '@models/DynamoDB/iconik-token.model';
 import { CloudFormationService } from '@services/cloud-formation.service';
@@ -58,25 +59,35 @@ export class SecurityManager {
 
   async changeRefreshTokenPeriod(
     refreshHours: string,
-    refreshTokenLambdaARN: string,
+    refreshTokensLambdaARN: string,
     invalidateTokensLambdaARN: string
   ) {
-    log('info changeRefreshTokenPeriod: ', refreshHours, refreshTokenLambdaARN, invalidateTokensLambdaARN);
+    const refreshTokensRuleName = 'refresh-tokens-event';
+    const tokensRefreshTime = parseFloat(refreshHours) * 60;
 
-    /**
-     * TODO:
-     * create 2 events:
-     * RefreshTokenEvent: replace tokens in CA and WH every N hours
-     * InvalidateTokensEvent: invalidate tokens from dynamoDB every N+REFRESH_TOKEN_HOURS hours
-     * */
+    const invalidateTokensRuleName = 'invalidate-tokens-event';
+    const tokensInvalidateTime = tokensRefreshTime + parseFloat(getEnv('REFRESH_TOKEN_HOURS')) * 60;
+
+    await this.service.createRuleAndBindLambda(
+      invalidateTokensRuleName,
+      tokensInvalidateTime,
+      invalidateTokensLambdaARN
+    );
+
+    await new Promise((res) => setTimeout(() => res(), 5000));
+
+    await this.service.createRuleAndBindLambda(refreshTokensRuleName, tokensRefreshTime, refreshTokensLambdaARN);
   }
 
-  async refreshToken(iconikService: IconikService): Promise<{ message: string }> {
+  async refreshTokens(iconikService: IconikService): Promise<{ message: string }> {
     const customActions: CustomActionSchema[] = await this.service.getCustomActions(iconikService);
     const webHooks: WebhookResponseSchema[] = await this.service.getWebHooks(iconikService);
 
     const invalidationTokens: IconikTokenSchema[] = this.service.getTokensFromWHandCA(webHooks, customActions);
-    await IconikTokenModel.batchPut(invalidationTokens);
+    if (invalidationTokens?.length) {
+      const batchPut = await IconikTokenModel.batchPut(invalidationTokens);
+      log('batchPut', batchPut);
+    }
 
     const newToken: string = await this.service.createNewAppToken(iconikService);
     await this.service.updateTokensInWHandCA(iconikService, webHooks, customActions, newToken);

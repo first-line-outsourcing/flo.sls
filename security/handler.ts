@@ -26,23 +26,23 @@ export const changeRefreshTokenPeriod: Handler<APIGatewayLambdaEvent<CustomActio
   log('[security] change refresh token period', event);
   try {
     const refreshHours = event.body.metadata_values.win_RefreshHours.field_values[0].value;
-    const refreshTokenLambdaArn: string = getEnv('REFRESH_TOKEN_LAMBDA_ARN');
+    const refreshTokensLambdaArn: string = getEnv('REFRESH_TOKEN_LAMBDA_ARN');
     const invalidateTokensLambdaArn: string = getEnv('INVALIDATE_TOKENS_LAMBDA_ARN');
 
     const manager = new SecurityManager();
-    return await manager.changeRefreshTokenPeriod(refreshHours, refreshTokenLambdaArn, invalidateTokensLambdaArn);
+    return await manager.changeRefreshTokenPeriod(refreshHours, refreshTokensLambdaArn, invalidateTokensLambdaArn);
   } catch (error) {
     errorHandler(error);
   }
 };
 
-export const refreshToken: Handler<APIGatewayLambdaEvent<null>> = async (event) => {
-  log('[security] refresh token', event);
+export const refreshTokens: Handler<APIGatewayLambdaEvent<null>> = async (event) => {
+  log('[security] refresh tokens', event);
   try {
     const iconikService: IconikService = createIconikClient();
 
     const manager: SecurityManager = new SecurityManager();
-    return await manager.refreshToken(iconikService);
+    return await manager.refreshTokens(iconikService);
   } catch (error) {
     errorHandler(error);
   }

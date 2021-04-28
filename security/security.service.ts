@@ -4,9 +4,28 @@ import { IconikTokenInterface, IconikTokenModel, IconikTokenSchema } from '@mode
 import { IconikService } from '@workflowwin/iconik-api';
 import { CustomActionSchema } from '@workflowwin/iconik-api/dist/src/assets/assets-methods';
 import { WebhookResponseSchema } from '@workflowwin/iconik-api/src/notifications/notifications-methods';
+import { CloudWatchEvents, Lambda } from 'aws-sdk';
+import * as AWS from 'aws-sdk';
+import {
+  DescribeRuleResponse,
+  PutRuleRequest,
+  PutRuleResponse,
+  PutTargetsRequest,
+  PutTargetsResponse,
+} from 'aws-sdk/clients/cloudwatchevents';
+import { AddPermissionResponse } from 'aws-sdk/clients/lambda';
 import { ScanResponse } from 'dynamoose/dist/DocumentRetriever';
 
 export class SecurityService {
+  private readonly cloudWatchEvents: CloudWatchEvents;
+  private readonly lambda: Lambda;
+
+  constructor() {
+    this.cloudWatchEvents = new AWS.CloudWatchEvents({ apiVersion: '2015-10-07' });
+    this.lambda = new AWS.Lambda();
+    AWS.config.update({ region: getEnv('REGION') });
+  }
+
   public async getCustomActions(iconikService: IconikService): Promise<CustomActionSchema[]> {
     return (await iconikService.assets.getCustomActions()).objects.filter((CA) => CA.type !== 'OPEN');
   }
@@ -47,23 +66,67 @@ export class SecurityService {
     customActions: CustomActionSchema[],
     token: string
   ): Promise<void> {
-    const WH: Promise<WebhookResponseSchema>[] = webHooks.map(({ event_type, url, id, status, headers }) =>
-      iconikService.notifications.updateWebhook(id, {
-        url,
-        event_type,
-        status,
-        headers: { ...headers, 'auth-token': token },
+    await Promise.all(
+      webHooks.map(async ({ event_type, url, id, status, headers }) => {
+        try {
+          await iconikService.notifications.updateWebhook(id, {
+            url,
+            event_type,
+            status,
+            headers: { ...headers, 'auth-token': token },
+          });
+        } catch (error) {
+          log('updateWebhook', error);
+        }
       })
     );
 
-    const CA: Promise<CustomActionSchema>[] = customActions.map((CA) =>
-      iconikService.assets.updateCustomAction(CA.context, CA.id!, {
-        ...CA,
-        headers: { ...CA?.headers, 'auth-token': token },
+    await Promise.all(
+      customActions.map(async (CA) => {
+        try {
+          const { context, id, title, url } = CA;
+          await iconikService.assets.updateCustomAction(context, id!, {
+            context,
+            title,
+            url,
+            headers: { ...CA?.headers, 'auth-token': token },
+          });
+        } catch (error) {
+          log('updateCustomAction', error);
+        }
       })
     );
+  }
 
-    await Promise.all([WH, CA]);
+  public async createRuleAndBindLambda(
+    ruleName: string,
+    ruleSchedule: number,
+    lambdaARN: string
+  ): Promise<PutRuleResponse | void> {
+    const params: PutRuleRequest = {
+      Name: ruleName,
+      ScheduleExpression: `rate(${ruleSchedule} minutes)`,
+      State: 'ENABLED',
+    };
+
+    const isRule = await this.getCloudWatchRule(ruleName);
+    if (isRule) {
+      return await this.putCloudWatchRule(params);
+    }
+
+    const { RuleArn } = await this.putCloudWatchRule(params);
+
+    await this.addFunctionInvokePermissionForRule(`${ruleName}-permission`, lambdaARN, RuleArn!);
+
+    await this.putCloudWatchTargets({
+      Rule: ruleName,
+      Targets: [
+        {
+          Id: '1',
+          Arn: lambdaARN,
+        },
+      ],
+    });
   }
 
   public async getTokensFromDynamoDB(): Promise<ScanResponse<IconikTokenInterface>> {
@@ -84,7 +147,43 @@ export class SecurityService {
     try {
       await iconikService.auth.deleteToken(getEnv('ICONIK_APP_ID'), token);
     } catch (error) {
-      log(error);
+      log('invalidateIconikToken: ', error);
     }
+  }
+
+  private async addFunctionInvokePermissionForRule(
+    permissionName: string,
+    lambdaARN: string,
+    ruleARN: string
+  ): Promise<AddPermissionResponse | undefined> {
+    try {
+      return await this.lambda
+        .addPermission({
+          Action: 'lambda:invokeFunction',
+          FunctionName: lambdaARN,
+          StatementId: permissionName,
+          Principal: 'events.amazonaws.com',
+          SourceArn: ruleARN,
+        })
+        .promise();
+    } catch (error) {
+      log('addFunctionInvokePermissionForRule: ', error);
+    }
+  }
+
+  private async getCloudWatchRule(name: string): Promise<DescribeRuleResponse | undefined> {
+    try {
+      return await this.cloudWatchEvents.describeRule({ Name: name }).promise();
+    } catch (error) {
+      log('getCloudWatchRule: ', error);
+    }
+  }
+
+  private async putCloudWatchRule(params: PutRuleRequest): Promise<PutRuleResponse> {
+    return await this.cloudWatchEvents.putRule(params).promise();
+  }
+
+  private async putCloudWatchTargets(params: PutTargetsRequest): Promise<PutTargetsResponse> {
+    return await this.cloudWatchEvents.putTargets(params).promise();
   }
 }

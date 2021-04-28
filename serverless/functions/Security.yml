@@ -25,7 +25,7 @@ changeRefreshTokenPeriod:
     client: ${file(env.yml):${opt:stage, self:provider.stage}.CLIENT}
   timeout: 28
   environment:
-    REFRESH_TOKEN_LAMBDA_ARN: !GetAtt RefreshTokenLambdaFunction.Arn
+    REFRESH_TOKEN_LAMBDA_ARN: !GetAtt RefreshTokensLambdaFunction.Arn
     INVALIDATE_TOKENS_LAMBDA_ARN: !GetAtt InvalidateTokensLambdaFunction.Arn
   events:
     - http:
@@ -39,15 +39,15 @@ changeRefreshTokenPeriod:
             Content-Type: "'application/json'"
           template: $input.json('$')
 
-refreshToken:
-  handler: security/handler.refreshToken
+refreshTokens:
+  handler: security/handler.refreshTokens
   description: 'refresh tokens in CA and WH every N hours'
   tags:
     client: ${file(env.yml):${opt:stage, self:provider.stage}.CLIENT}
   timeout: 28
   events:
     - http:
-        path: api/security/refresh-token
+        path: api/security/refresh-tokens
         method: get
         integration: lambda
         cors: true
