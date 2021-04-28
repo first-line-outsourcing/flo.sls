@@ -9,10 +9,11 @@ export class ExampleOfUseAuthorizerManager {
     iconikService: IconikService
   ): Promise<{ message: string }> {
     try {
-      const apiUrl = cloudFormation.getServiceEndpoint();
+      const apiUrl = await cloudFormation.getServiceEndpoint();
 
-      await iconikService.assets.createCustomAction('POST', {
-        context: 'ASSET',
+      await iconikService.assets.createCustomAction('NONE', {
+        context: 'NONE',
+        type: 'POST',
         title: 'Example Custom Action',
         url: `${apiUrl}/api/examples/use-authorizer`,
       });

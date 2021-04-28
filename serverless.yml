@@ -1,4 +1,4 @@
-service: template-win-sls
+service: template-sls
 
 provider:
   name: aws

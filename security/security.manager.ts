@@ -61,7 +61,7 @@ export class SecurityManager {
     refreshHours: string,
     refreshTokensLambdaARN: string,
     invalidateTokensLambdaARN: string
-  ) {
+  ): Promise<{ message: string }> {
     const refreshTokensRuleName = 'refresh-tokens-event';
     const tokensRefreshTime = parseFloat(refreshHours) * 60;
 
@@ -77,6 +77,8 @@ export class SecurityManager {
     await new Promise((res) => setTimeout(() => res(), 5000));
 
     await this.service.createRuleAndBindLambda(refreshTokensRuleName, tokensRefreshTime, refreshTokensLambdaARN);
+
+    return { message: 'Token refresh time changed successfully.' };
   }
 
   async refreshTokens(iconikService: IconikService): Promise<{ message: string }> {
