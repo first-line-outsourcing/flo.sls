@@ -5,31 +5,11 @@ getMediaInfo:
   description: Return Media Info by video URL
   tags:
     client: ${file(env.yml):${opt:stage, self:provider.stage}.CLIENT}
-  timeout: 28
+  timeout: 29
   events:
-    - http:
-        path: api/media-info
+    - httpApi:
+        path: /api/media-info
         method: post
-        integration: lambda
-        cors: true
-        #          origin: '*'
-        #          headers:
-        #            - Content-Type
-        #            - X-Amz-Date
-        #            - Authorization
-        #            - X-Api-Key
-        #            - X-Amz-Security-Token
-        #            - X-Amz-User-Agent
-        #            - Auth-Token
-        #          allowCredentials: false
-        response:
-          headers:
-            Access-Control-Allow-Origin: "'*'"
-            Content-Type: "'application/json'"
-          template: $input.json('$')
-#        authorizer:
-#          name: authorizer
-#          resultTtlInSeconds: 0
 #    - schedule: cron(1 10 * * ? *) # in Hawaii Standard Time will be 12:01am, in Eastern Daylight Time will be 06:01am
 #    - sqs:
 #        arn:
@@ -49,9 +29,3 @@ getMediaInfo:
 #          Fn::GetAtt:
 #            - UsersTable
 #            - StreamArn
-
-#authorizer:
-#  handler: api/auth/handler.authentication
-#  tags:
-#    client: ${file(env.yml):${opt:stage, self:provider.stage}.CLIENT}
-#  timeout: 30
