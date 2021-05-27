@@ -166,6 +166,12 @@ function and resources and env plugin for encrypted environment variables.
 - Log in with _admin/admin_ credentials
 - Now you can see the project's report
 
+### Troubleshooting
+
+- If you see the error `Not authorized. Analyzing this project requires authentication. Please provide a user token in sonar.login or other credentials in sonar.login and sonar.password.`,
+  go to the `Administration` menu in the header -> `Security` -> scroll down and turn off `Force user authentication`.
+  Do it for local usage only!
+
 ## How to add evn variable
 
 In project used https://github.com/org-redtea/serverless-env-generator that fork of https://github.com/DieProduktMacher/serverless-env-generator.
