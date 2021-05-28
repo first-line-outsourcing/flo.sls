@@ -91,7 +91,7 @@
   },
   "dependencies": {
     "@redtea/format-axios-error": "^2.0.2",
-    "@workflowwin/iconik-api": "file:../win/iconik-npm",
+    "@workflowwin/iconik-api": "2.2.1",
     "alai": "^1.0.3",
     "aws-sdk": "^2.893.0",
     "axios": "^0.21.1",
