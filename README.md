@@ -322,3 +322,7 @@ In other cases you should check [this page](https://docs.aws.amazon.com/apigatew
 
 - About REST API event in serverless docs. [Link](https://www.serverless.com/framework/docs/providers/aws/events/apigateway/). 
 - About HTTP API event in serverless docs. [Link](https://www.serverless.com/framework/docs/providers/aws/events/http-api/)
+
+### "Serverless Offline only supports retrieving JWT from the headers (undefined)" error when trying to start offline
+
+Probably, you use lambda authorizer for HTTP API. Serverless offline plugin does not support for that yet. Check the plugin repo for any updates.
