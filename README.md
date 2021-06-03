@@ -108,6 +108,7 @@ function and resources and env plugin for encrypted environment variables.
 
 - The Media Info feature that uses mediainfo binary file and returns media info by url
 - Examples of offline plugins and docker-compose file for working with AWS resources offline
+- Examples of HTTP API and REST API endpoints with authorizers
 - Examples of IAM Role Statements
 - Example of different AWS resources
 - Examples of models for dynamoose library
@@ -128,10 +129,13 @@ function and resources and env plugin for encrypted environment variables.
       feature's functionality
     - feature_name.interface.ts - This file should contain all required interfaces for the feature
 - bin - Executable files (third party libraries that can be used inside a Lambda function)
+- errors/ - Base collections of errors to use in lambda
 - helper - All auxiliary code
+  - http-api/ - Helpers for HTTP API
+  - rest-api/ - Helpers for REST API
   - app-errors.ts - This file contains the class that derives from Node.js Error class. It should be used for
     providing custom errors with the proper structure
-  - error-handler.ts - This file contains the class that helps handle errors
+  - base-error-handler.ts - Base for building error handlers. Normally you should not use it in lambda.
   - helper.ts - This file contains auxiliary functions
   - logger.ts - This file contains log function that helps log data in the proper way
 - models - Models for the databases
@@ -307,3 +311,18 @@ test:
 prod:
   <<: *common
 ```
+
+
+## FAQ
+
+### What type of API Gateway event to use for lambda: REST API or HTTP API?
+
+In most cases HTTP API is the best and cheapest choice. So, use it. 
+In other cases you should check [this page](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-vs-rest.html) to find out what to choose. There are a lot of differences between HTTP API and REST API.
+
+- About REST API event in serverless docs. [Link](https://www.serverless.com/framework/docs/providers/aws/events/apigateway/). 
+- About HTTP API event in serverless docs. [Link](https://www.serverless.com/framework/docs/providers/aws/events/http-api/)
+
+### "Serverless Offline only supports retrieving JWT from the headers (undefined)" error when trying to start offline
+
+Probably, you use lambda authorizer for HTTP API. Serverless offline plugin does not support for that yet. Check the plugin repo for any updates.
