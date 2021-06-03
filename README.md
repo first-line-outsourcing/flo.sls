@@ -90,20 +90,20 @@ Follow these steps:
 
 2. Set up environment variables
 
-- Open env.yml file, you can see stage sections here. For example, `local`, `dev`, and `prod`. If you deploy on
-  production use `prod` section and do not touch other sections.
-- Input your AWS region, for example, `us-east-1`
-- Go to AWS Console `Key Management Service` and create Symmetric key in your region
-- In the root folder of the project create kms_key.yml file and copy your key (Key ID) here like
-  ```
-  prod: your_key_here
-  ```
-- You can add any environment variables. If you need to secure them, encrypt them.
-- Copy the value of variable and run the command in the root of the project
-  ```
-  sls env --attribute VARIABLE_NAME --value variable_value --stage your_stage --encrypt
-  ```
-- `If you use some common variables`, like
+   - Open env.yml file, you can see stage sections here. For example, `local`, `dev`, and `prod`. If you deploy on
+     production use `prod` section and do not touch other sections.
+   - Input your AWS region, for example, `us-east-1`
+   - Go to AWS Console `Key Management Service` and create Symmetric key in your region
+   - In the root folder of the project create kms_key.yml file and copy your key (Key ID) here like
+     ```
+     key: your_key_here
+     ```
+   - You can add any environment variables. If you need to secure them, encrypt them.
+   - Copy the value of variable and run the command in the root of the project
+     ```
+     sls env --attribute VARIABLE_NAME --value variable_value --stage your_stage --encrypt
+     ```
+   - If you use some common variables, like
 
   ```yaml
   common: &common
@@ -144,6 +144,7 @@ Follow these steps:
 
 - The Media Info feature that uses mediainfo binary file and returns media info by url
 - Examples of offline plugins and docker-compose file for working with AWS resources offline
+- Examples of HTTP API and REST API endpoints with authorizers
 - Examples of IAM Role Statements
 - Example of different AWS resources
 - Examples of models for dynamoose library
@@ -201,12 +202,15 @@ Follow these steps:
     - feature_name.service.ts - It's the feature service. Its methods should implement one of the main steps of some
       feature's functionality
     - feature_name.interface.ts - This file should contain all required interfaces for the feature
-- authorizers - lambda authorizers(custom authorizers) or authorizers for iconik requests
 - bin - Executable files (third party libraries that can be used inside a Lambda function)
+- authorizers - lambda authorizers(custom authorizers) or authorizers for iconik requests
+- errors/ - Base collections of errors to use in lambda
 - helper - All auxiliary code
-  - app-errors.ts - This file contains the class that derives from Node.js Error class. It should be used for providing
-    custom errors with the proper structure
-  - error-handler.ts - This file contains the class that helps handle errors
+  - http-api/ - Helpers for HTTP API
+  - rest-api/ - Helpers for REST API
+  - app-errors.ts - This file contains the class that derives from Node.js Error class. It should be used for
+    providing custom errors with the proper structure
+  - base-error-handler.ts - Base for building error handlers. Normally you should not use it in lambda.
   - helper.ts - This file contains auxiliary functions
   - logger.ts - This file contains log function that helps log data in the proper way
 - models - Models for the databases
@@ -240,6 +244,12 @@ Follow these steps:
 - Go to http://localhost:9000
 - Log in with _admin/admin_ credentials
 - Now you can see the project's report
+
+### Troubleshooting
+
+- If you see the error `Not authorized. Analyzing this project requires authentication. Please provide a user token in sonar.login or other credentials in sonar.login and sonar.password.`,
+  go to the `Administration` menu in the header -> `Security` -> scroll down and turn off `Force user authentication`.
+  Do it for local usage only!
 
 ## How to add evn variable
 
@@ -376,3 +386,18 @@ test:
 prod:
   <<: *common
 ```
+
+
+## FAQ
+
+### What type of API Gateway event to use for lambda: REST API or HTTP API?
+
+In most cases HTTP API is the best and cheapest choice. So, use it. 
+In other cases you should check [this page](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-vs-rest.html) to find out what to choose. There are a lot of differences between HTTP API and REST API.
+
+- About REST API event in serverless docs. [Link](https://www.serverless.com/framework/docs/providers/aws/events/apigateway/). 
+- About HTTP API event in serverless docs. [Link](https://www.serverless.com/framework/docs/providers/aws/events/http-api/)
+
+### "Serverless Offline only supports retrieving JWT from the headers (undefined)" error when trying to start offline
+
+Probably, you use lambda authorizer for HTTP API. Serverless offline plugin does not support for that yet. Check the plugin repo for any updates.

@@ -1,8 +1,8 @@
-import { errorHandler } from '@helper/error-handler';
+import { errorHandler } from '@helper/http-api/error-handler';
+import { createResponse } from '@helper/http-api/response';
 import { log } from '@helper/logger';
-import { APIGatewayLambdaEvent } from '@interfaces/api-gateway-lambda.interface';
-import { MediaInfoCurlService, Track } from '@services/media-info-curl.service';
-import { Handler } from 'aws-lambda';
+import { MediaInfoCurlService } from '@services/media-info-curl.service';
+import { APIGatewayProxyHandlerV2 } from 'aws-lambda';
 import { MediaInfoUrl } from './media-info.inteface';
 import { MediaInfoManager } from './media-info.manager';
 
@@ -35,7 +35,7 @@ if (process.env.LAMBDA_TASK_ROOT) {
  * @param context
  */
 
-export const getMediaInfo: Handler<APIGatewayLambdaEvent<MediaInfoUrl>, Track | undefined> = async (event, context) => {
+export const getMediaInfo: APIGatewayProxyHandlerV2 = async (event, context) => {
   log(event);
 
   try {
@@ -47,7 +47,7 @@ export const getMediaInfo: Handler<APIGatewayLambdaEvent<MediaInfoUrl>, Track | 
     /**
      * Prepare required data
      */
-    const mediaInfoUrl: MediaInfoUrl = event.body;
+    const mediaInfoUrl: MediaInfoUrl = JSON.parse(event.body!);
 
     /**
      * Prepare required services
@@ -57,11 +57,13 @@ export const getMediaInfo: Handler<APIGatewayLambdaEvent<MediaInfoUrl>, Track | 
     /**
      * Call the manager's method
      */
-    return await manager.getMediaInfo(mediaInfoUrl, mediaInfoCurlService);
+    const result = await manager.getMediaInfo(mediaInfoUrl, mediaInfoCurlService);
+
+    return createResponse(200, result);
   } catch (e) {
     /**
      * Handle all errors
      */
-    errorHandler(e);
+    return errorHandler(e);
   }
 };

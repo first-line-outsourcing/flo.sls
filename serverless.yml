@@ -9,6 +9,18 @@ provider:
     JOBS_TABLE_NAME: ${self:custom.tablesNames.JobsTable.${opt:stage, self:provider.stage}}
   region: ${file(env.yml):${opt:stage, self:provider.stage}.REGION}
   profile: ${file(env.yml):${opt:stage, self:provider.stage}.PROFILE}
+  # https://www.serverless.com/framework/docs/deprecations/#LAMBDA_HASHING_VERSION_V2
+  lambdaHashingVersion: 20201221
+  httpApi:
+    useProviderTags: true
+    cors: true
+    authorizers:
+      # Remove example
+      exampleAuthorizer:
+        type: request
+        enableSimpleResponses: true
+        functionName: exampleAuthorizerHttpApi
+        identitySource: $request.header.Authorization
   tags:
     client: ${file(env.yml):${opt:stage, self:provider.stage}.CLIENT}
 #  iamRoleStatements:
@@ -113,7 +125,7 @@ provider:
 #        Name: ${opt:stage, self:provider.stage}UserPoolClient::Id
 
 package:
-  include:
+  patterns:
     - bin/*
 custom:
   queuesUrls:
