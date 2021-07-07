@@ -36,7 +36,7 @@ jobs:
           name: NPM install
           command: |
             echo //registry.npmjs.org/:_authToken=$NPM_TOKEN > ./.npmrc
-            npm i
+            npm ci
       - run:
           name: prepare kms_key.yml
           command: |
