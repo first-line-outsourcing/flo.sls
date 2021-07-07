@@ -6,12 +6,19 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 
-const entries = {};
-Object.keys(slsw.lib.entries).forEach((key) => (entries[key] = ['./source-map-install.js', slsw.lib.entries[key]]));
+function getEntries() {
+  const entries = {};
+  Object.keys(slsw.lib.entries)
+    .forEach((key) => (entries[key] = ['./source-map-install.js', slsw.lib.entries[key]]));
+  return entries;
+}
 
 const destPath = path.join(__dirname, '.webpack');
 module.exports = {
-  entry: entries,
+  // If you set package.individually = true in your the serverless config then
+  // no need to define `entry` field for webpack config.
+  // But it`s required for offline plugin.
+  entry: slsw.lib.options.stage === 'local' ? getEntries() : undefined,
   output: {
     libraryTarget: 'commonjs',
     path: destPath,
