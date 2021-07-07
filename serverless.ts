@@ -32,15 +32,6 @@ const masterConfig: AWS = {
       useProviderTags: true,
       payload: '2.0',
       cors: true,
-      authorizers: {
-        // Remove example
-        // exampleAuthorizer: {
-        //   type: 'request',
-        //   enableSimpleResponses: true,
-        //   functionName: 'exampleAuthorizerHttpApi',
-        //   identitySource: '$request.header.Authorization',
-        // },
-      },
     },
   },
   package: {
