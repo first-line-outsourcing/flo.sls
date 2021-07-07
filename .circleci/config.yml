@@ -45,7 +45,7 @@ jobs:
             echo 'test: x' >> kms_key.yml
             echo 'prod: x' >> kms_key.yml
       - run: npm run test:ci
-      - run: npm run build
+      - run: NODE_OPTIONS=--max_old_space_size=4096 npm run build
 
 workflows:
   version: 2.1
