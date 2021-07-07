@@ -37,6 +37,13 @@ jobs:
           command: |
             echo //registry.npmjs.org/:_authToken=$NPM_TOKEN > ./.npmrc
             npm i
+      - run:
+          name: prepare kms_key.yml
+          command: |
+            echo 'local: x' >> kms_key.yml
+            echo 'dev: x' >> kms_key.yml
+            echo 'test: x' >> kms_key.yml
+            echo 'prod: x' >> kms_key.yml
       - run: npm run test:ci
       - run: npm run build
 
