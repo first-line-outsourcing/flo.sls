@@ -7,7 +7,7 @@ import { usersConfig } from './config/serverless/parts/users';
 import { joinParts } from './config/serverless/utils';
 
 const masterConfig: AWS = {
-  service: 'template-sls-ts-test',
+  service: 'template-sls',
   configValidationMode: 'warn',
   variablesResolutionMode: '20210326',
   unresolvedVariablesNotificationMode: 'error',
