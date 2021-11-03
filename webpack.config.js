@@ -8,8 +8,7 @@ const Dotenv = require('dotenv-webpack');
 
 function getEntries() {
   const entries = {};
-  Object.keys(slsw.lib.entries)
-    .forEach((key) => (entries[key] = ['./source-map-install.js', slsw.lib.entries[key]]));
+  Object.keys(slsw.lib.entries).forEach((key) => (entries[key] = ['./source-map-install.js', slsw.lib.entries[key]]));
   return entries;
 }
 

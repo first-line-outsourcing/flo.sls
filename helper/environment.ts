@@ -1,4 +1,4 @@
-import { RuntimeError } from '@errors/runtime/runtime-error';
+import { RuntimeError } from '@floteam/errors/runtime/runtime-error';
 
 /**
  * Extract substitutable envs, because we use webpack-dotenv plugin
