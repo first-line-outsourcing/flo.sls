@@ -2,7 +2,7 @@ import { getEnv, isStage } from '@helper/environment';
 import { User } from '@models/DynamoDB/user.model';
 import { dynamoose } from '@services/dynamoose';
 import { Document } from 'dynamoose/dist/Document';
-import * as uuid from 'node-uuid';
+import { v4 } from 'uuid';
 
 export type JobStatus =
   | 'offer'
@@ -127,7 +127,7 @@ export const jobSchema = new dynamoose.Schema(
     id: {
       type: String,
       hashKey: true,
-      default: uuid.v4,
+      default: v4(),
     },
     producerId: {
       type: String,

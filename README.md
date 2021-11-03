@@ -105,18 +105,18 @@ Follow these steps:
      ```
    - If you use some common variables, like
 
-  ```yaml
-  common: &common
-    REGION: us-east-1
-    PROFILE: win
-    CLIENT: WIN
+```yaml
+common: &common
+  REGION: us-east-1
+  PROFILE: win
+  CLIENT: WIN
 
-  local:
-    <<: *common
-  ```
+local:
+  <<: *common
+```
 
-  The plugin will add this variables to all stages, but we don't want it. So after encrypting, copy encrypted value of
-  the new variable, revert changes and paste it to the right place.
+The plugin will add this variables to all stages, but we don't want it. So after encrypting, copy encrypted value of
+the new variable, revert changes and paste it to the right place.
 
 - Go to the iconik and create app with name `WIN Automation`. You should choose the admin user for this app. If the
   app already exists, use it.
@@ -387,15 +387,14 @@ prod:
   <<: *common
 ```
 
-
 ## FAQ
 
 ### What type of API Gateway event to use for lambda: REST API or HTTP API?
 
-In most cases HTTP API is the best and cheapest choice. So, use it. 
+In most cases HTTP API is the best and cheapest choice. So, use it.
 In other cases you should check [this page](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-vs-rest.html) to find out what to choose. There are a lot of differences between HTTP API and REST API.
 
-- About REST API event in serverless docs. [Link](https://www.serverless.com/framework/docs/providers/aws/events/apigateway/). 
+- About REST API event in serverless docs. [Link](https://www.serverless.com/framework/docs/providers/aws/events/apigateway/).
 - About HTTP API event in serverless docs. [Link](https://www.serverless.com/framework/docs/providers/aws/events/http-api/)
 
 ### "Serverless Offline only supports retrieving JWT from the headers (undefined)" error when trying to start offline
