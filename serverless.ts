@@ -59,6 +59,9 @@ const masterConfig: AWS = {
       test: '${file(./kms_key.yml):test}',
       prod: '${file(./kms_key.yml):prod}',
     },
+    'serverless-offline': {
+      ignoreJWTSignature: true,
+    },
     // s3: {
     //   host: '0.0.0.0',
     //   port: 8001,

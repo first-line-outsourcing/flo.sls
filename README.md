@@ -35,12 +35,12 @@ function and resources and env plugin for encrypted environment variables.
    - Install `nvm`\
      Linux, OSX: https://github.com/nvm-sh/nvm \
      Windows: https://github.com/coreybutler/nvm-windows
-   - Install `Node.js` _Recommended For Most Users_ version (12.18.4 for now) using nvm \
+   - Install `Node.js` _Recommended For Most Users_ version (14.17.0 for now) using nvm \
      Linux, OSX: https://github.com/nvm-sh/nvm#usage \
      Windows: https://github.com/coreybutler/nvm-windows#usage
      ```
-     nvm install 12.18.4
-     nvm use 12.18.4
+     nvm install 14.17.0
+     nvm use 14.17.0
      ```
    - Install `aws-cli` version 2 \
      Linux: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html \
@@ -74,8 +74,9 @@ function and resources and env plugin for encrypted environment variables.
    - Go to AWS Console `Key Management Service` and create Symmetric key in your region
    - In the root folder of the project create kms_key.yml file and copy your key (Key ID) here like
      ```
-     key: your_key_here
+     ${stage}: your_key_here
      ```
+     Where stage can be `local`, `dev`, `test` and `prod`
    - You can add any environment variables. If you need to secure them, encrypt them.
    - Copy the value of variable and run the command in the root of the project
      ```
@@ -93,7 +94,7 @@ function and resources and env plugin for encrypted environment variables.
        <<: *common
      ```
 
-     The plugin will add this variables to all stages, but we don't want it. So after encrypting, copy encrypted value
+     The plugin will add these variables to all stages, but we don't want it. So after encrypting, copy encrypted value
      of the new variable, revert changes and paste it to the right place.
 
    - You are ready for deploying
@@ -129,37 +130,44 @@ function and resources and env plugin for encrypted environment variables.
       feature's functionality
     - feature_name.interface.ts - This file should contain all required interfaces for the feature
 - bin - Executable files (third party libraries that can be used inside a Lambda function)
-- errors/ - Base collections of errors to use in lambda
+- config - Folder for configurations
+  - serverless - TypeScript files for the description of Serverless resources
+    - parts - TypeScript files for the description of Lambda function with their triggers and resources like S3 buckets, SQS, DynamoDB tables, etc.
+      - examples.ts - TypeScript file for description Lambda functions with their triggers for one feature
+      - feature.ts - TypeScript file for description Lambda functions with their triggers for one feature
+      - rest-api-cors.ts - Helper for setting up CORS for REST API
+      - jobs.ts - TypeScript file for description of DynamoDB table
+      - users.ts - TypeScript file for description of DynamoDB table
+    - cf-intristic-fn.ts - Helper with function for CloudFormation
+    - types.ts - Types for Serverless configurations
+    - utils.ts - Helper for Serverless configurations
 - helper - All auxiliary code
   - http-api/ - Helpers for HTTP API
   - rest-api/ - Helpers for REST API
-  - app-errors.ts - This file contains the class that derives from Node.js Error class. It should be used for
-    providing custom errors with the proper structure
   - base-error-handler.ts - Base for building error handlers. Normally you should not use it in lambda.
+  - environment.ts - Helper for working with environment variables
   - helper.ts - This file contains auxiliary functions
   - logger.ts - This file contains log function that helps log data in the proper way
+- interfaces
 - models - Models for the databases
-  - user.model.ts
-  - job.model.ts
-- serverless - YAML files for description Serverless resources
-  - functions - YAML files for description Lambda function with their triggers
-    - FeatureName.yml - YAML file for description Lambda functions with their triggers for one feature
-  - resources - YAML files for description resources like S3 buckets, SQS, DynamoDB tables, etc.
-    - APIGateway.yml
-    - Buckets.yml
-    - ElasticSearch.yml
-    - SQS.yml
-    - Tables.yml
+  - DynamoDB
+    - user.model.ts
+    - job.model.ts
+  - PostgreSQL
+    - account.model.ts
+    - domain.model.ts
 - services - Classes for working with third party libraries, APIs, services, etc.
   - cloud-formation.service.ts
   - email.service.ts
   - s3.service.ts
+- docker-compose.yml
 - env.yml - Environment variables
 - package.json
 - README.md
-- serverless.yml - Contains the main description of the service
-- webpack.config.json
+- serverless.ts - Contains the main description of the service
 - sonar-project.properties - Contains the configuration for static code analysis
+- tsconfig.json
+- webpack.config.js
 
 ## Static code analysis
 
@@ -176,7 +184,7 @@ function and resources and env plugin for encrypted environment variables.
   go to the `Administration` menu in the header -> `Security` -> scroll down and turn off `Force user authentication`.
   Do it for local usage only!
 
-## How to add evn variable
+## How to add env variable
 
 In project used https://github.com/org-redtea/serverless-env-generator that fork of https://github.com/DieProduktMacher/serverless-env-generator.
 

@@ -6,7 +6,7 @@ import { log } from '@helper/logger';
 import { APIGatewayProxyHandlerV2 } from 'aws-lambda';
 
 // Default HTTP API Response factory
-export const defaultResponse: APIGatewayProxyHandlerV2 = async (event) => {
+export const defaultResponse: APIGatewayProxyHandlerV2<string> = async (event) => {
   log(event);
 
   try {
@@ -17,7 +17,7 @@ export const defaultResponse: APIGatewayProxyHandlerV2 = async (event) => {
 };
 
 // Custom HTTP API Response factory
-export const customResponse: APIGatewayProxyHandlerV2 = async (event) => {
+export const customResponse: APIGatewayProxyHandlerV2<string> = async (event) => {
   log(event);
 
   const response = new Response({
