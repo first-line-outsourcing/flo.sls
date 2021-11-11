@@ -1,4 +1,3 @@
-import { Ref } from '../cf-intristic-fn';
 import { AWSPartitial } from '../types';
 
 export const usersConfig: AWSPartitial = {

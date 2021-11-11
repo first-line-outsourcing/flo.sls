@@ -14,7 +14,8 @@ export const examplesConfig: AWSPartitial = {
     },
   },
   functions: {
-    exampleHttpApiDefaultResponse: {
+    // prefix "api" for API Gateway Lambda triggers
+    apiExampleHttpApiDefaultResponse: {
       handler: 'api/http-api/handler.defaultResponse',
       memorySize: 128,
       events: [
@@ -29,7 +30,8 @@ export const examplesConfig: AWSPartitial = {
         },
       ],
     },
-    exampleHttpApiCustomResponse: {
+    // prefix "api" for API Gateway Lambda triggers
+    apiExampleHttpApiCustomResponse: {
       handler: 'api/http-api/handler.customResponse',
       memorySize: 128,
       events: [
@@ -41,7 +43,8 @@ export const examplesConfig: AWSPartitial = {
         },
       ],
     },
-    exampleRestApiDefaultResponse: {
+    // prefix "api" for API Gateway Lambda triggers
+    apiExampleRestApiDefaultResponse: {
       handler: 'api/rest-api/handler.handler',
       memorySize: 128,
       events: [

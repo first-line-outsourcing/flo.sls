@@ -4,7 +4,7 @@ import { log } from '@helper/logger';
 import {
   APIGatewayAuthorizerSimpleResult,
   APIGatewayRequestAuthorizerHttpApiPayloadV2Event,
-} from '@interfaces/api-gateway-authorizer';
+} from '@interfaces/api-gateway-authorizer.interface';
 import { APIGatewayAuthorizerResult, APIGatewayTokenAuthorizerWithContextHandler } from 'aws-lambda';
 import { Handler } from 'aws-lambda/handler';
 
