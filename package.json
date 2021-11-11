@@ -97,7 +97,7 @@
   "dependencies": {
     "@floteam/errors": "^1.0.8",
     "@redtea/format-axios-error": "^2.0.2",
-    "@workflowwin/iconik-api": "^2.1.60",
+    "@workflowwin/iconik-api": "^2.2.37",
     "aws-sdk": "^2.1020.0",
     "axios": "^0.24.0",
     "dotenv": "^8.6.0",
