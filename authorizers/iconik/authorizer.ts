@@ -1,4 +1,4 @@
-import { HttpBadRequestError, HttpInternalServerError, HttpUnauthorizedError } from '@errors/http';
+import { HttpBadRequestError, HttpInternalServerError, HttpUnauthorizedError } from '@floteam/errors/http';
 import { IconikService } from '@workflowwin/iconik-api';
 import { CustomActionPayload } from '@workflowwin/iconik-api/dist/src/assets/assets-methods';
 import { getEnv } from '@helper/environment';
