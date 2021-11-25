@@ -97,7 +97,7 @@
   "dependencies": {
     "@floteam/errors": "^1.0.8",
     "@redtea/format-axios-error": "^2.0.2",
-    "aws-sdk": "^2.1020.0",
+    "aws-sdk": "^2.1021.0",
     "axios": "^0.24.0",
     "dotenv": "^8.6.0",
     "dynamoose": "^2.7.3",
