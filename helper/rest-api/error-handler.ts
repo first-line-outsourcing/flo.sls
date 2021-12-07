@@ -1,4 +1,4 @@
-import { HttpBadRequestError, HttpInternalServerError } from '@floteam/errors/http';
+import { HttpBadRequestError, HttpInternalServerError } from '@floteam/errors';
 import { HttpError } from '@floteam/errors/http/http-error';
 import { RuntimeError } from '@floteam/errors/runtime/runtime-error';
 import { baseErrorHandler } from '@helper/base-error-handler';
