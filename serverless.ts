@@ -6,24 +6,30 @@ import { restApiCorsConfig } from './config/serverless/parts/rest-api-cors';
 import { usersConfig } from './config/serverless/parts/users';
 import { joinParts } from './config/serverless/utils';
 
+const CLIENT = '${file(./env.yml):${self:provider.stage}.CLIENT}';
+const SERVICE_NAME = `template-sls`;
+const STAGE = '${opt:stage, "dev"}';
+const REGION = '${file(./env.yml):${self:provider.stage}.REGION}';
+const PROFILE = '${file(./env.yml):${self:provider.stage}.PROFILE}';
+
 const masterConfig: AWS = {
-  service: 'template-sls',
+  service: SERVICE_NAME,
   configValidationMode: 'warn',
   variablesResolutionMode: '20210326',
   unresolvedVariablesNotificationMode: 'error',
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',
-    stage: '${opt:stage, "dev"}',
+    stage: STAGE,
     lambdaHashingVersion: '20201221',
     // @ts-ignore
-    region: '${file(./env.yml):${self:provider.stage}.REGION}',
-    profile: '${file(./env.yml):${self:provider.stage}.PROFILE}',
+    region: REGION,
+    profile: PROFILE,
     environment: {
-      STAGE: '${self:provider.stage}',
+      STAGE,
     },
     tags: {
-      client: '${file(./env.yml):${self:provider.stage}.CLIENT}',
+      client: CLIENT,
     },
     logs: {
       httpApi: true,
