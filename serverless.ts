@@ -6,6 +6,7 @@ import { restApiCorsConfig } from './config/serverless/parts/rest-api-cors';
 import { usersConfig } from './config/serverless/parts/users';
 import { joinParts } from './config/serverless/utils';
 
+const DEPLOYMENT_BUCKET = 'clients-serverless-deployment-bucket';
 const CLIENT = '${file(./env.yml):${self:provider.stage}.CLIENT}';
 const SERVICE_NAME = `template-sls`;
 const STAGE = '${opt:stage, "dev"}';
@@ -39,6 +40,10 @@ const masterConfig: AWS = {
       payload: '2.0',
       cors: true,
     },
+    deploymentBucket: {
+      name: DEPLOYMENT_BUCKET,
+    },
+    deploymentPrefix: `${SERVICE_NAME}-${STAGE}`,
   },
   package: {
     individually: true,
