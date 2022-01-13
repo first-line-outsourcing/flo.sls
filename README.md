@@ -21,6 +21,9 @@ Follow these steps:
 ## NPM commands
 
 - **deploy:dev**: deploy to the AWS dev environment
+- **free-up:dev**: free up AWS resources for dev stage
+- **deploy:test**: deploy to the AWS test environment
+- **free-up:test**: free up AWS resources for test stage
 - **deploy:prod**: deploy to the AWS prod environment
 - **deploy:local**: start local development environment
 - **build**: build the application with webpack but without deploy,
@@ -140,6 +143,14 @@ the new variable, revert changes and paste it to the right place.
 
 - After successful deployment you will see the API URLs. Copy the URLs that ends on `/initialization`, post them to
   the browser URL input and click enter. They will create all needed stuff in your iconik account.
+
+### Freeing up AWS resources
+
+When there is no dev tasks for the project very long time you can free up AWS resources of the project. It helps to reduce total cost for AWS resources on dev account.
+
+To free up resources use `npm run free-up:<stage>` command. Where `<stage>` is a stage you are going to free up resources for.
+
+When you run the command it uses `serverless.free-up-resources.ts` config to deploy sls application. The config contains minimum set of resources(REST API, HTTP API resources, etc.) for stage to keep ability to deploy it next time without changing anything. Feel free to edit the config for your case. If your project uses only HTTP API then keep the `HttpApi` resources in the config, if it is REST API then keep the `ApiGatewayRestApi` resources.
 
 ## The project contains:
 
