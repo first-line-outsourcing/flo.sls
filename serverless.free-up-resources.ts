@@ -45,7 +45,7 @@ const masterConfig: AWS = {
       //     Policy: '',
       //   },
       // },
-      // Use to keep REST API
+      // Use to keep HTTP API
       HttpApi: {
         Type: 'AWS::ApiGatewayV2::Api',
         Properties: {
