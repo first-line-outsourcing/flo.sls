@@ -35,10 +35,16 @@ const masterConfig: AWS = {
     logs: {
       httpApi: true,
     },
+    apiGateway: {
+      // need to be set to get free up resources feature work
+      disableDefaultEndpoint: false,
+    },
     httpApi: {
       useProviderTags: true,
       payload: '2.0',
       cors: true,
+      // need to be set to get free up resources feature work
+      disableDefaultEndpoint: false,
     },
     deploymentBucket: {
       name: DEPLOYMENT_BUCKET,
