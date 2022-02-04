@@ -100,7 +100,7 @@
     "aws-sdk": "^2.1048.0",
     "axios": "^0.24.0",
     "dotenv": "^10.0.0",
-    "dynamoose": "^2.8.3",
+    "dynamoose": "^2.8.4",
     "nodemailer": "^6.7.2",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.12.2",
