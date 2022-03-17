@@ -2,15 +2,19 @@
 
 ## Project information
 
-It is a skeleton for your AWS + Serverless applications. It uses typescript, webpack, dir-config plugin for Serverless
-function and resources and env plugin for encrypted environment variables.
+It is a skeleton for your AWS + Serverless applications.
 
 ## NPM commands
 
 - **deploy:dev**: deploy to the AWS dev environment
 - **deploy:prod**: deploy to the AWS prod environment
 - **deploy:local**: start local development environment
-- **build**: build the application with webpack but without deploy,
+- **sls:package:dev**: package code using sls package command for dev stage
+- **sls:package:test**: package code using sls package command for dev stage
+- **sls:package:prod**: package code using sls package command for prod stage
+- **sls:print:dev**: print sls config for dev stage
+- **sls:print:test**: print sls config for test test
+- **sls:print:prod**: print sls config for prod test
 - **lint**: start tslint for project files
 - **test**: start unit tests
 - **test:ci**: start test in CI environment
@@ -167,7 +171,8 @@ function and resources and env plugin for encrypted environment variables.
 - serverless.ts - Contains the main description of the service
 - sonar-project.properties - Contains the configuration for static code analysis
 - tsconfig.json
-- webpack.config.js
+- loadenv.ts - load environment variable from `.env` file
+- esbuild-pluings.js - load pluings for esbuild
 
 ## Static code analysis
 

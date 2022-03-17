@@ -42,17 +42,20 @@ const masterConfig: AWS = {
   },
   package: {
     individually: true,
-    patterns: ['bin/*'],
+    patterns: ['bin/*', '.env'],
   },
   custom: {
-    webpack: {
-      webpackConfig: 'webpack.config.js',
-      includeModules: {
-        forceExclude: ['aws-sdk'],
-      },
-      concurrency: 5,
-      serializedCompile: true,
+    esbuild: {
+      bundle: true,
+      minify: true,
+      metafile: false,
+      keepOutputDirectory: true,
       packager: 'npm',
+      inject: ['loadenv.ts'],
+      plugins: 'esbuild-plugins.js',
+      watch: {
+        pattern: ['api/**/*.ts', 'helper/**/*.ts', 'interfaces/**/*.ts', 'models/**/*.ts', 'services/**/*.ts'],
+      },
     },
     prune: {
       automatic: true,
@@ -118,7 +121,7 @@ const masterConfig: AWS = {
   },
   plugins: [
     '@redtea/serverless-env-generator',
-    'serverless-webpack',
+    'serverless-esbuild',
     'serverless-offline-sqs',
     'serverless-offline',
     // 'serverless-offline-sns',
