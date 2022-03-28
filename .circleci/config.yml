@@ -49,7 +49,7 @@ jobs:
             echo 'test: x' >> kms_key.yml
             echo 'prod: x' >> kms_key.yml
       - run: npm run test:ci
-      - run: npm run sll:pacakge:dev
+      - run: npm run sls:package:dev
 
 workflows:
   version: 2.1
