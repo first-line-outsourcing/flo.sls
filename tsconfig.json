@@ -8,8 +8,10 @@
     "sourceMap": true,
     "target": "es2017",
     "outDir": ".build",
+    "isolatedModules": true,
+    "esModuleInterop": true,
     "moduleResolution": "node",
-    "lib": ["es2017", "esnext.asynciterable"],
+    "lib": ["es2017"],
     "rootDir": "./",
     "baseUrl": ".",
     "paths": {
@@ -19,5 +21,5 @@
       "@interfaces/*": ["./interfaces/*"]
     }
   },
-  "exclude": ["node_modules", "coverage", ".build", ".git"]
+  "exclude": ["node_modules", "coverage", ".build", ".esbuild", ".git"]
 }
