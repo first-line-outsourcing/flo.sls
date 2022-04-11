@@ -60,7 +60,11 @@ const masterConfig: AWS = {
       bundle: true,
       minify: true,
       metafile: false,
-      keepOutputDirectory: true,
+      // If you want to debug the output than turn this on.
+      // In other cases keep it off because serverless-esbuild
+      // dont update extra files if they already exists in .esbuild folder.
+      // Extra files are files that you define in package.patterns settings.
+      keepOutputDirectory: false,
       packager: 'npm',
       inject: ['loadenv.ts'],
       plugins: 'esbuild-plugins.js',
