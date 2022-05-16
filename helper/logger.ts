@@ -17,7 +17,7 @@ export function log(...args): undefined {
         /**
          * Axios error has complicated structure that doesn't allow debugging it easily
          */
-        if (arg.isAxiosError) {
+        if (arg?.isAxiosError) {
           return JSON.stringify(format(arg));
         }
         return JSON.stringify(arg);
