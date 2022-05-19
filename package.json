@@ -105,7 +105,7 @@
     "nodemailer": "^6.7.2",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.12.2",
-    "sequelize-typescript": "^2.1.1",
+    "sequelize-typescript": "^2.1.2",
     "source-map-support": "^0.5.21",
     "uuid": "^8.3.2",
     "xml2js": "^0.4.23"
