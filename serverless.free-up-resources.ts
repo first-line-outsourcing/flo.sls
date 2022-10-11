@@ -1,11 +1,11 @@
 import type { AWS } from '@serverless/typescript';
 
 const DEPLOYMENT_BUCKET = 'clients-serverless-deployment-bucket';
-const CLIENT = '${file(./env.yml):${self:provider.stage}.CLIENT}';
+const CLIENT = '${self:provider.environment.CLIENT}';
 const SERVICE_NAME = `template-sls`;
 const STAGE = '${opt:stage, "dev"}';
-const REGION = '${file(./env.yml):${self:provider.stage}.REGION}';
-const PROFILE = '${file(./env.yml):${self:provider.stage}.PROFILE}';
+const REGION = '${self:provider.environment.REGION}';
+const PROFILE = '${self:provider.environment.PROFILE}';
 
 const masterConfig: AWS = {
   service: SERVICE_NAME,

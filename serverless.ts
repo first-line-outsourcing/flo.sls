@@ -1,17 +1,19 @@
 import type { AWS } from '@serverless/typescript';
+import { getEnvironment } from './config/serverless/environment';
 import { examplesConfig } from './config/serverless/parts/examples';
 import { getMediaInfoConfig } from './config/serverless/parts/get-media-info';
 import { jobsConfig } from './config/serverless/parts/jobs';
 import { restApiCorsConfig } from './config/serverless/parts/rest-api-cors';
 import { usersConfig } from './config/serverless/parts/users';
+import { environmentManagementConfig } from './management/config/environment-management';
 import { joinParts } from './config/serverless/utils';
 
 const DEPLOYMENT_BUCKET = 'clients-serverless-deployment-bucket';
-const CLIENT = '${file(./env.yml):${self:provider.stage}.CLIENT}';
+const CLIENT = '${self:provider.environment.CLIENT}';
 const SERVICE_NAME = `template-sls`;
 const STAGE = '${opt:stage, "dev"}';
-const REGION = '${file(./env.yml):${self:provider.stage}.REGION}';
-const PROFILE = '${file(./env.yml):${self:provider.stage}.PROFILE}';
+const REGION = '${self:provider.environment.REGION}';
+const PROFILE = '${self:provider.environment.PROFILE}';
 
 const masterConfig: AWS = {
   service: SERVICE_NAME,
@@ -28,6 +30,7 @@ const masterConfig: AWS = {
     profile: PROFILE,
     environment: {
       STAGE,
+      ...getEnvironment(),
     },
     tags: {
       client: CLIENT,
@@ -56,6 +59,11 @@ const masterConfig: AWS = {
     patterns: ['bin/*', '.env'],
   },
   custom: {
+    scripts: {
+      hooks: {
+        'deploy:finalize': `sls invoke -s ${process.env.STAGE} -f decryptEnvironment`,
+      },
+    },
     esbuild: {
       bundle: true,
       minify: true,
@@ -135,7 +143,7 @@ const masterConfig: AWS = {
     // },
   },
   plugins: [
-    '@redtea/serverless-env-generator',
+    'serverless-plugin-scripts',
     'serverless-esbuild',
     'serverless-offline-sqs',
     'serverless-offline',
@@ -151,4 +159,5 @@ module.exports = joinParts(masterConfig, [
   jobsConfig,
   usersConfig,
   examplesConfig,
+  environmentManagementConfig,
 ]);
