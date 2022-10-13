@@ -1,8 +1,9 @@
 import { log } from '@helper/logger';
+import { ParameterInSSM } from '@services/ssm.servise';
 import { MetadataOutputSchema } from '@workflowwin/iconik-api/dist/src/metadata/metadata-methods';
 import { StackResourceSummary } from 'aws-sdk/clients/cloudformation';
 import { DecryptRequest } from 'aws-sdk/clients/kms';
-import { KMS, Lambda, CloudFormation } from 'aws-sdk';
+import { KMS, Lambda, CloudFormation, SSM } from 'aws-sdk';
 import { EnvironmentVariables, UpdateFunctionConfigurationRequest } from 'aws-sdk/clients/lambda';
 
 export class EnvironmentService {
@@ -80,5 +81,35 @@ export class EnvironmentService {
         },
       },
     };
+  }
+
+  async getProjectEnvs(InvalidParameters): Promise<ParameterInSSM[]> {
+    const result: ParameterInSSM[] = [];
+    const encryptedRegex = new RegExp('^encrypted:');
+    await Promise.all(
+      InvalidParameters.map(async (invalidParameter) => {
+        let env = process.env[invalidParameter];
+        if (env && encryptedRegex.test(env)) {
+          env = env.replace(encryptedRegex, '');
+          const decryptResponse = await this.#decrypt(env);
+          result.push({
+            Name: invalidParameter,
+            Value: decryptResponse,
+          });
+        } else {
+          result.push({
+            Name: invalidParameter,
+            Value: env!,
+          });
+        }
+      })
+    );
+    return result;
+  }
+
+  mapEnvsFromSSMService(projectEnvs: ParameterInSSM[]): EnvironmentVariables {
+    const updatedEnv: EnvironmentVariables = {};
+    projectEnvs.map((envData) => (updatedEnv[envData.Name] = envData.Value));
+    return updatedEnv;
   }
 }

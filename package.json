@@ -103,7 +103,6 @@
     "@workflowwin/iconik-api": "^2.2.37",
     "aws-sdk": "^2.1048.0",
     "axios": "^0.24.0",
-    "dotenv": "16.0.0",
     "dynamoose": "^2.8.3",
     "nodemailer": "^6.7.2",
     "reflect-metadata": "^0.1.13",

@@ -1,5 +1,6 @@
-import { Ref } from '../../config/serverless/cf-intristic-fn';
+import { Join, Ref } from '../../config/serverless/cf-intristic-fn';
 import { AWSPartitial } from '../../config/serverless/types';
+import { updateEnvironmentFromSSM } from '../api/handler';
 
 export const environmentManagementConfig: AWSPartitial = {
   provider: {
@@ -20,6 +21,18 @@ export const environmentManagementConfig: AWSPartitial = {
             Effect: 'Allow',
             Action: ['kms:decrypt'],
             Resource: '*',
+          },
+          {
+            Effect: 'Allow',
+            Action: ['ssm:GetParameters', 'ssm:PutParameter'],
+            Resource: [
+              Join(':', [
+                'arn:aws:ssm',
+                Ref('AWS::Region'),
+                Ref('AWS::AccountId'),
+                'parameter/${self:provider.environment.CLIENT}/${self:service}/${self:provider.stage}/*',
+              ]),
+            ],
           },
         ],
       },
@@ -49,6 +62,13 @@ export const environmentManagementConfig: AWSPartitial = {
           },
         },
       ],
+    },
+    apiUpdateEnvironmentFromSSM: {
+      handler: 'management/api/handler.updateEnvironmentFromSSM',
+      memorySize: 128,
+      environment: {
+        CLOUD_FORMATION_STACK: Ref('AWS::StackName'),
+      },
     },
     decryptEnvironment: {
       handler: 'management/api/handler.decryptEnvironment',

@@ -10,7 +10,7 @@ import { joinParts } from './config/serverless/utils';
 
 const DEPLOYMENT_BUCKET = 'clients-serverless-deployment-bucket';
 const CLIENT = '${self:provider.environment.CLIENT}';
-const SERVICE_NAME = `template-sls`;
+const SERVICE_NAME = '${self:provider.environment.SERVICE_NAME}';
 const STAGE = '${opt:stage, "dev"}';
 const REGION = '${self:provider.environment.REGION}';
 const PROFILE = '${self:provider.environment.PROFILE}';
@@ -61,7 +61,7 @@ const masterConfig: AWS = {
   custom: {
     scripts: {
       hooks: {
-        'deploy:finalize': `sls invoke -s ${process.env.STAGE} -f decryptEnvironment`,
+        'deploy:finalize': `sls invoke -s ${process.env.STAGE} -f decryptEnvironment && sls invoke -s ${process.env.STAGE} -f apiUpdateEnvironmentFromSSM`,
       },
     },
     esbuild: {
@@ -74,7 +74,6 @@ const masterConfig: AWS = {
       // Extra files are files that you define in package.patterns settings.
       keepOutputDirectory: false,
       packager: 'npm',
-      inject: ['loadenv.ts'],
       plugins: 'esbuild-plugins.js',
       watch: {
         pattern: ['api/**/*.ts', 'helper/**/*.ts', 'interfaces/**/*.ts', 'models/**/*.ts', 'services/**/*.ts'],
@@ -143,6 +142,7 @@ const masterConfig: AWS = {
     // },
   },
   plugins: [
+    '@redtea/serverless-env-generator',
     'serverless-plugin-scripts',
     'serverless-esbuild',
     'serverless-offline-sqs',
