@@ -1,5 +1,5 @@
 import type { AWS } from '@serverless/typescript';
-import { getEnvironment } from './config/serverless/environment';
+import { getEnvs } from './helper/environment';
 import { examplesConfig } from './config/serverless/parts/examples';
 import { getMediaInfoConfig } from './config/serverless/parts/get-media-info';
 import { jobsConfig } from './config/serverless/parts/jobs';
@@ -9,11 +9,11 @@ import { environmentManagementConfig } from './management/config/environment-man
 import { joinParts } from './config/serverless/utils';
 
 const DEPLOYMENT_BUCKET = 'clients-serverless-deployment-bucket';
-const CLIENT = '${self:provider.environment.CLIENT}';
-const SERVICE_NAME = '${self:provider.environment.SERVICE_NAME}';
+const CLIENT = '${file(./env.yml):${self:provider.stage}.CLIENT}';
+const SERVICE_NAME = '${file(./env.yml):${self:provider.stage}.SERVICE_NAME}';
 const STAGE = '${opt:stage, "dev"}';
-const REGION = '${self:provider.environment.REGION}';
-const PROFILE = '${self:provider.environment.PROFILE}';
+const REGION = '${file(./env.yml):${self:provider.stage}.REGION}';
+const PROFILE = '${file(./env.yml):${self:provider.stage}.PROFILE}';
 
 const masterConfig: AWS = {
   service: SERVICE_NAME,
@@ -30,7 +30,7 @@ const masterConfig: AWS = {
     profile: PROFILE,
     environment: {
       STAGE,
-      ...getEnvironment(),
+      ...(!process.env.NO_GET_ENVS_SCRIPT ? getEnvs(process.env.STAGE) : {}),
     },
     tags: {
       client: CLIENT,
@@ -74,6 +74,7 @@ const masterConfig: AWS = {
       // Extra files are files that you define in package.patterns settings.
       keepOutputDirectory: false,
       packager: 'npm',
+      inject: ['loadenv.ts'],
       plugins: 'esbuild-plugins.js',
       watch: {
         pattern: ['api/**/*.ts', 'helper/**/*.ts', 'interfaces/**/*.ts', 'models/**/*.ts', 'services/**/*.ts'],

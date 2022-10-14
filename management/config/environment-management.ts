@@ -1,6 +1,5 @@
 import { Join, Ref } from '../../config/serverless/cf-intristic-fn';
 import { AWSPartitial } from '../../config/serverless/types';
-import { updateEnvironmentFromSSM } from '../api/handler';
 
 export const environmentManagementConfig: AWSPartitial = {
   provider: {
@@ -30,7 +29,7 @@ export const environmentManagementConfig: AWSPartitial = {
                 'arn:aws:ssm',
                 Ref('AWS::Region'),
                 Ref('AWS::AccountId'),
-                'parameter/${self:provider.environment.CLIENT}/${self:service}/${self:provider.stage}/*',
+                'parameter/${file(./env.yml):${self:provider.stage}.CLIENT}/${self:service}/${self:provider.stage}/*',
               ]),
             ],
           },

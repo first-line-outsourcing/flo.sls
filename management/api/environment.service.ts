@@ -3,7 +3,7 @@ import { ParameterInSSM } from '@services/ssm.servise';
 import { MetadataOutputSchema } from '@workflowwin/iconik-api/dist/src/metadata/metadata-methods';
 import { StackResourceSummary } from 'aws-sdk/clients/cloudformation';
 import { DecryptRequest } from 'aws-sdk/clients/kms';
-import { KMS, Lambda, CloudFormation, SSM } from 'aws-sdk';
+import { KMS, Lambda, CloudFormation } from 'aws-sdk';
 import { EnvironmentVariables, UpdateFunctionConfigurationRequest } from 'aws-sdk/clients/lambda';
 
 export class EnvironmentService {
