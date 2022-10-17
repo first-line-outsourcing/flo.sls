@@ -64,6 +64,7 @@
     "@commitlint/cli": "^15.0.0",
     "@commitlint/config-conventional": "^15.0.0",
     "@emarketeer/esbuild-plugin-tsc": "0.4.1",
+    "@redtea/serverless-env-generator": "2.1.0",
     "@serverless/typescript": "2.68.0",
     "@types/aws-lambda": "8.10.88",
     "@types/bluebird": "^3.5.36",

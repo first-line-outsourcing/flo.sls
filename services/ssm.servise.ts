@@ -39,6 +39,15 @@ export class SSMService {
     }
   }
 
+  public async updateCredentialInSSM(updatedEnv) {
+    try {
+      //TODO: Update parameter in SSM
+    } catch (error) {
+      console.log('error', error);
+      throw new RuntimeError('Cannot update SSM parameters.');
+    }
+  }
+
   private createParamName(env: string): string {
     return `${this.createParamPath()}${env}`;
   }

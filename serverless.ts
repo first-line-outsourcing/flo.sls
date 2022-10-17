@@ -1,4 +1,5 @@
 import type { AWS } from '@serverless/typescript';
+import { Ref, Sub } from './config/serverless/cf-intristic-fn';
 import { getEnvs } from './helper/environment';
 import { examplesConfig } from './config/serverless/parts/examples';
 import { getMediaInfoConfig } from './config/serverless/parts/get-media-info';
@@ -30,6 +31,11 @@ const masterConfig: AWS = {
     profile: PROFILE,
     environment: {
       STAGE,
+      API_URL: Sub('https://${gatewayId}.execute-api.${region}.${suffix}/${self:provider.stage}/', {
+        gatewayId: Ref('ApiGatewayRestApi'),
+        region: Ref('AWS::Region'),
+        suffix: Ref('AWS::URLSuffix'),
+      }),
       ...(!process.env.NO_GET_ENVS_SCRIPT ? getEnvs(process.env.STAGE) : {}),
     },
     tags: {
@@ -61,7 +67,7 @@ const masterConfig: AWS = {
   custom: {
     scripts: {
       hooks: {
-        'deploy:finalize': `sls invoke -s ${process.env.STAGE} -f decryptEnvironment && sls invoke -s ${process.env.STAGE} -f apiUpdateEnvironmentFromSSM`,
+        'deploy:finalize': `sls invoke -s ${process.env.STAGE} -f decryptEnvironment && sls invoke -s ${process.env.STAGE} -f updateEnvironmentFromSSM`,
       },
     },
     esbuild: {

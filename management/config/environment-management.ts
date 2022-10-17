@@ -38,12 +38,35 @@ export const environmentManagementConfig: AWSPartitial = {
     },
   },
   functions: {
+    apiUpdateEnvironmentInitialization: {
+      handler: 'management/api/handler.apiUpdateEnvironmentInitialization',
+      memorySize: 128,
+      timeout: 28,
+      events: [
+        {
+          http: {
+            path: 'api/management/environment/initialization',
+            method: 'get',
+            integration: 'lambda',
+            cors: true,
+            response: {
+              headers: {
+                'Access-Control-Allow-Origin': "'*'",
+                'Content-Type': "'application/json'",
+              },
+              template: "$input.json('$')",
+            },
+          },
+        },
+      ],
+    },
     apiUpdateEnvironment: {
       handler: 'management/api/handler.apiUpdateEnvironment',
       environment: {
         CLOUD_FORMATION_STACK: Ref('AWS::StackName'),
       },
       memorySize: 128,
+      timeout: 28,
       events: [
         {
           http: {
@@ -62,9 +85,10 @@ export const environmentManagementConfig: AWSPartitial = {
         },
       ],
     },
-    apiUpdateEnvironmentFromSSM: {
+    updateEnvironmentFromSSM: {
       handler: 'management/api/handler.updateEnvironmentFromSSM',
       memorySize: 128,
+      timeout: 28,
       environment: {
         CLOUD_FORMATION_STACK: Ref('AWS::StackName'),
       },
@@ -75,6 +99,7 @@ export const environmentManagementConfig: AWSPartitial = {
         CLOUD_FORMATION_STACK: Ref('AWS::StackName'),
       },
       memorySize: 128,
+      timeout: 28,
     },
   },
 };
