@@ -1,27 +1,33 @@
-import { getEnv } from '@helper/environment';
 import { format } from '@redtea/format-axios-error';
+import { inspect } from 'util';
+import { isAxiosError } from './axios';
+import { getEnv } from './environment';
 
-export function log(...args): undefined {
-  /**
-   * Don't show the logs in CI for faster testing
-   * Sometimes we turn off the logs in production environment for better performance
-   */
-  if (getEnv('CI', false) === 'true' || getEnv('HIDE_LOGS', false) === 'true') {
-    return;
-  }
-  if (getEnv('IS_OFFLINE', false) === 'true') {
-    args.forEach((i) => console.dir(i));
-  } else {
-    console.log(
-      ...args.map((arg) => {
-        /**
-         * Axios error has complicated structure that doesn't allow debugging it easily
-         */
-        if (arg.isAxiosError) {
-          return JSON.stringify(format(arg));
+function wrapLogger<T extends (...args: any[]) => any>(logger: T): T {
+  return ((...args: any[]) => {
+    /**
+     * Don't show the logs in CI for faster testing
+     * Sometimes we turn off the logs in production environment for better performance
+     */
+    if (getEnv('CI', false) === 'true' || getEnv('HIDE_LOGS', false) === 'true') {
+      return;
+    }
+
+    logger(
+      ...args.map((a) => {
+        if (isAxiosError(a)) {
+          a = format(a);
         }
-        return JSON.stringify(arg);
+        return inspect(a, {
+          depth: null,
+        });
       })
     );
-  }
+  }) as T;
 }
+
+export const log = wrapLogger(console.log.bind(console));
+export const debug = wrapLogger(console.debug.bind(console));
+export const info = wrapLogger(console.info.bind(console));
+export const error = wrapLogger(console.error.bind(console));
+export const warn = wrapLogger(console.warn.bind(console));

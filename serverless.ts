@@ -1,12 +1,11 @@
 import type { AWS } from '@serverless/typescript';
-import { Ref, Sub } from './config/serverless/cf-intristic-fn';
-import { getEnvs } from './helper/environment';
+import { GetAtt, Ref, Sub } from './config/serverless/cf-intristic-fn';
 import { examplesConfig } from './config/serverless/parts/examples';
 import { getMediaInfoConfig } from './config/serverless/parts/get-media-info';
 import { jobsConfig } from './config/serverless/parts/jobs';
 import { restApiCorsConfig } from './config/serverless/parts/rest-api-cors';
+import { serviceAdminConfig } from './config/serverless/parts/service-admin';
 import { usersConfig } from './config/serverless/parts/users';
-import { environmentManagementConfig } from './management/config/environment-management';
 import { joinParts } from './config/serverless/utils';
 
 const DEPLOYMENT_BUCKET = 'clients-serverless-deployment-bucket';
@@ -31,12 +30,13 @@ const masterConfig: AWS = {
     profile: PROFILE,
     environment: {
       STAGE,
+      CLIENT,
+      BASE_HTTP_API_URL: GetAtt('HttpApi.ApiEndpoint'),
       API_URL: Sub('https://${gatewayId}.execute-api.${region}.${suffix}/${self:provider.stage}/', {
         gatewayId: Ref('ApiGatewayRestApi'),
         region: Ref('AWS::Region'),
         suffix: Ref('AWS::URLSuffix'),
       }),
-      ...(!process.env.NO_GET_ENVS_SCRIPT ? getEnvs(process.env.STAGE) : {}),
     },
     tags: {
       client: CLIENT,
@@ -65,11 +65,6 @@ const masterConfig: AWS = {
     patterns: ['bin/*', '.env'],
   },
   custom: {
-    scripts: {
-      hooks: {
-        'deploy:finalize': `sls invoke -s ${process.env.STAGE} -f decryptEnvironment && sls invoke -s ${process.env.STAGE} -f updateEnvironmentFromSSM`,
-      },
-    },
     esbuild: {
       bundle: true,
       minify: true,
@@ -150,7 +145,6 @@ const masterConfig: AWS = {
   },
   plugins: [
     '@redtea/serverless-env-generator',
-    'serverless-plugin-scripts',
     'serverless-esbuild',
     'serverless-offline-sqs',
     'serverless-offline',
@@ -161,10 +155,10 @@ const masterConfig: AWS = {
 };
 
 module.exports = joinParts(masterConfig, [
+  serviceAdminConfig,
   restApiCorsConfig,
   getMediaInfoConfig,
   jobsConfig,
   usersConfig,
   examplesConfig,
-  environmentManagementConfig,
 ]);

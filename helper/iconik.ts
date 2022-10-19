@@ -1,8 +1,9 @@
+import { IconikContext } from '@helper/authorizers/iconik/context';
 import { getEnv } from '@helper/environment';
+import { IconikCredentialsStore } from '@services/IconikCredentialsStore';
 import { IconikService } from '@workflowwin/iconik-api';
-import { IconikContext } from '../authorizers/iconik/context';
 
-export function createIconikClient(authContext?: IconikContext): IconikService {
+export async function createIconikClient(authContext?: IconikContext): Promise<IconikService> {
   if (authContext) {
     return new IconikService({
       systemDomainId: authContext.systemDomainId,
@@ -12,10 +13,13 @@ export function createIconikClient(authContext?: IconikContext): IconikService {
     });
   }
 
+  const iconikCredentialsStore = new IconikCredentialsStore();
+  const credentials = await iconikCredentialsStore.get();
+
   return new IconikService({
     systemDomainId: getEnv('ICONIK_DOMAIN_ID'),
-    appId: getEnv('ICONIK_APP_ID'),
+    appId: credentials.appId,
     iconikUrl: getEnv('ICONIK_URL'),
-    authToken: getEnv('ICONIK_APP_AUTH_TOKEN'),
+    authToken: credentials.appAuthToken,
   });
 }

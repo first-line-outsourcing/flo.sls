@@ -1,0 +1,102 @@
+import { InputValidationError } from '@floteam/errors';
+import { RuntimeError } from '@floteam/errors/runtime/runtime-error';
+import { debug } from '@helper/logger';
+import { SSM } from 'aws-sdk';
+import NodeCache from 'node-cache';
+
+const cache = new NodeCache({
+  stdTTL: 60,
+  checkperiod: 80,
+});
+
+export interface IconikCredentials {
+  appId: string;
+  appAuthToken: string;
+}
+
+export class IconikCredentialsStore {
+  private ssm = new SSM({
+    maxRetries: 5,
+    retryDelayOptions: {
+      base: Math.ceil(1000 / 40),
+    },
+  });
+
+  async get(): Promise<IconikCredentials> {
+    if (cache.get('credentials')) {
+      return cache.get('credentials') as IconikCredentials;
+    }
+
+    let result: SSM.GetParametersByPathResult;
+
+    try {
+      result = await this.ssm
+        .getParametersByPath({
+          Path: this.createParamPath(),
+          WithDecryption: true,
+        })
+        .promise();
+    } catch (error) {
+      debug('get ssm parameters error=', error);
+      throw new RuntimeError('Cannot get SSM parameters.');
+    }
+
+    const params: Partial<IconikCredentials> =
+            result.Parameters?.reduce((out, param) => {
+              const name = param.Name!.split('/').pop();
+              switch (name) {
+                case 'app-id':
+                  out.appId = param.Value;
+                  break;
+                case 'app-auth-token':
+                  out.appAuthToken = param.Value;
+                  break;
+              }
+              return out;
+            }, {} as Partial<IconikCredentials>) ?? {} as Partial<IconikCredentials>;
+
+    if (!params.appId) {
+      this.throwParamError('app-id', 'The App ID is empty');
+    }
+
+    if (!params.appAuthToken) {
+      this.throwParamError('app-auth-token', 'The App Auth Token is empty');
+    }
+
+    return params as IconikCredentials;
+  }
+
+  async update(credentials: IconikCredentials) {
+    try {
+      await this.ssm
+        .putParameter({
+          Name: this.createParamPath('app-id'),
+          Type: 'String',
+          Value: credentials.appId
+        })
+        .promise();
+      await this.ssm
+        .putParameter({
+          Name: this.createParamPath('app-auth-token'),
+          Value: credentials.appAuthToken,
+          Type: 'SecureString',
+        })
+        .promise();
+
+      cache.set('credentials', credentials);
+    } catch (error) {
+      debug('update ssm parameters error=', error);
+      throw new RuntimeError('Cannot update SSM parameters.');
+    }
+  }
+
+  private throwParamError(name: string, reason: string): never {
+    throw new InputValidationError(
+      `${reason}. Please check/add ${this.createParamPath(name)} SSM parameter.`
+    );
+  }
+
+  private createParamPath(path?: string): string {
+    return `/win/${process.env.CLIENT}/${process.env.SERVICE_NAME}/${process.env.STAGE}/iconik-credentials/${path}`;
+  }
+}
