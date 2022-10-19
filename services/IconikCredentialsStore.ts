@@ -1,5 +1,6 @@
 import { InputValidationError } from '@floteam/errors';
 import { RuntimeError } from '@floteam/errors/runtime/runtime-error';
+import { getEnv, getStage } from '@helper/environment';
 import { debug } from '@helper/logger';
 import { SSM } from 'aws-sdk';
 import NodeCache from 'node-cache';
@@ -72,7 +73,8 @@ export class IconikCredentialsStore {
         .putParameter({
           Name: this.createParamPath('app-id'),
           Type: 'String',
-          Value: credentials.appId
+          Value: credentials.appId,
+          Overwrite: true,
         })
         .promise();
       await this.ssm
@@ -80,9 +82,9 @@ export class IconikCredentialsStore {
           Name: this.createParamPath('app-auth-token'),
           Value: credentials.appAuthToken,
           Type: 'SecureString',
+          Overwrite: true,
         })
         .promise();
-
       cache.set('credentials', credentials);
     } catch (error) {
       debug('update ssm parameters error=', error);
@@ -97,6 +99,6 @@ export class IconikCredentialsStore {
   }
 
   private createParamPath(path?: string): string {
-    return `/win/${process.env.CLIENT}/${process.env.SERVICE_NAME}/${process.env.STAGE}/iconik-credentials/${path}`;
+    return `/win/${getEnv('CLIENT')}/${getEnv('SERVICE_NAME')}/${getStage()}/iconik-credentials${path ? `/${path}` : ''}`;
   }
 }

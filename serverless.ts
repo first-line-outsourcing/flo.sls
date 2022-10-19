@@ -30,7 +30,6 @@ const masterConfig: AWS = {
     profile: PROFILE,
     environment: {
       STAGE,
-      CLIENT,
       BASE_HTTP_API_URL: GetAtt('HttpApi.ApiEndpoint'),
       API_URL: Sub('https://${gatewayId}.execute-api.${region}.${suffix}/${self:provider.stage}/', {
         gatewayId: Ref('ApiGatewayRestApi'),

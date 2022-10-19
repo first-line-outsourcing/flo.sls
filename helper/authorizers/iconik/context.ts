@@ -94,9 +94,12 @@ export async function authorizeIconikRequest(
 }
 
 export async function authorizeByAuthToken(authToken: string): Promise<IconikContext> {
+  const iconikCredentialsStore = new IconikCredentialsStore();
+  const credentials = await iconikCredentialsStore.get();
+
   const iconikUrl = getEnv('ICONIK_URL');
-  const appId = getEnv('ICONIK_APP_ID');
   const systemDomainId = getEnv('ICONIK_DOMAIN_ID');
+  const appId = credentials.appId;
 
   const iconik = new IconikService({
     authToken,

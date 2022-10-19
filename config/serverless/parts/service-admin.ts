@@ -22,13 +22,13 @@ export const serviceAdminConfig: AWSPartitial = {
           },
           {
             Effect: 'Allow',
-            Action: ['ssm:GetParameters', 'ssm:PutParameter'],
+            Action: ['ssm:GetParameters', 'ssm:PutParameter', 'ssm:GetParametersByPath'],
             Resource: [
               Join(':', [
                 'arn:aws:ssm',
                 Ref('AWS::Region'),
                 Ref('AWS::AccountId'),
-                'parameter/${file(./env.yml):${self:provider.stage}.CLIENT}/${self:service}/${self:provider.stage}/*',
+                'parameter/win/${file(./env.yml):${self:provider.stage}.CLIENT}/${self:service}/${self:provider.stage}/*',
               ]),
             ],
           },
@@ -37,7 +37,7 @@ export const serviceAdminConfig: AWSPartitial = {
     },
   },
   functions: {
-    mngInitialization: {
+    sadminInit: {
       handler: 'api/service-admin/handler.init',
       memorySize: 128,
       timeout: 28,
@@ -45,12 +45,12 @@ export const serviceAdminConfig: AWSPartitial = {
         {
           httpApi: {
             path: '/api/service-admin/init',
-            method: 'get',
+            method: 'post',
           },
         },
       ],
     },
-    mngUpdate: {
+    sadmiUpdateIconikCredentials: {
       handler: 'api/service-admin/handler.updateIconikCredentials',
       memorySize: 128,
       timeout: 28,

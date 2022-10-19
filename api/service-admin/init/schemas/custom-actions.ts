@@ -2,8 +2,8 @@ import {IconikCustomActionBootstrapSchema} from '@workflowwin/iconik-api/dist/sr
 
 export function buildCustomActionsSchema(
   appId: string,
-  appAutoToken: string,
-  baseApiUrl: string
+  baseApiUrl: string,
+  metadataViewId: string,
 ): IconikCustomActionBootstrapSchema[] {
   if (!baseApiUrl.endsWith('/')) {
     baseApiUrl = `${baseApiUrl}/`;
@@ -12,14 +12,12 @@ export function buildCustomActionsSchema(
   return [
     {
       properties: {
-        title: 'Update iconik environments',
+        title: 'Update iconik credentials',
         context: 'NONE',
-        headers: {
-          'auth-token': appAutoToken,
-        },
         type: 'POST',
         app_id: appId,
         url: `${baseApiUrl}api/service-admin/update-iconik-credentials`,
+        metadata_view: metadataViewId
       },
     },
   ];
