@@ -5,6 +5,8 @@ import { debug } from '@helper/logger';
 import { SSM } from 'aws-sdk';
 import NodeCache from 'node-cache';
 
+// Reduces number of requests to SSM services.
+// How this works: https://docs.aws.amazon.com/lambda/latest/operatorguide/static-initialization.html
 const cache = new NodeCache({
   stdTTL: 60,
   checkperiod: 80,
