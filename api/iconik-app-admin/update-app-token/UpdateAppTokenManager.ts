@@ -8,7 +8,7 @@ const defaultFieldsMapping = {
   win_IconikAppToken: 'appAuthToken'
 };
 
-export class UpdateIconikCredentialsManager {
+export class UpdateAppTokenManager {
   private iconikCredentialsStore = new IconikCredentialsStore();
 
   async update(body: CustomActionPayload) {

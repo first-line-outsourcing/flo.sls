@@ -1,3 +1,4 @@
+import { getEnv, getStage } from '@helper/environment';
 import {IconikCustomActionBootstrapSchema} from '@workflowwin/iconik-api/dist/src/client-extensions/bootstrap';
 
 export function buildCustomActionsSchema(
@@ -12,11 +13,11 @@ export function buildCustomActionsSchema(
   return [
     {
       properties: {
-        title: 'Update iconik credentials',
+        title: `[${getEnv('SERVICE_NAME')}:${getStage()}] Update app token`,
         context: 'NONE',
         type: 'POST',
         app_id: appId,
-        url: `${baseApiUrl}api/service-admin/update-iconik-credentials`,
+        url: `${baseApiUrl}api/iconik-app-admin/update-app-token`,
         metadata_view: metadataViewId
       },
     },

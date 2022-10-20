@@ -1,7 +1,7 @@
 import { Join, Ref } from '../cf-intristic-fn';
 import { AWSPartitial } from '../types';
 
-export const serviceAdminConfig: AWSPartitial = {
+export const iconikAppAdminConfig: AWSPartitial = {
   provider: {
     iam: {
       role: {
@@ -37,27 +37,27 @@ export const serviceAdminConfig: AWSPartitial = {
     },
   },
   functions: {
-    sadminInit: {
-      handler: 'api/service-admin/handler.init',
+    iaaInit: {
+      handler: 'api/iconik-app-admin/handler.init',
       memorySize: 128,
       timeout: 28,
       events: [
         {
           httpApi: {
-            path: '/api/service-admin/init',
+            path: '/api/iconik-app-admin/init',
             method: 'post',
           },
         },
       ],
     },
-    sadmiUpdateIconikCredentials: {
-      handler: 'api/service-admin/handler.updateIconikCredentials',
+    iaaUpdateAppToken: {
+      handler: 'api/iconik-app-admin/handler.updateAppToken',
       memorySize: 128,
       timeout: 28,
       events: [
         {
           httpApi: {
-            path: '/api/service-admin/update-iconik-credentials',
+            path: '/api/iconik-app-admin/update-app-token',
             method: 'post',
           },
         },

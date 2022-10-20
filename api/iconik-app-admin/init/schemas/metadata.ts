@@ -1,3 +1,4 @@
+import { getEnv, getStage } from '@helper/environment';
 import {IconikMetadataBootstrapSchema} from '@workflowwin/iconik-api/dist/src/client-extensions/bootstrap';
 
 export const metadataSchema: IconikMetadataBootstrapSchema = {
@@ -7,7 +8,7 @@ export const metadataSchema: IconikMetadataBootstrapSchema = {
         description:
           'WIN Automation',
         field_type: 'string',
-        label: 'iconik App ID',
+        label: 'App ID',
       },
     },
     win_IconikAppToken: {
@@ -15,14 +16,14 @@ export const metadataSchema: IconikMetadataBootstrapSchema = {
         description:
           'WIN Automation',
         field_type: 'string',
-        label: 'iconik App Auth Token',
+        label: 'App Auth Token',
       },
     },
   },
   views: [
     {
       properties: {
-        name: 'Update iconik credentials',
+        name: `[${getEnv('SERVICE_NAME')}:${getStage()}] Update app token`,
       },
       fields: {
         win_IconikAppID: {},

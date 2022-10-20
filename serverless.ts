@@ -4,7 +4,7 @@ import { examplesConfig } from './config/serverless/parts/examples';
 import { getMediaInfoConfig } from './config/serverless/parts/get-media-info';
 import { jobsConfig } from './config/serverless/parts/jobs';
 import { restApiCorsConfig } from './config/serverless/parts/rest-api-cors';
-import { serviceAdminConfig } from './config/serverless/parts/service-admin';
+import { iconikAppAdminConfig } from './config/serverless/parts/iconik-app-admin';
 import { usersConfig } from './config/serverless/parts/users';
 import { joinParts } from './config/serverless/utils';
 
@@ -154,7 +154,7 @@ const masterConfig: AWS = {
 };
 
 module.exports = joinParts(masterConfig, [
-  serviceAdminConfig,
+  iconikAppAdminConfig,
   restApiCorsConfig,
   getMediaInfoConfig,
   jobsConfig,
