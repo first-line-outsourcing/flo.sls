@@ -1,7 +1,5 @@
 import { IconikCredentials, IconikCredentialsStorage } from '@services/IconikCredentialsStorage';
 import { CustomActionPayload } from '@workflowwin/iconik-api/dist/src/assets/assets-methods';
-import { MetadataOutputSchema } from '@workflowwin/iconik-api/dist/src/metadata/metadata-methods';
-import { EnvironmentVariables } from 'aws-sdk/clients/lambda';
 
 const defaultFieldsMapping = {
   win_IconikAppID: 'appId',
