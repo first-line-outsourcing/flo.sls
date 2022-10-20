@@ -1,5 +1,5 @@
 import { HttpBadRequestError, HttpInternalServerError, HttpUnauthorizedError } from '@floteam/errors';
-import { IconikCredentialsStore } from '@services/IconikCredentialsStore';
+import { IconikCredentialsStorage } from '@services/IconikCredentialsStorage';
 import { IconikService } from '@workflowwin/iconik-api';
 import { AxiosError } from 'axios';
 import { getEnv } from '../../environment';
@@ -28,7 +28,7 @@ export async function authorizeIconikRequest(
   systemDomainId: string,
   callerId: string | null
 ): Promise<IconikContext> {
-  const iconikCredentialsStore = new IconikCredentialsStore();
+  const iconikCredentialsStore = new IconikCredentialsStorage();
   const credentials = await iconikCredentialsStore.get();
 
   const iconikUrl = getEnv('ICONIK_URL');
@@ -97,7 +97,7 @@ export async function authorizeIconikRequest(
 }
 
 export async function authorizeByAuthToken(authToken: string): Promise<IconikContext> {
-  const iconikCredentialsStore = new IconikCredentialsStore();
+  const iconikCredentialsStore = new IconikCredentialsStorage();
   const credentials = await iconikCredentialsStore.get();
 
   const iconikUrl = getEnv('ICONIK_URL');

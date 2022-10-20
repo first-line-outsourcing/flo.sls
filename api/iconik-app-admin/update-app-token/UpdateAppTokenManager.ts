@@ -1,4 +1,4 @@
-import { IconikCredentials, IconikCredentialsStore } from '@services/IconikCredentialsStore';
+import { IconikCredentials, IconikCredentialsStorage } from '@services/IconikCredentialsStorage';
 import { CustomActionPayload } from '@workflowwin/iconik-api/dist/src/assets/assets-methods';
 import { MetadataOutputSchema } from '@workflowwin/iconik-api/dist/src/metadata/metadata-methods';
 import { EnvironmentVariables } from 'aws-sdk/clients/lambda';
@@ -9,7 +9,7 @@ const defaultFieldsMapping = {
 };
 
 export class UpdateAppTokenManager {
-  private iconikCredentialsStore = new IconikCredentialsStore();
+  private iconikCredentialsStore = new IconikCredentialsStorage();
 
   /**
    * Updates app token in the SSM parameters store.

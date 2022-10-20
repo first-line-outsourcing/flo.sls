@@ -1,12 +1,12 @@
 import { getEnv } from '@helper/environment';
-import { IconikCredentialsStore } from '@services/IconikCredentialsStore';
+import { IconikCredentialsStorage } from '@services/IconikCredentialsStorage';
 import '@workflowwin/iconik-api/dist/src/client-extensions/bootstrap';
 import { IconikClient } from '@workflowwin/iconik-api/dist/src/iconik-client.interface';
 import { buildCustomActionsSchema } from './schemas/custom-actions';
 import { metadataSchema } from './schemas/metadata';
 
 export class InitManager {
-  private iconikCredentialsStore = new IconikCredentialsStore();
+  private iconikCredentialsStore = new IconikCredentialsStorage();
 
   constructor(private iconikClient: IconikClient) {
   }

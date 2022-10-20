@@ -1,6 +1,6 @@
 import { IconikContext } from '@helper/authorizers/iconik/context';
 import { getEnv } from '@helper/environment';
-import { IconikCredentialsStore } from '@services/IconikCredentialsStore';
+import { IconikCredentialsStorage } from '@services/IconikCredentialsStorage';
 import { IconikService } from '@workflowwin/iconik-api';
 
 /**
@@ -19,7 +19,7 @@ export async function createIconikClient(authContext?: IconikContext): Promise<I
     });
   }
 
-  const iconikCredentialsStore = new IconikCredentialsStore();
+  const iconikCredentialsStore = new IconikCredentialsStorage();
   const credentials = await iconikCredentialsStore.get();
 
   return new IconikService({

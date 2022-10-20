@@ -18,10 +18,10 @@ export interface IconikCredentials {
 }
 
 /**
- * Gives access to iconik credentials store.
+ * Gives access to iconik credentials storage.
  * Current implementation uses SSM as storage for APP ID and APP AUTH TOKEN.
  */
-export class IconikCredentialsStore {
+export class IconikCredentialsStorage {
   private ssm = new SSM({
     maxRetries: 5,
     retryDelayOptions: {
