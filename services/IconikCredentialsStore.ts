@@ -5,8 +5,8 @@ import { debug } from '@helper/logger';
 import { SSM } from 'aws-sdk';
 import NodeCache from 'node-cache';
 
-// Reduces number of requests to SSM services.
-// How this works: https://docs.aws.amazon.com/lambda/latest/operatorguide/static-initialization.html
+// Reduces number of requests to external storage.
+// How it works: https://docs.aws.amazon.com/lambda/latest/operatorguide/static-initialization.html
 const cache = new NodeCache({
   stdTTL: 60,
   checkperiod: 80,
@@ -17,6 +17,10 @@ export interface IconikCredentials {
   appAuthToken: string;
 }
 
+/**
+ * Gives access to iconik credentials store.
+ * Current implementation uses SSM as storage for APP ID and APP AUTH TOKEN.
+ */
 export class IconikCredentialsStore {
   private ssm = new SSM({
     maxRetries: 5,
@@ -25,6 +29,11 @@ export class IconikCredentialsStore {
     },
   });
 
+  /**
+   * Get iconik app credentials
+   *
+   * @returns {Promise<IconikCredentials>}
+   */
   async get(): Promise<IconikCredentials> {
     if (cache.get('credentials')) {
       return cache.get('credentials') as IconikCredentials;
@@ -69,6 +78,12 @@ export class IconikCredentialsStore {
     return params as IconikCredentials;
   }
 
+  /**
+   * Update iconik app credentials
+   *
+   * @param {IconikCredentials} credentials
+   * @returns {Promise<void>}
+   */
   async update(credentials: IconikCredentials) {
     try {
       await this.ssm

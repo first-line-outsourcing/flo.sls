@@ -3,6 +3,12 @@ import { getEnv } from '@helper/environment';
 import { IconikCredentialsStore } from '@services/IconikCredentialsStore';
 import { IconikService } from '@workflowwin/iconik-api';
 
+/**
+ * Create iconik API client from auth context data or from env vars and app token from the SSM parameters storage.
+ *
+ * @param {IconikContext} authContext
+ * @returns {Promise<IconikService>}
+ */
 export async function createIconikClient(authContext?: IconikContext): Promise<IconikService> {
   if (authContext) {
     return new IconikService({

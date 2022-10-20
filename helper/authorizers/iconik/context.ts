@@ -5,6 +5,9 @@ import { AxiosError } from 'axios';
 import { getEnv } from '../../environment';
 import { debug, log } from '../../logger';
 
+/**
+ * Information about who calls an API method from iconik side
+ */
 export interface IconikContext {
   appId: string;
   systemDomainId: string;

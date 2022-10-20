@@ -11,6 +11,12 @@ const defaultFieldsMapping = {
 export class UpdateAppTokenManager {
   private iconikCredentialsStore = new IconikCredentialsStore();
 
+  /**
+   * Updates app token in the SSM parameters store.
+   *
+   * @param {CustomActionPayload} body
+   * @returns {Promise<void>}
+   */
   async update(body: CustomActionPayload) {
     const credentials = this.parseBody(body);
     await this.iconikCredentialsStore.update(credentials);

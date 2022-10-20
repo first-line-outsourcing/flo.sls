@@ -10,22 +10,6 @@ export function isStage(stage: Stage): boolean {
   return getStage() === stage;
 }
 
-export function getEncryptedVariables() {
-  const encryptedRegex = new RegExp('^encrypted:');
-  return Object.keys(process.env).reduce((acc, key) => {
-    const value = process.env[key];
-    if (!value) {
-      return acc;
-    }
-    const isEncrypted = encryptedRegex.test(value!);
-    if (!isEncrypted) {
-      return acc;
-    }
-    acc[key] = value.replace(encryptedRegex, '');
-    return acc;
-  }, {} as Record<string, string | undefined>);
-}
-
 export function getEnv(name: string, required?: true): string;
 export function getEnv(name: string, required: false): string | undefined;
 export function getEnv(name: string, required = true): string | undefined {

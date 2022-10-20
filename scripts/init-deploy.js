@@ -1,3 +1,8 @@
+/**
+ * It checks whether the service is deployed and if not then
+ * creates records in the SSM parameters storage.
+ */
+
 const awsSdk = require('aws-sdk');
 const path = require('path');
 const fs = require('fs');
@@ -18,6 +23,7 @@ if (!env) {
 main();
 
 async function main() {
+  // Load all env vars from the env.yaml into `envs` variable
   loadEnvs()
 
   awsSdk.config.credentials = new awsSdk.SharedIniFileCredentials({
@@ -25,14 +31,17 @@ async function main() {
   });
   awsSdk.config.region = envs.REGION;
 
+  // Initialize SSM client
   ssm = new awsSdk.SSM();
 
+  // Service is already deployed
   if (!(await shouldRun())) {
     console.log('Skip');
     return;
   }
 
   try {
+    // Create the parameter for iconik APP ID
     await ssm
       .putParameter({
         Name: createParamPath('iconik-credentials', 'app-id'),
@@ -41,6 +50,8 @@ async function main() {
         Overwrite: true,
       })
       .promise();
+
+    // Create the parameter for iconik APP AUTH TOKEN
     await ssm
       .putParameter({
         Name: createParamPath('iconik-credentials', 'app-auth-token'),
@@ -49,6 +60,8 @@ async function main() {
         Type: 'SecureString',
       })
       .promise();
+
+    // Create the parameter to check deployment status
     await ssm
       .putParameter({
         Name: createParamPath('service-admin', 'deployed'),

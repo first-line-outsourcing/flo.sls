@@ -8,6 +8,12 @@ import { UpdateAppTokenManager } from './update-app-token/UpdateAppTokenManager'
 
 export type UpdateEnvironmentLambda = APIGatewayLambdaEvent<any>;
 
+/**
+ * Install iconik app admin to iconik
+ *
+ * @param {APIGatewayLambdaEvent<any>} event
+ * @returns {Promise<void>}
+ */
 export const init: Handler<APIGatewayLambdaEvent<any>, void> = async (event) => {
   logger.debug(event);
 
@@ -22,6 +28,13 @@ export const init: Handler<APIGatewayLambdaEvent<any>, void> = async (event) => 
   }
 };
 
+/**
+ * Update iconik app token in the SSM parameters store.
+ * Accepts App ID and App Auth Token from the metadata form.
+ *
+ * @param {APIGatewayLambdaEvent<any>} event
+ * @returns {Promise<void>}
+ */
 export const updateAppToken: Handler<APIGatewayLambdaEvent<any>, void> = async (event) => {
   logger.debug(event);
 
