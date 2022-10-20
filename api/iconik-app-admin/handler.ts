@@ -40,8 +40,7 @@ export const updateAppToken: Handler<APIGatewayLambdaEvent<any>, void> = async (
 
   try {
     const body = JSON.parse(event.body);
-    const iconikContext = await authorizeIconikCustomAction(body);
-    const iconikClient = await createIconikClient(iconikContext);
+    await authorizeIconikCustomAction(body);
     const manager = new UpdateAppTokenManager();
     await manager.update(body);
   } catch (error) {

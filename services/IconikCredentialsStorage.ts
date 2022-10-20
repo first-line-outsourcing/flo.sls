@@ -54,18 +54,18 @@ export class IconikCredentialsStorage {
     }
 
     const params: Partial<IconikCredentials> =
-            result.Parameters?.reduce((out, param) => {
-              const name = param.Name!.split('/').pop();
-              switch (name) {
-                case 'app-id':
-                  out.appId = param.Value;
-                  break;
-                case 'app-auth-token':
-                  out.appAuthToken = param.Value;
-                  break;
-              }
-              return out;
-            }, {} as Partial<IconikCredentials>) ?? {} as Partial<IconikCredentials>;
+      result.Parameters?.reduce((out, param) => {
+        const name = param.Name!.split('/').pop();
+        switch (name) {
+          case 'app-id':
+            out.appId = param.Value;
+            break;
+          case 'app-auth-token':
+            out.appAuthToken = param.Value;
+            break;
+        }
+        return out;
+      }, {} as Partial<IconikCredentials>) ?? ({} as Partial<IconikCredentials>);
 
     if (!params.appId) {
       this.throwParamError('app-id', 'The App ID is empty');
@@ -110,12 +110,12 @@ export class IconikCredentialsStorage {
   }
 
   private throwParamError(name: string, reason: string): never {
-    throw new InputValidationError(
-      `${reason}. Please check/add ${this.createParamPath(name)} SSM parameter.`
-    );
+    throw new InputValidationError(`${reason}. Please check/add ${this.createParamPath(name)} SSM parameter.`);
   }
 
   private createParamPath(path?: string): string {
-    return `/win/${getEnv('CLIENT')}/${getEnv('SERVICE_NAME')}/${getStage()}/iconik-credentials${path ? `/${path}` : ''}`;
+    return `/win/${getEnv('CLIENT')}/${getEnv('SERVICE_NAME')}/${getStage()}/iconik-credentials${
+      path ? `/${path}` : ''
+    }`;
   }
 }

@@ -7,18 +7,9 @@ export const iconikAppAdminConfig: AWSPartitial = {
       role: {
         statements: [
           {
-            'Effect': 'Allow',
-            'Action': [
-              'kms:Decrypt'
-            ],
-            'Resource': [
-              Join(':', [
-                'arn:aws:kms',
-                Ref('AWS::Region'),
-                Ref('AWS::AccountId'),
-                'alias/aws/ssm',
-              ])
-            ]
+            Effect: 'Allow',
+            Action: ['kms:Decrypt'],
+            Resource: [Join(':', ['arn:aws:kms', Ref('AWS::Region'), Ref('AWS::AccountId'), 'alias/aws/ssm'])],
           },
           {
             Effect: 'Allow',

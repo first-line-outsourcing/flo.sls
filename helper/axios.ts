@@ -22,7 +22,7 @@ export function isResponseWithHttpStatus(error: AxiosError, status: number | num
   return false;
 }
 
-export async function retryRequestIf<V extends any>(
+export async function retryRequestIf<V>(
   boundFn: (...args: any) => Promise<V>,
   httpCode: number,
   times = 3
@@ -30,7 +30,7 @@ export async function retryRequestIf<V extends any>(
   let attempts = times,
     result!: V,
     error: any,
-    isError: boolean = false;
+    isError = false;
 
   while (attempts) {
     try {

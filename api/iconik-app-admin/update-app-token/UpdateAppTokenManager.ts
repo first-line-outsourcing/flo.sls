@@ -3,7 +3,7 @@ import { CustomActionPayload } from '@workflowwin/iconik-api/dist/src/assets/ass
 
 const defaultFieldsMapping = {
   win_IconikAppID: 'appId',
-  win_IconikAppToken: 'appAuthToken'
+  win_IconikAppToken: 'appAuthToken',
 };
 
 export class UpdateAppTokenManager {
