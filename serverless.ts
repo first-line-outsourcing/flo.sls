@@ -1,14 +1,16 @@
 import type { AWS } from '@serverless/typescript';
+import { GetAtt, Ref, Sub } from './config/serverless/cf-intristic-fn';
 import { examplesConfig } from './config/serverless/parts/examples';
 import { getMediaInfoConfig } from './config/serverless/parts/get-media-info';
 import { jobsConfig } from './config/serverless/parts/jobs';
 import { restApiCorsConfig } from './config/serverless/parts/rest-api-cors';
+import { iconikAppAdminConfig } from './config/serverless/parts/iconik-app-admin';
 import { usersConfig } from './config/serverless/parts/users';
 import { joinParts } from './config/serverless/utils';
 
 const DEPLOYMENT_BUCKET = 'clients-serverless-deployment-bucket';
 const CLIENT = '${file(./env.yml):${self:provider.stage}.CLIENT}';
-const SERVICE_NAME = `template-sls`;
+const SERVICE_NAME = '${file(./env.yml):${self:provider.stage}.SERVICE_NAME}';
 const STAGE = '${opt:stage, "dev"}';
 const REGION = '${file(./env.yml):${self:provider.stage}.REGION}';
 const PROFILE = '${file(./env.yml):${self:provider.stage}.PROFILE}';
@@ -28,6 +30,12 @@ const masterConfig: AWS = {
     profile: PROFILE,
     environment: {
       STAGE,
+      BASE_HTTP_API_URL: GetAtt('HttpApi.ApiEndpoint'),
+      API_URL: Sub('https://${gatewayId}.execute-api.${region}.${suffix}/${self:provider.stage}/', {
+        gatewayId: Ref('ApiGatewayRestApi'),
+        region: Ref('AWS::Region'),
+        suffix: Ref('AWS::URLSuffix'),
+      }),
     },
     tags: {
       client: CLIENT,
@@ -146,6 +154,7 @@ const masterConfig: AWS = {
 };
 
 module.exports = joinParts(masterConfig, [
+  iconikAppAdminConfig,
   restApiCorsConfig,
   getMediaInfoConfig,
   jobsConfig,

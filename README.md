@@ -410,6 +410,68 @@ prod:
   <<: *common
 ```
 
+## Iconik app token
+
+Iconik App ID and Auth token is stored in the SSM parameters storage. To get or update token use `IconikCredentialsStorage` service:
+
+```typescript
+// helper/example.ts
+import { IconikCredentialsStorage } from '../services/IconikCredentialsStorage';
+
+async function printIconikCredentials() {
+  const storage = new IconikCredentialsStorage();
+  console.log(await storage.get());
+}
+```
+
+You can change iconik APP ID or APP AUTH TOKEN in the [SSM parameters store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html). The path patterns:
+
+- /win/{CLIENT_NAME}/{SERVICE_NAME/{STAGE}/iconik-credentials/{VARIABLE_NAME}
+
+Where:
+- CLIENT_NAME - value of `CLIENT` variable from `env.yaml`
+- SERVICE_NAME - value of `service` field of the sls config
+- STAGE - stage name: dev/prod/test/etc
+- VARIABLE_NAME - can be: app-id, app-auth-token
+
+Those parameters are created on first deployment(check the `init-deploy.js` script), so you don`t have to create them by hands.
+
+## Iconik app admin
+
+Iconik app admin is build-in feature to manage iconik app related things like token management. 
+
+Current list of what it does:
+
+- Provide an iconik custom action to update iconik app id and app auth token in the SSM parameter store.
+
+To install into an iconik domain go to the iconik domain custom actions admin panel and add the following custom action:
+![image](docs/images/iconik-app-admin-create-init-ca.png)
+
+- URL = `{BASE_API_URL}/api/iconik-app-admin/init`
+- App name = name of the app you used to deploy the service
+
+Then trigger the init custom action and wait some time. It adds **[{SERVICE_NAME}:{STAGE}] Update app token** metadata view and **[{SERVICE_NAME}:{STAGE}] Update app token** custom action. Remove the init custom action from custom actions list.
+
+You can use the **Update app token** custom action to update app token.
+
+Required dependencies:
+- `api/iconik-app-admin/*`
+- `services/IconikCredentialsStorage.ts`
+- `authorizers/iconik/custom-action.ts`
+- `helper/authorizers/iconik/context.ts`
+- `helper/environment.ts`
+- `helper/axios.ts`
+- `interfaces/api-gateway-lambda.interface.ts`
+- `config/serverless/parts/iconik-app-admin.ts`
+- `@workflowwin/iconik-api` package
+- `@floteam/errors` package
+- `@redtea/format-axios-error` package
+- `axios` package
+- `@types/aws-lambda` package
+
+All code of the iconik app admin is here: `api/iconik-app-admin/`.
+
+
 ## FAQ
 
 ### What type of API Gateway event to use for lambda: REST API or HTTP API?

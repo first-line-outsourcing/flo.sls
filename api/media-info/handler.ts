@@ -32,10 +32,9 @@ if (process.env.LAMBDA_TASK_ROOT) {
  *
  * This function should handle all errors and return them with proper structure
  * @param event - APIGateway, SQS Trigger, SNS Trigger, etc. event object
- * @param context
  */
 
-export const getMediaInfo: APIGatewayProxyHandlerV2 = async (event, context) => {
+export const getMediaInfo: APIGatewayProxyHandlerV2 = async (event) => {
   log(event);
 
   try {

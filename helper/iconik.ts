@@ -1,8 +1,15 @@
+import { IconikContext } from '@helper/authorizers/iconik/context';
 import { getEnv } from '@helper/environment';
+import { IconikCredentialsStorage } from '@services/IconikCredentialsStorage';
 import { IconikService } from '@workflowwin/iconik-api';
-import { IconikContext } from '../authorizers/iconik/context';
 
-export function createIconikClient(authContext?: IconikContext): IconikService {
+/**
+ * Create iconik API client from auth context data or from env vars and app token from the SSM parameters storage.
+ *
+ * @param {IconikContext} authContext
+ * @returns {Promise<IconikService>}
+ */
+export async function createIconikClient(authContext?: IconikContext): Promise<IconikService> {
   if (authContext) {
     return new IconikService({
       systemDomainId: authContext.systemDomainId,
@@ -12,10 +19,13 @@ export function createIconikClient(authContext?: IconikContext): IconikService {
     });
   }
 
+  const iconikCredentialsStore = new IconikCredentialsStorage();
+  const credentials = await iconikCredentialsStore.get();
+
   return new IconikService({
     systemDomainId: getEnv('ICONIK_DOMAIN_ID'),
-    appId: getEnv('ICONIK_APP_ID'),
+    appId: credentials.appId,
     iconikUrl: getEnv('ICONIK_URL'),
-    authToken: getEnv('ICONIK_APP_AUTH_TOKEN'),
+    authToken: credentials.appAuthToken,
   });
 }
