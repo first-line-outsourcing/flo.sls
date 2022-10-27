@@ -15,13 +15,10 @@ const PROFILE = '${file(./env.yml):${self:provider.stage}.PROFILE}';
 const masterConfig: AWS = {
   service: SERVICE_NAME,
   configValidationMode: 'warn',
-  variablesResolutionMode: '20210326',
-  unresolvedVariablesNotificationMode: 'error',
   provider: {
     name: 'aws',
-    runtime: 'nodejs14.x',
+    runtime: 'nodejs16.x',
     stage: STAGE,
-    lambdaHashingVersion: '20201221',
     // @ts-ignore
     region: REGION,
     profile: PROFILE,
@@ -35,7 +32,6 @@ const masterConfig: AWS = {
       httpApi: true,
     },
     httpApi: {
-      useProviderTags: true,
       payload: '2.0',
       cors: true,
     },
@@ -75,11 +71,6 @@ const masterConfig: AWS = {
     'serverless-offline': {
       ignoreJWTSignature: true,
     },
-    // s3: {
-    //   host: '0.0.0.0',
-    //   port: 8001,
-    //   directory: '/tmp',
-    // },
     // capacities: [
     //   {
     //     table: 'UsersTable',
@@ -129,7 +120,6 @@ const masterConfig: AWS = {
     'serverless-offline-sqs',
     'serverless-offline',
     // 'serverless-offline-sns',
-    // 'serverless-s3-local',
     'serverless-prune-plugin',
   ],
 };
