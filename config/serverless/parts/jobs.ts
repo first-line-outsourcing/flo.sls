@@ -1,9 +1,17 @@
 import { AWSPartitial } from '../types';
 
 export const jobsConfig: AWSPartitial = {
+  params: {
+    default: {
+      JOBS_TABLE: 'Jobs-${sls:stage}',
+    },
+    prod: {
+      JOBS_TABLE: 'Jobs',
+    },
+  },
   provider: {
     environment: {
-      // JOBS_TABLE_NAME: '${self:custom.tablesNames.JobsTable.${self:provider.stage}}',
+      // JOBS_TABLE_NAME: '${param:JOBS_TABLE}',
     },
     iam: {
       role: {
@@ -22,8 +30,8 @@ export const jobsConfig: AWSPartitial = {
           //     'dynamodb:BatchWriteItem',
           //   ],
           //   Resource: [
-          //     'arn:aws:dynamodb:*:*:table/${file(env.yml):${self:provider.stage}.JOBS_TABLE}',
-          //     'arn:aws:dynamodb:*:*:table/${file(env.yml):${self:provider.stage}.JOBS_TABLE}/index/*',
+          //     'arn:aws:dynamodb:*:*:table/${param:JOBS_TABLE}',
+          //     'arn:aws:dynamodb:*:*:table/${param:JOBS_TABLE}/index/*',
           //   ],
           // },
         ],
@@ -107,22 +115,12 @@ export const jobsConfig: AWSPartitial = {
       //       },
       //     ],
       //     BillingMode: 'PAY_PER_REQUEST',
-      //     TableName: '${self:custom.tablesNames.JobsTable.${self:provider.stage}}',
+      //     TableName: '${param:JOBS_TABLE}',
       //     StreamSpecification: {
       //       StreamViewType: 'NEW_AND_OLD_IMAGES',
       //     },
       //   },
       // },
     },
-  },
-  custom: {
-    // tablesNames: {
-    //   JobsTable: {
-    //     local: 'Jobs-local',
-    //     dev: 'Jobs-dev',
-    //     test: 'Jobs-test',
-    //     prod: 'Jobs',
-    //   },
-    // },
   },
 };

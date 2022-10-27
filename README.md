@@ -58,7 +58,7 @@ It is a skeleton for your AWS + Serverless applications.
    - Create AWS user with at least programmatic access. It will be better to use a user with the Admin access. Download
      user's credentials.\
      Set up `AWS credentials` according to `Serverless framework` documentation. \
-     Name the profile as it named in the `env.yml -> PROFILE` field. \
+     Name the profile as it named in the `PROFILE` [param](https://www.serverless.com/framework/docs/guides/parameters#stage-parameters) of the serverless config. \
      https://serverless.com/framework/docs/providers/aws/cli-reference/config-credentials/
      ```
      serverless config credentials --provider aws --key ACCESS_KEY_ID --secret SECRET_ACCESS_KEY --profile PROFILE
@@ -74,14 +74,13 @@ It is a skeleton for your AWS + Serverless applications.
 
    - Open env.yml file, you can see stage sections here. For example, `local`, `dev`, and `prod`. If you deploy on
      production use `prod` section and do not touch other sections.
-   - Input your AWS region, for example, `us-east-1`
-   - Go to AWS Console `Key Management Service` and create Symmetric key in your region
+   - Go to AWS Console `Key Management Service` and create Symmetric key in your region (or use existent)
    - In the root folder of the project create kms_key.yml file and copy your key (Key ID) here like
      ```
      ${stage}: your_key_here
      ```
      Where stage can be `local`, `dev`, `test` and `prod`
-   - You can add any environment variables. If you need to secure them, encrypt them.
+   - You can add any environment variables. If you need to secure them, encrypt them. It\`s recommended to use [params](https://www.serverless.com/framework/docs/guides/parameters#stage-parameters) for none secure variables.
    - Copy the value of variable and run the command in the root of the project
      ```
      sls env --attribute VARIABLE_NAME --value variable_value --stage your_stage --encrypt
@@ -90,9 +89,7 @@ It is a skeleton for your AWS + Serverless applications.
 
      ```yaml
      common: &common
-       REGION: us-east-1
-       PROFILE: default
-       CLIENT: FLO
+       MY_SHARED_VAR: <encrypted content>
 
      local:
        <<: *common
@@ -338,3 +335,28 @@ In other cases you should check [this page](https://docs.aws.amazon.com/apigatew
 ### "Serverless Offline only supports retrieving JWT from the headers (undefined)" error when trying to start offline
 
 Probably, you use lambda authorizer for HTTP API. Serverless offline plugin does not support for that yet. Check the plugin repo for any updates.
+
+
+### What to use to store parameters that various per stage: `env.yml` or [params](https://www.serverless.com/framework/docs/guides/parameters#stage-parameters)?
+
+To store parameters that must be encrypted or if you have very big number of parameters use `env.yml`. In other cases you can use [params](https://www.serverless.com/framework/docs/guides/parameters#stage-parameters) + the environment property of the serverless config:
+
+```typescript
+const serverelssConfig: AWS = {
+  ...
+  params: {
+    dev: {
+      MY_PARAM: '1',
+    },
+    prod: {
+      MY_PARAM: '2',
+    },
+  },
+  provider: {
+    environment: {
+      MY_PARAM: '${param:MY_PARAM}',
+    },
+  },
+  ...
+}
+```
