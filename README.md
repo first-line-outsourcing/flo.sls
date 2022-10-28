@@ -376,7 +376,7 @@ const serverelssConfig: AWS = {
 }
 ```
 
-In this case `MY_TAG` will be passed to lambda too. If you don`t want that happens then use the stage parameters instead.
+In this case `MY_TAG` will be passed to lambda too. If you don\`t want that happens then use the stage parameters instead.
 
 Here is some recommendations you may follow in you project:
 
