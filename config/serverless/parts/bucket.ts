@@ -1,6 +1,11 @@
 // import { AWSPartitial } from '../types';
 //
 // export const bucketExampleConfig: AWSPartitial = {
+//   params: {
+//     default: {
+//       BUCKET: 'my-bucket',
+//     },
+//   },
 //   provider: {
 //     iam: {
 //       role: {
@@ -9,8 +14,8 @@
 //             Effect: 'Allow',
 //             Action: ['s3:*'],
 //             Resource: [
-//               'arn:aws:s3:::${file(env.yml):${self:provider.stage}.BUCKET}',
-//               'arn:aws:s3:::${file(env.yml):${self:provider.stage}.BUCKET}/*',
+//               'arn:aws:s3:::${param:BUCKET}',
+//               'arn:aws:s3:::${param:BUCKET}/*',
 //             ],
 //           },
 //         ],
@@ -26,7 +31,7 @@
 //       events: [
 //         {
 //           s3: {
-//             bucket: '${file(env.yml):${self:provider.stage}.BUCKET}',
+//             bucket: '${param:BUCKET}',
 //             event: 's3:ObjectCreated:*',
 //           },
 //         },
@@ -38,7 +43,7 @@
 //       MyBucket: {
 //         Type: 'AWS::S3::Bucket',
 //         Properties: {
-//           BucketName: '${file(env.yml):${self:provider.stage}.BUCKET}',
+//           BucketName: '${param:BUCKET}',
 //         },
 //       },
 //     },
