@@ -462,11 +462,14 @@ Required dependencies:
 - `helper/environment.ts`
 - `helper/axios.ts`
 - `interfaces/api-gateway-lambda.interface.ts`
+- `interfaces/api-gateway-authorizer.interface.ts`
 - `config/serverless/parts/iconik-app-admin.ts`
+- `scripts/init-deploy.js` - add pre-script to each deploy command in the `package.json`: `"predeploy:<stage>": "node scripts/init-deploy.js <stage>",`
 - `@workflowwin/iconik-api` package
 - `@floteam/errors` package
 - `@redtea/format-axios-error` package
 - `axios` package
+- `node-cache` package
 - `@types/aws-lambda` package
 
 All code of the iconik app admin is here: `api/iconik-app-admin/`.
