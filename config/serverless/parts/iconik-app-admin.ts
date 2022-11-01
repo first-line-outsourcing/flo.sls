@@ -19,7 +19,7 @@ export const iconikAppAdminConfig: AWSPartitial = {
                 'arn:aws:ssm',
                 Ref('AWS::Region'),
                 Ref('AWS::AccountId'),
-                'parameter/win/${file(./env.yml):${self:provider.stage}.CLIENT}/${self:service}/${self:provider.stage}/*',
+                'parameter/win/${param:CLIENT}/${self:service}/${self:provider.stage}/*',
               ]),
             ],
           },

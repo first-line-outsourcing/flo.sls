@@ -1,9 +1,23 @@
 import { AWSPartitial } from '../types';
 
 export const usersConfig: AWSPartitial = {
+  params: {
+    default: {
+      USERS_TABLE_NAME: 'Users-${sls:stage}',
+      // ELASTIC_SEARCH_DOMAIN: '',
+      // USER_POOL: '',
+      // USER_POOL_CLIENT: '',
+      // ELASTIC_SEARCH_INSTANCE_TYPE: '',
+      // ELASTIC_SEARCH_INSTANCE_COUNT: '',
+    },
+    prod: {
+      USERS_TABLE_NAME: 'Users',
+    },
+  },
   provider: {
     environment: {
-      // USERS_TABLE_NAME: '${self:custom.tablesNames.UsersTable.${self:provider.stage}}',
+      // USERS_TABLE_NAME: '${param:USERS_TABLE_NAME}',
+      // USER_POOL_CLIENT: '${param:USER_POOL_CLIENT}',
     },
     iam: {
       role: {
@@ -21,14 +35,14 @@ export const usersConfig: AWSPartitial = {
           //     'dynamodb:BatchGetItem',
           //     'dynamodb:BatchWriteItem',
           //   ],
-          //   Resource: 'arn:aws:dynamodb:*:*:table/${file(env.yml):${self:provider.stage}.USERS_TABLE}',
+          //   Resource: 'arn:aws:dynamodb:*:*:table/${param:USERS_TABLE_NAME}',
           // },
           // {
           //   Effect: 'Allow',
           //   Action: ['es:*'],
           //   Resource: [
-          //     'arn:aws:es:*:*:domain/${file(env.yml):${self:provider.stage}.ELASTIC_SEARCH_DOMAIN}',
-          //     'arn:aws:es:*:*:domain/${file(env.yml):${self:provider.stage}.ELASTIC_SEARCH_DOMAIN}/*',
+          //     'arn:aws:es:*:*:domain/${param:ELASTIC_SEARCH_DOMAIN}',
+          //     'arn:aws:es:*:*:domain/${param:ELASTIC_SEARCH_DOMAIN}/*',
           //   ],
           // },
         ],
@@ -41,7 +55,7 @@ export const usersConfig: AWSPartitial = {
       //   Type: 'AWS::Cognito::UserPool',
       //   Properties: {
       //     Properties: {
-      //       UserPoolName: '${file(env.yml):${opt:stage, self:provider.stage}.USER_POOL}',
+      //       UserPoolName: '${param:USER_POOL}',
       //       UsernameAttributes: ['email'],
       //       AutoVerifiedAttributes: ['email'],
       //       Schema: [
@@ -70,7 +84,7 @@ export const usersConfig: AWSPartitial = {
       // UserPoolClient: {
       //   Type: 'AWS::Cognito::UserPoolClient',
       //   Properties: {
-      //     ClientName: '${self:provider.environment.USER_POOL_CLIENT}',
+      //     ClientName: '${param:USER_POOL_CLIENT}',
       //     GenerateSecret: false,
       //     UserPoolId: Ref('UserPool'),
       //   },
@@ -92,7 +106,7 @@ export const usersConfig: AWSPartitial = {
       //       },
       //     ],
       //     BillingMode: 'PAY_PER_REQUEST',
-      //     TableName: '${self:custom.tablesNames.UsersTable.${self:provider.stage}}',
+      //     TableName: '${param:USERS_TABLE_NAME}',
       //     StreamSpecification: {
       //       StreamViewType: 'NEW_AND_OLD_IMAGES',
       //     },
@@ -101,15 +115,15 @@ export const usersConfig: AWSPartitial = {
       // ElasticSearchUsersInstance: {
       //   Type: 'AWS::Elasticsearch::Domain',
       //   Properties: {
-      //     DomainName: '${file(env.yml):${self:provider.stage}.ELASTIC_SEARCH_DOMAIN}',
+      //     DomainName: '${param:ELASTIC_SEARCH_DOMAIN}',
       //     EBSOptions: {
       //       EBSEnabled: true,
       //       VolumeType: 'gp2',
       //       VolumeSize: 10,
       //     },
       //     ElasticsearchClusterConfig: {
-      //       InstanceType: '${file(env.yml):${opt:stage, self:provider.stage}.ELASTIC_SEARCH_INSTANCE_TYPE}',
-      //       InstanceCount: '${file(env.yml):${opt:stage, self:provider.stage}.ELASTIC_SEARCH_INSTANCE_COUNT}',
+      //       InstanceType: '${param:ELASTIC_SEARCH_INSTANCE_TYPE}',
+      //       InstanceCount: '${param:ELASTIC_SEARCH_INSTANCE_COUNT}',
       //       DedicatedMasterEnabled: false,
       //       ZoneAwarenessEnabled: false,
       //     },
@@ -131,15 +145,5 @@ export const usersConfig: AWSPartitial = {
       //   },
       // },
     },
-  },
-  custom: {
-    // tablesNames: {
-    //   UsersTable: {
-    //     local: 'Users-local',
-    //     dev: 'Users-dev',
-    //     test: 'Users-test',
-    //     prod: 'Users',
-    //   },
-    // },
   },
 };

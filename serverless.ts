@@ -9,26 +9,39 @@ import { usersConfig } from './config/serverless/parts/users';
 import { joinParts } from './config/serverless/utils';
 
 const DEPLOYMENT_BUCKET = 'clients-serverless-deployment-bucket';
-const CLIENT = '${file(./env.yml):${self:provider.stage}.CLIENT}';
-const SERVICE_NAME = '${file(./env.yml):${self:provider.stage}.SERVICE_NAME}';
+const CLIENT = '${param:CLIENT}';
+const SERVICE_NAME = `template-win-sls`;
 const STAGE = '${opt:stage, "dev"}';
-const REGION = '${file(./env.yml):${self:provider.stage}.REGION}';
-const PROFILE = '${file(./env.yml):${self:provider.stage}.PROFILE}';
+const REGION = '${param:REGION}';
+const PROFILE = '${param:PROFILE}';
 
 const masterConfig: AWS = {
   service: SERVICE_NAME,
+  // See https://www.serverless.com/framework/docs/guides/parameters#stage-parameters
+  params: {
+    // default parameters
+    default: {
+      REGION: 'us-east-1',
+      CLIENT: 'WIN',
+      PROFILE: 'win',
+    },
+    dev: {},
+    prod: {},
+    local: {
+      IS_OFFLINE: true,
+      OFFLINE_API_BASE_URL: 'http://localhost:3000/local/',
+    },
+  },
   configValidationMode: 'warn',
-  variablesResolutionMode: '20210326',
-  unresolvedVariablesNotificationMode: 'error',
   provider: {
     name: 'aws',
-    runtime: 'nodejs14.x',
+    runtime: 'nodejs16.x',
     stage: STAGE,
-    lambdaHashingVersion: '20201221',
     // @ts-ignore
     region: REGION,
     profile: PROFILE,
     environment: {
+      SERVICE_NAME: '${self:service}',
       STAGE,
       BASE_HTTP_API_URL: GetAtt('HttpApi.ApiEndpoint'),
       API_URL: Sub('https://${gatewayId}.execute-api.${region}.${suffix}/${self:provider.stage}/', {
@@ -48,7 +61,6 @@ const masterConfig: AWS = {
       disableDefaultEndpoint: false,
     },
     httpApi: {
-      useProviderTags: true,
       payload: '2.0',
       cors: true,
       // need to be set to get free up resources feature work
@@ -94,11 +106,6 @@ const masterConfig: AWS = {
     'serverless-offline': {
       ignoreJWTSignature: true,
     },
-    // s3: {
-    //   host: '0.0.0.0',
-    //   port: 8001,
-    //   directory: '/tmp',
-    // },
     // capacities: [
     //   {
     //     table: 'UsersTable',
@@ -136,7 +143,7 @@ const masterConfig: AWS = {
     //   autoCreate: true,
     //   apiVersion: '2012-11-05',
     //   endpoint: 'http://0.0.0.0:9324',
-    //   region: '${file(./env.yml):${self:provider.stage}.REGION}',
+    //   region: '${param:REGION}',
     //   accessKeyId: 'root',
     //   secretAccessKey: 'root',
     //   skipCacheInvalidation: false,
@@ -148,7 +155,6 @@ const masterConfig: AWS = {
     'serverless-offline-sqs',
     'serverless-offline',
     // 'serverless-offline-sns',
-    // 'serverless-s3-local',
     'serverless-prune-plugin',
   ],
 };

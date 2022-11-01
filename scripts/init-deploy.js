@@ -24,7 +24,7 @@ main();
 
 async function main() {
   // Load all env vars from the env.yaml into `envs` variable
-  loadEnvs()
+  loadEnvs();
 
   awsSdk.config.credentials = new awsSdk.SharedIniFileCredentials({
     profile: envs.PROFILE,
@@ -80,9 +80,11 @@ async function main() {
 
 async function shouldRun() {
   try {
-    const v = await ssm.getParameter({
-      Name: createParamPath('service-admin', 'deployed'),
-    }).promise();
+    const v = await ssm
+      .getParameter({
+        Name: createParamPath('service-admin', 'deployed'),
+      })
+      .promise();
 
     return v.Parameter?.Value !== 'true';
   } catch (error) {
@@ -96,26 +98,52 @@ async function shouldRun() {
 
 function loadEnvs() {
   try {
-    const stdout = cp.execFileSync('node', [path.join(cwd, 'node_modules/.bin/sls')].concat(['env', '--stage', env, '-d']), {
-      env: {
-        ...process.env,
-        STAGE: env,
-      },
-    });
+    let {stderr: out} = cp.spawnSync(
+      'node',
+      [path.join(cwd, 'node_modules/.bin/sls')].concat(['env', '--stage', env, '-d']),
+      {
+        env: {
+          ...process.env,
+          STAGE: env,
+        },
+      }
+    );
 
-    const output = stdout.toString();
-    envs = parseEnvs(output);
+    out = out.toString();
+    envs = parseEnvs(out);
     envs.STAGE = env;
+    out = cp.execFileSync(
+      'node',
+      [path.join(cwd, 'node_modules/.bin/sls')].concat(['print', '--stage', env, '--config', 'serverless.ts', '--format', 'json']),
+      {
+        env: {
+          ...process.env,
+          STAGE: env,
+        },
+      }
+    );
+    out = JSON.parse(out.toString());
+    envs.REGION = getParam(out, 'REGION', env);
+    envs.CLIENT = getParam(out, 'CLIENT', env);
+    envs.PROFILE = getParam(out, 'PROFILE', env);
   } catch (error) {
     console.error(error);
     throw new Error('Unable to get envs');
   }
 }
 
+function getParam(config, name, stage) {
+  const dest = config.params;
+  if (dest[stage] && dest[stage][name] !== undefined) {
+    return dest[stage][name];
+  }
+  return dest.default ? dest.default[name] : undefined;
+}
+
 function parseEnvs(str) {
   const lines = str.split(/\r\n|\r|\n/).slice(1);
   const output = lines.reduce((out, line) => {
-    const result = line.match(/^Serverless:   ([^:]+): (.+?)( \(encrypted\))?$/);
+    const result = line.match(/^  ([^:]+): (.+?)( \(encrypted\))?$/);
     if (result) {
       const [, key, value] = result;
       out[key] = value;

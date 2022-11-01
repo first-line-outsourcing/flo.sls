@@ -106,22 +106,21 @@ Follow these steps:
      ${stage}: your_key_here
      ```
      Where stage can be `local`, `dev`, `test` and `prod`
-   - You can add any environment variables. If you need to secure them, encrypt them.
+   - You can add any environment variables. If you need to secure them, encrypt them. Check FAQ section of this document for useful information about `env.yaml` and Serverless stage parameters.
+
    - Copy the value of variable and run the command in the root of the project
      ```
      sls env --attribute VARIABLE_NAME --value variable_value --stage your_stage --encrypt
      ```
    - If you use some common variables, like
 
-```yaml
-common: &common
-  REGION: us-east-1
-  PROFILE: win
-  CLIENT: WIN
+     ```yaml
+     common: &common
+       MY_SHARED_VAR: <encrypted content>
 
-local:
-  <<: *common
-```
+     local:
+       <<: *common
+     ```
 
 The plugin will add these variables to all stages, but we don't want it. So after encrypting, copy encrypted value of
 the new variable, revert changes and paste it to the right place.
@@ -488,3 +487,53 @@ In other cases you should check [this page](https://docs.aws.amazon.com/apigatew
 ### "Serverless Offline only supports retrieving JWT from the headers (undefined)" error when trying to start offline
 
 Probably, you use lambda authorizer for HTTP API. Serverless offline plugin does not support for that yet. Check the plugin repo for any updates.
+
+
+### What to use: `env.yml` or [params](https://www.serverless.com/framework/docs/guides/parameters#stage-parameters)?
+
+With [Serverless stage parameters](https://www.serverless.com/framework/docs/guides/parameters#stage-parameters) you can pass different value of a parameter depending on the stage to the serverless config. You can use it as values source for env variables for lambda like this:
+
+```typescript
+const serverelssConfig: AWS = {
+  ...
+  params: {
+    dev: {
+      MY_PARAM: '1',
+    },
+    prod: {
+      MY_PARAM: '2',
+    },
+  },
+  provider: {
+    environment: {
+      MY_PARAM: '${param:MY_PARAM}',
+    },
+  },
+  ...
+}
+```
+
+With `env.yml` you can store encrypted env variables and any env variables that will be passed to lambda on deploy. You can use it even in the serverless config as parameter like this:
+
+```typescript
+const serverelssConfig: AWS = {
+  ...
+  provider: {
+    tags: {
+      MY_TAG: `${file(./env.yml):${self:provider.stage}.MY_TAG}`,
+    },
+  },
+  ...
+}
+```
+
+In this case `MY_TAG` will be passed to lambda too. If you don\`t want that happens then use the stage parameters instead.
+
+Here is some recommendations you may follow in you project:
+
+- Use the stage parameters to substitute values in the serverless config. Those parameters will not be passed to lambda and only visible in the serverless config.
+- Use `env.yml` to store encrypted env variables / encrypted parameters / any env variable or parameter. Keep in mind that all variables/parameters in the yml file will be passed to each lambda as env variables.
+- Use the stage parameters as values source for lambda env variables if you have only a few variables.
+
+
+
