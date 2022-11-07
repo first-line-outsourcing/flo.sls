@@ -473,6 +473,10 @@ Required dependencies:
 
 All code of the iconik app admin is here: `api/iconik-app-admin/`.
 
+PR with more details of how to integrate the module into project based on serverless v2: [#6](https://github.com/workflow-intelligence-nexus/win.sls/pull/6).
+
+Commit with some changes in projects based on serverless v3: [aa2f2e170d3e386091f23f21007e6a4c1bb3dd7e](https://github.com/workflow-intelligence-nexus/win.sls/commit/aa2f2e170d3e386091f23f21007e6a4c1bb3dd7e)
+
 
 ## FAQ
 
