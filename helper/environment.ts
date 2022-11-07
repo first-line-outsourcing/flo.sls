@@ -15,7 +15,7 @@ export function getEnv(name: string, required: false): string | undefined;
 export function getEnv(name: string, required = true): string | undefined {
   const v = process.env[name];
 
-  if (required && !v) {
+  if (required && v == undefined) {
     throw new RuntimeError(`Missing environment variable ${name}`);
   }
 
