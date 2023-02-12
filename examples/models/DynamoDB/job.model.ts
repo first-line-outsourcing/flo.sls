@@ -1,5 +1,5 @@
 import { getEnv, isStage } from '@helper/environment';
-import { User } from '@models/DynamoDB/user.model';
+import { User } from './user.model';
 import { dynamoose } from '@services/dynamoose';
 import { Document } from 'dynamoose/dist/Document';
 import { v4 } from 'uuid';

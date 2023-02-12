@@ -1,9 +1,5 @@
 import type { AWS } from '@serverless/typescript';
-import { examplesConfig } from './config/serverless/parts/examples';
-import { getMediaInfoConfig } from './config/serverless/parts/get-media-info';
-import { jobsConfig } from './config/serverless/parts/jobs';
-import { restApiCorsConfig } from './config/serverless/parts/rest-api-cors';
-import { usersConfig } from './config/serverless/parts/users';
+import { deployTestConfig } from './config/serverless/parts/deploy-test';
 import { joinParts } from './config/serverless/utils';
 
 const CLIENT = '${param:CLIENT}';
@@ -32,7 +28,7 @@ const masterConfig: AWS = {
   configValidationMode: 'warn',
   provider: {
     name: 'aws',
-    runtime: 'nodejs16.x',
+    runtime: 'nodejs18.x',
     stage: STAGE,
     // @ts-ignore
     region: REGION,
@@ -132,17 +128,11 @@ const masterConfig: AWS = {
   plugins: [
     '@redtea/serverless-env-generator',
     'serverless-esbuild',
-    'serverless-offline-sqs',
     'serverless-offline',
+    // 'serverless-offline-sqs',
     // 'serverless-offline-sns',
     'serverless-prune-plugin',
   ],
 };
 
-module.exports = joinParts(masterConfig, [
-  restApiCorsConfig,
-  getMediaInfoConfig,
-  jobsConfig,
-  usersConfig,
-  examplesConfig,
-]);
+module.exports = joinParts(masterConfig, [/*DELETE THIS >*/ deployTestConfig]);
