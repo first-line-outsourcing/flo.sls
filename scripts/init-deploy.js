@@ -126,6 +126,7 @@ function loadEnvs() {
     envs.REGION = getParam(out, 'REGION', env);
     envs.CLIENT = getParam(out, 'CLIENT', env);
     envs.PROFILE = getParam(out, 'PROFILE', env);
+    envs.SERVICE_NAME = out.service;
   } catch (error) {
     console.error(error);
     throw new Error('Unable to get envs');
