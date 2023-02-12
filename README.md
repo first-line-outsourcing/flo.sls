@@ -151,7 +151,7 @@ It is a skeleton for your AWS + Serverless applications.
 
 ## Examples
 
-If you need to play with examples then add all content of `examples/` directory to the project root, update `package.json` content with content from `examples/package.json` and update docker-compose.yaml content with content from `examples/package.json`.
+If you need to play with examples then add all content of `examples/` directory to the project root, update `package.json` content with content from `examples/package.json` and update `docker-compose.yaml` content with content from `examples/docker-compose.yaml`.
 
 You should delete `examples/` directory for real project.
 
