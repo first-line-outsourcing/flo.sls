@@ -2,7 +2,7 @@ import { InputValidationError } from '@floteam/errors';
 import { RuntimeError } from '@floteam/errors/runtime/runtime-error';
 import { getEnv, getStage } from '@helper/environment';
 import { debug } from '@helper/logger';
-import { SSM } from 'aws-sdk';
+import { GetParametersByPathResult, SSM } from '@aws-sdk/client-ssm';
 import NodeCache from 'node-cache';
 
 // Reduces number of requests to external storage.
@@ -23,10 +23,7 @@ export interface IconikCredentials {
  */
 export class IconikCredentialsStorage {
   private ssm = new SSM({
-    maxRetries: 5,
-    retryDelayOptions: {
-      base: Math.ceil(1000 / 40),
-    },
+    maxAttempts: 5,
   });
 
   /**
@@ -39,15 +36,13 @@ export class IconikCredentialsStorage {
       return cache.get('credentials') as IconikCredentials;
     }
 
-    let result: SSM.GetParametersByPathResult;
+    let result: GetParametersByPathResult;
 
     try {
-      result = await this.ssm
-        .getParametersByPath({
-          Path: this.createParamPath(),
-          WithDecryption: true,
-        })
-        .promise();
+      result = await this.ssm.getParametersByPath({
+        Path: this.createParamPath(),
+        WithDecryption: true,
+      });
     } catch (error) {
       debug('get ssm parameters error=', error);
       throw new RuntimeError('Cannot get SSM parameters.');
@@ -86,22 +81,18 @@ export class IconikCredentialsStorage {
    */
   async update(credentials: IconikCredentials) {
     try {
-      await this.ssm
-        .putParameter({
-          Name: this.createParamPath('app-id'),
-          Type: 'String',
-          Value: credentials.appId,
-          Overwrite: true,
-        })
-        .promise();
-      await this.ssm
-        .putParameter({
-          Name: this.createParamPath('app-auth-token'),
-          Value: credentials.appAuthToken,
-          Type: 'SecureString',
-          Overwrite: true,
-        })
-        .promise();
+      await this.ssm.putParameter({
+        Name: this.createParamPath('app-id'),
+        Type: 'String',
+        Value: credentials.appId,
+        Overwrite: true,
+      });
+      await this.ssm.putParameter({
+        Name: this.createParamPath('app-auth-token'),
+        Value: credentials.appAuthToken,
+        Type: 'SecureString',
+        Overwrite: true,
+      });
       cache.set('credentials', credentials);
     } catch (error) {
       debug('update ssm parameters error=', error);

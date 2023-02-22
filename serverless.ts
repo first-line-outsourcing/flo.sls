@@ -1,11 +1,7 @@
 import type { AWS } from '@serverless/typescript';
-import { GetAtt, Ref, Sub } from './config/serverless/cf-intristic-fn';
-import { examplesConfig } from './config/serverless/parts/examples';
-import { getMediaInfoConfig } from './config/serverless/parts/get-media-info';
-import { jobsConfig } from './config/serverless/parts/jobs';
-import { restApiCorsConfig } from './config/serverless/parts/rest-api-cors';
+import { deployTestConfig } from './config/serverless/parts/deploy-test';
 import { iconikAppAdminConfig } from './config/serverless/parts/iconik-app-admin';
-import { usersConfig } from './config/serverless/parts/users';
+import { GetAtt, Ref, Sub } from './config/serverless/cf-intristic-fn';
 import { joinParts } from './config/serverless/utils';
 
 const DEPLOYMENT_BUCKET = 'clients-serverless-deployment-bucket';
@@ -16,8 +12,7 @@ const REGION = '${param:REGION}';
 const PROFILE = '${param:PROFILE}';
 
 const masterConfig: AWS = {
-  service: SERVICE_NAME,
-  // See https://www.serverless.com/framework/docs/guides/parameters#stage-parameters
+  service: SERVICE_NAME, // See https://www.serverless.com/framework/docs/guides/parameters#stage-parameters
   params: {
     // default parameters
     default: {
@@ -35,20 +30,18 @@ const masterConfig: AWS = {
   configValidationMode: 'warn',
   provider: {
     name: 'aws',
-    runtime: 'nodejs16.x',
-    stage: STAGE,
-    // @ts-ignore
+    runtime: 'nodejs18.x',
+    stage: STAGE, // @ts-ignore
     region: REGION,
     profile: PROFILE,
     environment: {
       SERVICE_NAME: '${self:service}',
       STAGE,
-      BASE_HTTP_API_URL: GetAtt('HttpApi.ApiEndpoint'),
-      API_URL: Sub('https://${gatewayId}.execute-api.${region}.${suffix}/${self:provider.stage}/', {
-        gatewayId: Ref('ApiGatewayRestApi'),
-        region: Ref('AWS::Region'),
-        suffix: Ref('AWS::URLSuffix'),
-      }),
+      BASE_HTTP_API_URL: GetAtt('HttpApi.ApiEndpoint'), // API_URL: Sub('https://${gatewayId}.execute-api.${region}.${suffix}/${self:provider.stage}/', {
+      //   gatewayId: Ref('ApiGatewayRestApi'),
+      //   region: Ref('AWS::Region'),
+      //   suffix: Ref('AWS::URLSuffix'),
+      // }),
     },
     tags: {
       client: CLIENT,
@@ -62,8 +55,7 @@ const masterConfig: AWS = {
     },
     httpApi: {
       payload: '2.0',
-      cors: true,
-      // need to be set to get free up resources feature work
+      cors: true, // need to be set to get free up resources feature work
       disableDefaultEndpoint: false,
     },
     deploymentBucket: {
@@ -79,8 +71,7 @@ const masterConfig: AWS = {
     esbuild: {
       bundle: true,
       minify: true,
-      metafile: false,
-      // If you want to debug the output than turn this on.
+      metafile: false, // If you want to debug the output than turn this on.
       // In other cases keep it off because serverless-esbuild
       // dont update extra files if they already exists in .esbuild folder.
       // Extra files are files that you define in package.patterns settings.
@@ -105,8 +96,7 @@ const masterConfig: AWS = {
     },
     'serverless-offline': {
       ignoreJWTSignature: true,
-    },
-    // capacities: [
+    }, // capacities: [
     //   {
     //     table: 'UsersTable',
     //     read: {
@@ -152,18 +142,11 @@ const masterConfig: AWS = {
   plugins: [
     '@redtea/serverless-env-generator',
     'serverless-esbuild',
-    'serverless-offline-sqs',
     'serverless-offline',
+    // 'serverless-offline-sqs',
     // 'serverless-offline-sns',
     'serverless-prune-plugin',
   ],
 };
 
-module.exports = joinParts(masterConfig, [
-  iconikAppAdminConfig,
-  restApiCorsConfig,
-  getMediaInfoConfig,
-  jobsConfig,
-  usersConfig,
-  examplesConfig,
-]);
+module.exports = joinParts(masterConfig, [iconikAppAdminConfig, /*DELETE THIS >*/ deployTestConfig]);

@@ -2,7 +2,7 @@
 
 ## Project information
 
-It is a skeleton for your AWS + Serverless applications.
+It is a skeleton for your AWS + Serverless applications. 
 
 It is forked from https://github.com/first-line-outsourcing/flo.sls and all changes from parent repository can be pulled here. \
 Follow these steps:
@@ -34,17 +34,6 @@ Follow these steps:
 - **lint**: start tslint for project files
 - **test**: start unit tests
 - **test:ci**: start test in CI environment
-- **sqs:up**: start Docker SQS container for local development
-- **sqs:down**: stop Docker SQS container for local development
-- **sqs:list-queues**: list local queues
-- **sqs:create-queue**: create local queue (remove square brackets for FIFO queue)
-- **sqs:receive-messages**: receive messages from local queue (remove square brackets for FIFO queue)
-- **sqs:delete-queue**: delete local queue (remove square brackets for FIFO queue)
-- **db:up**: start Docker Postgres container for local development
-- **db:drop**: drop Postgres database
-- **db:create**: create Postgres database
-- **db:migrate**: migrate Postgres database
-- **dynamodb:up**: start Docker DynamoDB container for local development
 - **sonarqube:up**: start Docker SonarQube container for local static code analysis
 - **sonarqube-verify**: start Static Code Analysis
 - **containers:down**: stop all containers
@@ -56,13 +45,7 @@ Follow these steps:
 - Install `nvm`\
   Linux, OSX: https://github.com/nvm-sh/nvm \
   Windows: https://github.com/coreybutler/nvm-windows
-- Install `Node.js` _Recommended For Most Users_ version (14.17.0 for now) using nvm \
-  Linux, OSX: https://github.com/nvm-sh/nvm#usage \
-  Windows: https://github.com/coreybutler/nvm-windows#usage
-  ```
-  nvm install 14.17.0
-  nvm use 14.17.0
-  ```
+- Do `nvm install ` in the root of the project. It will install appropriate version of Node.Js from `.nvmrc`.
 - Install `aws-cli` version 2 \
   Linux: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html \
   Windows: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-windows.html \
@@ -75,8 +58,7 @@ Follow these steps:
 - Create AWS user with at least programmatic access. It will be better to use a user with the Admin access. Download
   user's credentials.\
   Set up `AWS credentials` according to `Serverless framework` documentation. \
-  Name the profile as it named in the `env.yml -> PROFILE` field. \
-  (For `local` and `dev` stages it should be `win`, for `prod` stage - name of the client) \
+  Name the profile as it named in the `PROFILE` [param](https://www.serverless.com/framework/docs/guides/parameters#stage-parameters) of the serverless config. \
   https://serverless.com/framework/docs/providers/aws/cli-reference/config-credentials/
   ```
   serverless config credentials --provider aws --key ACCESS_KEY_ID --secret SECRET_ACCESS_KEY --profile PROFILE
@@ -94,13 +76,11 @@ Follow these steps:
   ```
   npm i
   ```
-
 2. Set up environment variables
 
    - Open env.yml file, you can see stage sections here. For example, `local`, `dev`, and `prod`. If you deploy on
      production use `prod` section and do not touch other sections.
-   - Input your AWS region, for example, `us-east-1`
-   - Go to AWS Console `Key Management Service` and create Symmetric key in your region
+   - Go to AWS Console `Key Management Service` and create Symmetric key in your region (or use existent)
    - In the root folder of the project create kms_key.yml file and copy your key (Key ID) here like
      ```
      ${stage}: your_key_here
@@ -122,30 +102,25 @@ Follow these steps:
        <<: *common
      ```
 
-The plugin will add these variables to all stages, but we don't want it. So after encrypting, copy encrypted value of
-the new variable, revert changes and paste it to the right place.
+     The plugin will add these variables to all stages, but we don't want it. So after encrypting, copy encrypted value
+     of the new variable, revert changes and paste it to the right place.
 
-- Go to the iconik and create app with name `WIN Automation`. You should choose the admin user for this app. If the
-  app already exists, use it.
-- Copy app id and run the command in the root of the
-  project `sls env --attribute ICONIK_APP_ID --value your_app_id --stage prod --encrypt`. Do not forget to do the
-  step `If you use some common variables`.
-- Copy auth token and run the command in the root of the
-  project `sls env --attribute ICONIK_AUTH_TOKEN --value your_auth_token --stage prod --encrypt`. Do not forget to do
-  the step `If you use some common variables`.
-- You are ready for deploying
+   - Go to the iconik and create app with name `WIN Automation`. You should choose the admin user for this app. If the
+     app already exists, use it.
+   - Copy app id and run the command in the root of the
+     project `sls env --attribute ICONIK_APP_ID --value your_app_id --stage prod --encrypt`. Do not forget to do the
+     step `If you use some common variables`.
+   - Copy auth token and run the command in the root of the
+     project `sls env --attribute ICONIK_AUTH_TOKEN --value your_auth_token --stage prod --encrypt`. Do not forget to do
+     the step `If you use some common variables`.
+   - You are ready for deploying
 
 3. Deploy
 
-- Run the command in the root of the project
-  ```
-  npm run deploy:your_stage
-  ```
-
-4. Set up features
-
-- After successful deployment you will see the API URLs. Copy the URLs that ends on `/initialization`, post them to
-  the browser URL input and click enter. They will create all needed stuff in your iconik account.
+   - Run the command in the root of the project
+     ```
+     npm run deploy:your_stage
+     ```
 
 ### Freeing up AWS resources
 
@@ -157,14 +132,6 @@ When you run the command it uses `serverless.free-up-resources.ts` config to dep
 
 ## The project contains:
 
-- The Media Info feature that uses mediainfo binary file and returns media info by url
-- Examples of offline plugins and docker-compose file for working with AWS resources offline
-- Examples of HTTP API and REST API endpoints with authorizers
-- Examples of IAM Role Statements
-- Example of different AWS resources
-- Examples of models for dynamoose library
-- Examples of models for sequelize library
-- Examples of services for working with AWS resources
 - Simple CircleCI configuration
 
 ## iconik Resources
@@ -237,17 +204,8 @@ When you run the command it uses `serverless.free-up-resources.ts` config to dep
   - helper.ts - This file contains auxiliary functions
   - logger.ts - This file contains log function that helps log data in the proper way
 - interfaces
-- models - Models for the databases
-  - DynamoDB
-    - user.model.ts
-    - job.model.ts
-  - PostgreSQL
-    - account.model.ts
-    - domain.model.ts
+- examples - Examples
 - services - Classes for working with third party libraries, APIs, services, etc.
-  - cloud-formation.service.ts
-  - email.service.ts
-  - s3.service.ts
 - docker-compose.yml
 - env.yml - Environment variables
 - package.json
@@ -257,6 +215,23 @@ When you run the command it uses `serverless.free-up-resources.ts` config to dep
 - tsconfig.json
 - loadenv.ts - load environment variable from `.env` file
 - esbuild-pluings.js - load pluings for esbuild
+
+## Examples
+
+If you need to play with examples then add all content of `examples/` directory to the project root, update `package.json` content with content from `examples/package.json` and update `docker-compose.yaml` content with content from `examples/docker-compose.yaml`.
+
+You should delete `examples/` directory for real project.
+
+List of examples:
+
+- The Media Info feature that uses mediainfo binary file and returns media info by url
+- Offline plugins and docker-compose file for working with AWS resources offline
+- HTTP API and REST API endpoints with authorizers
+- IAM Role Statements
+- AWS resources
+- Models for dynamoose library
+- Models for sequelize library
+- Services for working with AWS resources
 
 ## Static code analysis
 
@@ -539,5 +514,7 @@ Here is some recommendations you may follow in you project:
 - Use `env.yml` to store encrypted env variables / encrypted parameters / any env variable or parameter. Keep in mind that all variables/parameters in the yml file will be passed to each lambda as env variables.
 - Use the stage parameters as values source for lambda env variables if you have only a few variables.
 
+### Can I use aws-sdk package with Node.Js 18?
 
+No. Starting from Node.Js 18 aws lambda environment does not provide `aws-sdk`(old AWS SDK) package. It supports AWS SDK v3 only(`@aws-sdk/*`). Check this [blog post](https://aws.amazon.com/blogs/compute/node-js-18-x-runtime-now-available-in-aws-lambda/).
 

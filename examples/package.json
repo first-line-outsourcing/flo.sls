@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "db:up": "docker-compose -f docker-compose.yml up -d postgres",
+    "db:drop": "npx sequelize-cli db:drop",
+    "db:create": "npx sequelize-cli db:create",
+    "db:migrate": "npx sequelize-cli db:migrate",
+    "dynamodb:up": "docker-compose -f docker-compose.yml up -d dynamodb",
+  },
+  "dependencies": {
+    "dynamoose": "^2.8.3",
+    "nodemailer": "^6.7.2",
+    "sequelize": "^6.12.2",
+    "sequelize-typescript": "^2.1.1",
+    "xml2js": "^0.4.23"
+  }
+}
