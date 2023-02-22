@@ -2,7 +2,7 @@
 
 ## Project information
 
-It is a skeleton for your AWS + Serverless applications.
+It is a skeleton for your AWS + Serverless applications. 
 
 ## NPM commands
 
@@ -39,13 +39,7 @@ It is a skeleton for your AWS + Serverless applications.
    - Install `nvm`\
      Linux, OSX: https://github.com/nvm-sh/nvm \
      Windows: https://github.com/coreybutler/nvm-windows
-   - Install `Node.js` _Recommended For Most Users_ version (14.17.0 for now) using nvm \
-     Linux, OSX: https://github.com/nvm-sh/nvm#usage \
-     Windows: https://github.com/coreybutler/nvm-windows#usage
-     ```
-     nvm install 14.17.0
-     nvm use 14.17.0
-     ```
+   - Do `nvm install` in the root of the project. It will install appropriate version of Node.Js from `.nvmrc`.
    - Install `aws-cli` version 2 \
      Linux: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html \
      Windows: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-windows.html \
@@ -109,14 +103,6 @@ It is a skeleton for your AWS + Serverless applications.
 
 ### The project contains:
 
-- The Media Info feature that uses mediainfo binary file and returns media info by url
-- Examples of offline plugins and docker-compose file for working with AWS resources offline
-- Examples of HTTP API and REST API endpoints with authorizers
-- Examples of IAM Role Statements
-- Example of different AWS resources
-- Examples of models for dynamoose library
-- Examples of models for sequelize library
-- Examples of services for working with AWS resources
 - Simple CircleCI configuration
 
 ### Project structure
@@ -151,17 +137,8 @@ It is a skeleton for your AWS + Serverless applications.
   - helper.ts - This file contains auxiliary functions
   - logger.ts - This file contains log function that helps log data in the proper way
 - interfaces
-- models - Models for the databases
-  - DynamoDB
-    - user.model.ts
-    - job.model.ts
-  - PostgreSQL
-    - account.model.ts
-    - domain.model.ts
+- examples - Examples
 - services - Classes for working with third party libraries, APIs, services, etc.
-  - cloud-formation.service.ts
-  - email.service.ts
-  - s3.service.ts
 - docker-compose.yml
 - env.yml - Environment variables
 - package.json
@@ -171,6 +148,23 @@ It is a skeleton for your AWS + Serverless applications.
 - tsconfig.json
 - loadenv.ts - load environment variable from `.env` file
 - esbuild-pluings.js - load pluings for esbuild
+
+## Examples
+
+If you need to play with examples then add all content of `examples/` directory to the project root, update `package.json` content with content from `examples/package.json` and update `docker-compose.yaml` content with content from `examples/docker-compose.yaml`.
+
+You should delete `examples/` directory for real project.
+
+List of examples:
+
+- The Media Info feature that uses mediainfo binary file and returns media info by url
+- Offline plugins and docker-compose file for working with AWS resources offline
+- HTTP API and REST API endpoints with authorizers
+- IAM Role Statements
+- AWS resources
+- Models for dynamoose library
+- Models for sequelize library
+- Services for working with AWS resources
 
 ## Static code analysis
 
@@ -384,5 +378,7 @@ Here is some recommendations you may follow in you project:
 - Use `env.yml` to store encrypted env variables / encrypted parameters / any env variable or parameter. Keep in mind that all variables/parameters in the yml file will be passed to each lambda as env variables.
 - Use the stage parameters as values source for lambda env variables if you have only a few variables.
 
+### Can I use aws-sdk package with Node.Js 18?
 
+No. Starting from Node.Js 18 aws lambda environment does not provide `aws-sdk`(old AWS SDK) package. It supports AWS SDK v3 only(`@aws-sdk/*`). Check this [blog post](https://aws.amazon.com/blogs/compute/node-js-18-x-runtime-now-available-in-aws-lambda/).
 
