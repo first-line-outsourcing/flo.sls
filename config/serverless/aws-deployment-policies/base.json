@@ -7,16 +7,10 @@
         "apigateway:*"
       ],
       "Resource": [
-        "arn:aws:apigateway:AWS_REGION::/apis"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "apigateway:*"
-      ],
-      "Resource": [
-        "arn:aws:apigateway:AWS_REGION::/apis/*",
+        "arn:aws:apigateway:AWS_REGION::/restapis*",
+        "arn:aws:apigateway:AWS_REGION::/apikeys*",
+        "arn:aws:apigateway:AWS_REGION::/usageplans*",
+        "arn:aws:apigateway:AWS_REGION::/apis*",
         "arn:aws:apigateway:AWS_REGION::/tags/*"
       ]
     },
@@ -25,7 +19,7 @@
       "Action": [
         "cloudformation:*"
       ],
-      "Resource": "arn:aws:cloudformation:AWS_REGION:AWS_ACCOUNT:stack/PROJECT-PREFIX-*/*"
+      "Resource": "arn:aws:cloudformation:AWS_REGION:AWS_ACCOUNT:stack/PROJECT-PREFIX-*"
     },
     {
       "Effect": "Allow",
@@ -56,16 +50,25 @@
         "iam:*"
       ],
       "Resource": [
-        "arn:aws:iam::*:role/PROJECT-PREFIX-*-lambdaRole"
+        "arn:aws:iam::AWS_ACCOUNT:role/PROJECT-PREFIX-*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "NotAction": [
+        "lambda:InvokeFunction"
+      ],
+      "Resource": [
+        "arn:aws:lambda:AWS_REGION:AWS_ACCOUNT:function:PROJECT-PREFIX-*"
       ]
     },
     {
       "Effect": "Allow",
       "Action": [
-        "lambda:*"
+        "lambda:InvokeFunction"
       ],
       "Resource": [
-        "arn:aws:lambda:*:*:function:PROJECT-PREFIX-*"
+        "arn:aws:lambda:AWS_REGION:AWS_ACCOUNT:function:PROJECT-PREFIX-*-custom-resource-existing-s3"
       ]
     },
     {
@@ -140,31 +143,6 @@
     {
       "Effect": "Allow",
       "Action": [
-        "s3:*"
-      ],
-      "Resource": [
-        "arn:aws:s3:::PROJECT-PREFIX-*/*"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ssm:*"
-      ],
-      "Resource": [
-        "arn:aws:ssm:AWS_REGION:AWS_ACCOUNT:parameter/PROJECT-PREFIX/*"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "kms:Decrypt"
-      ],
-      "Resource": "arn:aws:kms:AWS_REGION:AWS_ACCOUNT:alias/aws/ssm"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
         "kms:DescribeKey",
         "kms:Decrypt",
         "kms:Encrypt",
@@ -172,15 +150,6 @@
       ],
       "Resource": [
         "arn:aws:kms:AWS_REGION:AWS_ACCOUNT:key/AWS_KMS_KEY"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "sqs:*"
-      ],
-      "Resource": [
-        "arn:aws:sqs:AWS_REGION:AWS_ACCOUNT:PROJECT-PREFIX-*"
       ]
     }
   ]

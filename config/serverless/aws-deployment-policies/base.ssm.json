@@ -1,0 +1,21 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ssm:*"
+      ],
+      "Resource": [
+        "arn:aws:ssm:AWS_REGION:AWS_ACCOUNT:parameter/PROJECT-PREFIX/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "kms:Decrypt"
+      ],
+      "Resource": "arn:aws:kms:AWS_REGION:AWS_ACCOUNT:alias/aws/ssm"
+    }
+  ]
+}
