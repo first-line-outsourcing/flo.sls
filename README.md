@@ -275,7 +275,7 @@ To add an `env` variable, follow these steps:
       sls env -a $NAME -s $STAGE -d
       ```
 
-3. Use the following commands to store and encrypt variables in your YAML environment files. Note that variables are stored in the first file listed in `_envFiles_`.
+3. Use the following commands to store and encrypt variables in your YAML environment files.
 
   - Set a variable:
 
