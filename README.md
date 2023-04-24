@@ -1,8 +1,17 @@
-# AWS + Serverless API for your application
+# Serverless app template (AWS)
 
 ## Project information
 
-It is a skeleton for your AWS + Serverless applications. 
+PROJECT INFORMATION HERE
+
+### Links
+
+- [Initial requirements](https://example.com)
+- LINKS HERE
+
+## Contacts
+
+- MY NAME <my@email.com> (position)
 
 ## NPM commands
 
@@ -35,75 +44,97 @@ It is a skeleton for your AWS + Serverless applications.
 
 ## Deployment information
 
-1. Preparation
-   - Install `nvm`\
-     Linux, OSX: https://github.com/nvm-sh/nvm \
-     Windows: https://github.com/coreybutler/nvm-windows
-   - Do `nvm install` in the root of the project. It will install appropriate version of Node.Js from `.nvmrc`.
-   - Install `aws-cli` version 2 \
-     Linux: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html \
-     Windows: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-windows.html \
-     OSX: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-mac.html
-   - Install `Serverless framework` globally via npm \
-     https://serverless.com/framework/docs/getting-started/
-     ```
-     npm install -g serverless
-     ```
-   - Create AWS user with at least programmatic access. It will be better to use a user with the Admin access. Download
-     user's credentials.\
-     Set up `AWS credentials` according to `Serverless framework` documentation. \
-     Name the profile as it named in the `PROFILE` [param](https://www.serverless.com/framework/docs/guides/parameters#stage-parameters) of the serverless config. \
-     https://serverless.com/framework/docs/providers/aws/cli-reference/config-credentials/
-     ```
-     serverless config credentials --provider aws --key ACCESS_KEY_ID --secret SECRET_ACCESS_KEY --profile PROFILE
-     ```
-   - Install `git` https://git-scm.com/downloads
-   - If the repository is private you should set up SSH key or use HTTPS for cloning it
-   - Clone the repository
-   - Install node_modules running the command in the root of the project
-     ```
-     npm i
-     ```
-2. Set up environment variables
+### AWS IAM Deployment Policy
 
-   - Open env.yml file, you can see stage sections here. For example, `local`, `dev`, and `prod`. If you deploy on
-     production use `prod` section and do not touch other sections.
-   - Go to AWS Console `Key Management Service` and create Symmetric key in your region (or use existent)
-   - In the root folder of the project create kms_key.yml file and copy your key (Key ID) here like
-     ```
-     ${stage}: your_key_here
-     ```
-     Where stage can be `local`, `dev`, `test` and `prod`
-   - You can add any environment variables. If you need to secure them, encrypt them. Check FAQ section of this document for useful information about `env.yaml` and Serverless stage parameters.
+To deploy to production, it is necessary to create an AWS IAM user and attach a deployment policy that allows actions on project resources or on resources with a project prefix.
 
-   - Copy the value of variable and run the command in the root of the project
-     ```
-     sls env --attribute VARIABLE_NAME --value variable_value --stage your_stage --encrypt
-     ```
-   - If you use some common variables, like
+To prepare the project deployment policy, use the base policy located in the `config/serverless/aws-deployment-policy/base.json` file, and add any necessary statements. Ensure that you replace the following placeholders in the policy:
+- `PROJECT-PREFIX` with the actual project resource prefix
+- `AWS_REGION` with the AWS region
+- `AWS_ACCOUNT` with the AWS account number
+- `AWS_KMS_KEY` with the AWS KMS key ID
 
-     ```yaml
-     common: &common
-       MY_SHARED_VAR: <encrypted content>
+Once you have prepared the deployment policy, save it as a JSON file in `config/serverless/aws-deployment-policy/` with the name `stage.<STAGE>.json`, where `<STAGE>` represents the name of the stage the policy is for. When the policy is ready, request that the AWS deployment account vendor creates an IAM user and attaches the prepared policy to it.
 
-     local:
-       <<: *common
-     ```
+For development or test stages, the above steps can be omitted, and an IAM user with admin rights can be used instead.
 
-     The plugin will add these variables to all stages, but we don't want it. So after encrypting, copy encrypted value
-     of the new variable, revert changes and paste it to the right place.
+After completing the deployment IAM user setup, proceed to the next section to create an AWS profile with the serverless framework.
 
-   - You are ready for deploying
 
-3. Deploy
-   - Run the command in the root of the project
-     ```
-     npm run deploy:your_stage
-     ```
+### Installing tools
 
-### The project contains:
+To prepare for deployment, follow these steps:
 
-- Simple CircleCI configuration
+1. Install nvm by visiting the following links:
+  * For Linux and OSX: https://github.com/nvm-sh/nvm
+  * For Windows: https://github.com/coreybutler/nvm-windows
+
+2. In the root of the project, run the following command to install the appropriate version of Node.Js from .nvmrc:
+    ```
+    nvm install
+    ```
+
+3. Install aws-cli version 2 by visiting the following links:
+  * For Linux: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
+  * For Windows: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-windows.html
+  * For OSX: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-mac.html
+
+4. Install the [Serverless framework](https://serverless.com/framework/docs/getting-started/) globally via npm by running the following command:
+    ```
+    npm install -g serverless
+    ```
+
+6. Set up AWS credentials according to the [Serverless framework documentation](https://www.serverless.com/framework/docs/providers/aws/guide/credentials/). The name of the profile must match the `PROFILE` serverless parameter in the `provider` section of the `serverless.yml` file for the corresponding stage. Here's an example command for configuring a profile:
+
+    ```
+    serverless config credentials --provider aws --key ACCESS_KEY_ID --secret SECRET_ACCESS_KEY --profile PROFILE
+    ```
+
+7. Install `git` from https://git-scm.com/downloads.
+
+8. If the repository is private, you should set up an SSH key or use HTTPS to clone it.
+
+9. Clone the repository.
+
+10. Install the required `node_modules` by running the following command in the root of the project:
+    ```
+    npm i
+    ```
+
+
+### 2. Set up environment variables
+
+To set up environment variables:
+
+1. Open the `env.yml` file, which contains sections for different stages (`local`, `dev`, `prod`, etc.). If you're deploying to production, use the `prod` section and don't modify the other sections.
+2. In the AWS Console, go to `Key Management Service` and create a symmetric key in your region (or use an existing one).
+3.  In the root folder of the project, create a `kms_key.yml` file and add your key ID for each stage, like this:
+    ```
+    ${stage}: your_key_here
+    ```
+
+The `stage` variable can be set to `local`, `dev`, `test`, or `prod`. You can find a full list of supported stages in the `custom.envEncryptionKeyId` section of the `serverless.ts` config.
+4. You can add environment variables that will be shared across all Lambda functions. For more information on how to encrypt environment variables with KMS, see the [Set and encrypt variable](#set-and-encrypt-a-variable) section. Also, check the [FAQ](#faq) section for recommendations on when to use environment variables and [Serverless parameters](https://www.serverless.com/framework/docs/guides/parameters).
+
+
+
+### PROJECT SPECIFIC ACTIONS BEFORE DEPLOYING
+
+**If there are any project-specific actions that need to be taken before deploying, they should be listed in this section. Examples of such actions could include building specific dependencies or ensuring certain settings are properly configured for the deployment environment. It is important to document these actions clearly to ensure smooth and error-free deployment.**
+
+### Deploy
+
+To deploy your project, please follow these steps:
+
+Run the following command in the root of the project, replacing STAGE_NAME with the name of the stage you want to deploy:
+
+```
+npm run deploy:STAGE_NAME
+```
+
+Wait for the deployment process to complete. You can monitor the progress of your deployment in your command terminal or by checking the logs generated during the deployment process.
+
+That's it! Your project should now be deployed and ready to use.
 
 ### Project structure
 
@@ -151,129 +182,133 @@ It is a skeleton for your AWS + Serverless applications.
 
 ## Examples
 
-If you need to play with examples then add all content of `examples/` directory to the project root, update `package.json` content with content from `examples/package.json` and update `docker-compose.yaml` content with content from `examples/docker-compose.yaml`.
+If you would like to experiment with the examples, please follow these steps:
 
-You should delete `examples/` directory for real project.
+1. Add all the contents of the `examples/` directory to the project root.
+2. Update the `package.json` file with the contents of `examples/package.json`.
+3. Update the `docker-compose.yaml` file with the contents of `examples/docker-compose.yaml`.
 
-List of examples:
+Please note that for a real project, the `examples/` directory should be deleted.
 
-- The Media Info feature that uses mediainfo binary file and returns media info by url
-- Offline plugins and docker-compose file for working with AWS resources offline
-- HTTP API and REST API endpoints with authorizers
-- IAM Role Statements
-- AWS resources
-- Models for dynamoose library
-- Models for sequelize library
-- Services for working with AWS resources
+Here is a list of available examples:
+- **Media Info**: This feature uses the `mediainfo` binary file and returns media information by URL.
+- **Offline plugins and Docker Compose file**: This is for working with AWS resources offline.
+- **HTTP API and REST API endpoints with authorizers**
+- **IAM Role Statements**
+- **AWS resources**
+- **Models for the dynamoose library**
+- **Models for the sequelize library**
+- **Services for working with AWS resources**
 
-## Static code analysis
 
-- Start SonarQube docker container with command `npm run sonarqube:up`
-- Start tests with command `npm run test`
-- Start analysis with command `npm run sonarqube-verify`
-- Go to http://localhost:9000
-- Log in with _admin/admin_ credentials
-- Now you can see the project's report
+## Static Code Analysis
+
+To perform static code analysis, please follow these steps:
+
+1. Start the SonarQube docker container by running the command `npm run sonarqube:up`.
+2. Run the tests using the command `npm run test`.
+3. Perform the analysis using the command `npm run sonarqube-verify`.
+4. Open your web browser and go to http://localhost:9000.
+5. Log in using the credentials _admin/admin_.
+6. You should now be able to see the project's report.
+
 
 ### Troubleshooting
 
-- If you see the error `Not authorized. Analyzing this project requires authentication. Please provide a user token in sonar.login or other credentials in sonar.login and sonar.password.`,
-  go to the `Administration` menu in the header -> `Security` -> scroll down and turn off `Force user authentication`.
-  Do it for local usage only!
+If you encounter the error message `Not authorized. Analyzing this project requires authentication. Please provide a user token in sonar.login or other credentials in sonar.login and sonar.password.`, please follow these steps:
 
-## How to add env variable
+1. Go to the `Administration` menu in the header.
+2. Select `Security`.
+3. Scroll down and turn off `Force user authentication`.
+4. Note that this should only be done for local usage.
 
-In project used https://github.com/org-redtea/serverless-env-generator that fork of https://github.com/DieProduktMacher/serverless-env-generator.
 
-Some caveats:
+## How to Add an Environment Variable
 
-- Shorthand `-v` does not work for both original plugin and forked.
-- Shorthand `-c` does not work
+In this project, we have used https://github.com/org-redtea/serverless-env-generator, which is a fork of https://github.com/DieProduktMacher/serverless-env-generator.
 
-Add kms_key.yml file with `${stage}` field and your KMS Id to the root.
-For example:
+There are some caveats to keep in mind when using this plugin:
 
-```YAML
-local: xxx
-dev: xxx
-test: xxx
-prod: xxx
-```
+- The shorthand `-v` does not work for either the original plugin or the forked version.
+- The shorthand `-c` does not work.
 
-### In short:
+To add an `env` variable, follow these steps:
 
-#### Viewing environment variables
+1. Create a `kms_key.yml` file with `${stage}` field and your KMS Id in the root directory. For example:
 
-Use the following commands to read and decrypt variables from your YAML environment files:
+    ```YAML
+    local: xxx
+    dev: xxx
+    test: xxx
+    prod: xxx
+    ```
 
-#### List variables
+2. Use the following commands to read and decrypt variables from your YAML environment files:
 
-```sh
-serverless env
-serverless env --stage $STAGE
-```
+  - List all variables:
 
-#### View one variable
+      ```sh
+      serverless env
+      serverless env --stage $STAGE
+      ```
 
-```sh
-serverless env --attribute $NAME
-serverless env --attribute $NAME --stage $STAGE
+  - View one variable:
 
-#shorthand:
-sls env -a $NAME
-sls env -a $NAME -s $STAGE
-```
+      ```sh
+      serverless env --attribute $NAME
+      serverless env --attribute $NAME --stage $STAGE
 
-#### Decrypt variables
+      # shorthand:
+      sls env -a $NAME
+      sls env -a $NAME -s $STAGE
+      ```
 
-```sh
-serverless env --decrypt
-serverless env --attribute $NAME --decrypt
-serverless env --attribute $NAME --stage $STAGE --decrypt
+  - Decrypt variables:
 
-#shorthand:
-sls env -a $NAME --decrypt
-sls env -a $NAME -s $STAGE -d
-```
+      ```sh
+      serverless env --decrypt
+      serverless env --attribute $NAME --decrypt
+      serverless env --attribute $NAME --stage $STAGE --decrypt
 
-#### Setting environment variables
+      # shorthand:
+      sls env -a $NAME --decrypt
+      sls env -a $NAME -s $STAGE -d
+      ```
 
-Use the following commands to store and encrypt variables in your YAML environment files:
+3. Use the following commands to store and encrypt variables in your YAML environment files.
 
-Note that variables are stored to the first file listed in _envFiles_.
+  - Set a variable:
 
-#### Set a variable
+      ```sh
+      serverless env --attribute $NAME --value $PLAINTEXT
+      serverless env --attribute $NAME --value $PLAINTEXT --stage $STAGE
 
-```sh
-serverless env --attribute $NAME --value $PLAINTEXT
-serverless env --attribute $NAME --value $PLAINTEXT --stage $STAGE
+      # shorthand:
+      sls env -a $NAME --value $PLAINTEXT
+      sls env -a $NAME --value $PLAINTEXT --s $STAGE
+      ```
 
-#shorthand:
-sls env -a $NAME --value $PLAINTEXT
-sls env -a $NAME --value $PLAINTEXT --s $STAGE
-```
+  - Set and encrypt a variable:
 
-#### Set and encrypt a variable
+      ```sh
+      serverless env --attribute $NAME --value $PLAINTEXT --encrypt
+      serverless env --attribute $NAME --value $PLAINTEXT --stage $STAGE --encrypt
 
-```sh
-serverless env --attribute $NAME --value $PLAINTEXT --encrypt
-serverless env --attribute $NAME --value $PLAINTEXT --stage $STAGE --encrypt
+      # shorthand:
+      sls env -a $NAME --value $PLAINTEXT -e
+      sls env -a $NAME --value $PLAINTEXT -s $STAGE -e
+      ```
 
-#shorthand:
-sls env -a $NAME --value $PLAINTEXT -e
-sls env -a $NAME --value $PLAINTEXT -s $STAGE -e
-```
+  - Set the value of an attribute in an anchor:
 
-#### Set value of attribute in anchor
+      ```sh
+      serverless env --anchor $ANHOR --attribute $NAME --value $PLAINTEXT
 
-```sh
-serverless env --anchor $ANHOR --attribute $NAME --value $PLAINTEXT
+      # shorthand:
+      sls env --anchor $ANHOR -a $NAME --value $PLAINTEXT
+      ```
 
-#shorthand:
-sls env --anchor $ANHOR -a $NAME --value $PLAINTEXT
-```
-
-Let\`s assume we have the following `env.yml`:
+Assuming you have the following `env.yml`:
 
 ```YAML
 common:
@@ -294,13 +329,13 @@ prod:
 
 The result of the command:
 
-```bash
+```
 $ sls env --attribute VAR --anchor common --value 2
 ```
 
 will be:
 
-```YAML
+```
 common:
   &common
   VAR: "2"
@@ -319,25 +354,28 @@ prod:
 
 ## FAQ
 
-### What type of API Gateway event to use for lambda: REST API or HTTP API?
+### Which API Gateway event type should be used with Lambda: REST API or HTTP API?
 
-In most cases HTTP API is the best and cheapest choice. So, use it.
-In other cases you should check [this page](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-vs-rest.html) to find out what to choose. There are a lot of differences between HTTP API and REST API.
+In most cases, it's recommended to use the HTTP API as it is the best and most cost-effective option. However, in certain situations, it may be necessary to use the REST API instead. To determine which option is best for your use case, refer to [this page](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-vs-rest.html) which outlines the key differences between HTTP API and REST API.
 
-- About REST API event in serverless docs. [Link](https://www.serverless.com/framework/docs/providers/aws/events/apigateway/).
-- About HTTP API event in serverless docs. [Link](https://www.serverless.com/framework/docs/providers/aws/events/http-api/)
+For more information about configuring the REST API event with the Serverless Framework, please refer to [this link](https://www.serverless.com/framework/docs/providers/aws/events/apigateway/).
 
-### "Serverless Offline only supports retrieving JWT from the headers (undefined)" error when trying to start offline
+For more information about configuring the HTTP API event with the Serverless Framework, please refer to [this link](https://www.serverless.com/framework/docs/providers/aws/events/http-api/).
 
-Probably, you use lambda authorizer for HTTP API. Serverless offline plugin does not support for that yet. Check the plugin repo for any updates.
+# "Serverless Offline only supports retrieving JWT from the headers (undefined)" error when trying to start offline
 
+If you are encountering this error, it is likely that you are using a Lambda authorizer for an HTTP API. Please note that the Serverless Offline plugin does not yet support Lambda authorizers.
 
-### What to use: `env.yml` or [params](https://www.serverless.com/framework/docs/guides/parameters#stage-parameters)?
+You may want to check the plugin repository for any updates or alternative solutions to this issue.
 
-With [Serverless stage parameters](https://www.serverless.com/framework/docs/guides/parameters#stage-parameters) you can pass different value of a parameter depending on the stage to the serverless config. You can use it as values source for env variables for lambda like this:
+## What to use: `env.yml` or [params](https://www.serverless.com/framework/docs/guides/parameters#stage-parameters)?
+
+When configuring a serverless application, you can choose between using `env.yml` or [Serverless stage parameters](https://www.serverless.com/framework/docs/guides/parameters#stage-parameters) to manage environment variables.
+
+Stage parameters allow you to pass different values of a parameter depending on the stage. These parameters can be used as a value source for environment variables for the Lambda function, as shown in the TypeScript example below:
 
 ```typescript
-const serverelssConfig: AWS = {
+const serverlessConfig: AWS = {
   ...
   params: {
     dev: {
@@ -356,10 +394,10 @@ const serverelssConfig: AWS = {
 }
 ```
 
-With `env.yml` you can store encrypted env variables and any env variables that will be passed to lambda on deploy. You can use it even in the serverless config as parameter like this:
+On the other hand, `env.yml` is used to store encrypted environment variables, as well as any other variables that will be passed to the Lambda function on deployment. You can also use it in the serverless config as a parameter, like this:
 
-```typescript
-const serverelssConfig: AWS = {
+```
+const serverlessConfig: AWS = {
   ...
   provider: {
     tags: {
@@ -370,15 +408,16 @@ const serverelssConfig: AWS = {
 }
 ```
 
-In this case `MY_TAG` will be passed to lambda too. If you don\`t want that happens then use the stage parameters instead.
+If you want to avoid passing all variables and parameters to the Lambda function, it is recommended to use stage parameters instead.
 
-Here is some recommendations you may follow in you project:
+Here are some recommendations to follow when using these options in your project:
 
-- Use the stage parameters to substitute values in the serverless config. Those parameters will not be passed to lambda and only visible in the serverless config.
-- Use `env.yml` to store encrypted env variables / encrypted parameters / any env variable or parameter. Keep in mind that all variables/parameters in the yml file will be passed to each lambda as env variables.
-- Use the stage parameters as values source for lambda env variables if you have only a few variables.
+ - Use stage parameters to substitute values in the serverless config. These parameters will not be passed to the Lambda function and will only be visible in the serverless config.
+ - Use `env.yml` to store encrypted environment variables, encrypted parameters, and any other environment variable or parameter. Keep in mind that all variables/parameters in the YAML file will be passed to each Lambda function as environment variables.
+ - Use stage parameters as a value source for Lambda environment variables if you only have a few variables.
 
-### Can I use aws-sdk package with Node.Js 18?
+### Can I use the `aws-sdk` package with Node.js 18?
 
-No. Starting from Node.Js 18 aws lambda environment does not provide `aws-sdk`(old AWS SDK) package. It supports AWS SDK v3 only(`@aws-sdk/*`). Check this [blog post](https://aws.amazon.com/blogs/compute/node-js-18-x-runtime-now-available-in-aws-lambda/).
+No, you cannot use the `aws-sdk` package with Node.js 18 in the AWS Lambda environment. The environment only supports AWS SDK v3 (`@aws-sdk/*`). You can check out this [blog post](https://aws.amazon.com/blogs/compute/node-js-18-x-runtime-now-available-in-aws-lambda/) for more information.
+
 

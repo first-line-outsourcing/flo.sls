@@ -1,6 +1,6 @@
 import { RuntimeError } from '@floteam/errors/runtime/runtime-error';
 
-export type Stage = 'local' | 'dev' | 'test' | 'prod';
+export type Stage = 'local' | 'dev' | 'test' | 'prod' | string;
 
 export function getStage(): Stage {
   return getEnv('STAGE') as Stage;
