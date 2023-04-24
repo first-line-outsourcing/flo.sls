@@ -1,6 +1,7 @@
+import './config/serverless/stage-loader';
 import type { AWS } from '@serverless/typescript';
 import { deployTestConfig } from './config/serverless/parts/deploy-test';
-import { joinParts } from './config/serverless/utils';
+import { getStage, joinParts } from './config/serverless/utils';
 
 const CLIENT = '${param:CLIENT}';
 const SERVICE_NAME = `template-flo-sls`;
@@ -74,10 +75,8 @@ const masterConfig: AWS = {
     },
     envFiles: ['env.yml'],
     envEncryptionKeyId: {
-      local: '${file(./kms_key.yml):local}',
-      dev: '${file(./kms_key.yml):dev}',
-      test: '${file(./kms_key.yml):test}',
-      prod: '${file(./kms_key.yml):prod}',
+      // Load stage specific key only
+      [getStage()]: `\${file(./kms_key.yml):${getStage()}}`,
     },
     'serverless-offline': {
       ignoreJWTSignature: true,
