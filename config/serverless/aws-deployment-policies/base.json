@@ -1,0 +1,156 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "apigateway:*"
+      ],
+      "Resource": [
+        "arn:aws:apigateway:AWS_REGION::/restapis*",
+        "arn:aws:apigateway:AWS_REGION::/apikeys*",
+        "arn:aws:apigateway:AWS_REGION::/usageplans*",
+        "arn:aws:apigateway:AWS_REGION::/apis*",
+        "arn:aws:apigateway:AWS_REGION::/tags/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "cloudformation:*"
+      ],
+      "Resource": "arn:aws:cloudformation:AWS_REGION:AWS_ACCOUNT:stack/PROJECT-PREFIX-*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "cloudformation:ValidateTemplate"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:Describe*"
+      ],
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "events:*"
+      ],
+      "Resource": "arn:aws:events:AWS_REGION:AWS_ACCOUNT:rule/PROJECT-PREFIX-*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iam:*"
+      ],
+      "Resource": [
+        "arn:aws:iam::AWS_ACCOUNT:role/PROJECT-PREFIX-*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "NotAction": [
+        "lambda:InvokeFunction"
+      ],
+      "Resource": [
+        "arn:aws:lambda:AWS_REGION:AWS_ACCOUNT:function:PROJECT-PREFIX-*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "lambda:InvokeFunction"
+      ],
+      "Resource": [
+        "arn:aws:lambda:AWS_REGION:AWS_ACCOUNT:function:PROJECT-PREFIX-*-custom-resource-existing-s3"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "lambda:ListEventSourceMappings",
+        "lambda:CreateEventSourceMapping",
+        "lambda:UpdateEventSourceMapping",
+        "lambda:DeleteEventSourceMapping",
+        "lambda:GetEventSourceMapping"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:DescribeLogGroups"
+      ],
+      "Resource": "arn:aws:logs:AWS_REGION:AWS_ACCOUNT:log-group::log-stream:*"
+    },
+    {
+      "Action": [
+        "logs:*"
+      ],
+      "Resource": "arn:aws:logs:AWS_REGION:AWS_ACCOUNT:log-group:/aws/lambda/PROJECT-PREFIX-*",
+      "Effect": "Allow"
+    },
+    {
+      "Action": [
+        "logs:*"
+      ],
+      "Resource": "arn:aws:logs:AWS_REGION:AWS_ACCOUNT:log-group:/aws/http-api/PROJECT-PREFIX-*",
+      "Effect": "Allow"
+    },
+    {
+      "Action": [
+        "logs:*"
+      ],
+      "Resource": "arn:aws:logs:AWS_REGION:AWS_ACCOUNT:log-group:/aws/lambda/PROJECT-PREFIX-*:log-stream:*",
+      "Effect": "Allow"
+    },
+    {
+      "Action": [
+        "logs:*"
+      ],
+      "Resource": "arn:aws:logs:AWS_REGION:AWS_ACCOUNT:log-group:/aws/http-api/PROJECT-PREFIX-*:log-stream:*",
+      "Effect": "Allow"
+    },
+    {
+      "Action": [
+        "logs:CreateLogDelivery",
+        "logs:CreateLogGroup",
+        "logs:DeleteLogDelivery",
+        "logs:DescribeResourcePolicies",
+        "logs:GetLogDelivery",
+        "logs:ListLogDeliveries",
+        "logs:PutResourcePolicy",
+        "logs:UpdateLogDelivery"
+      ],
+      "Resource": "*",
+      "Effect": "Allow"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:*"
+      ],
+      "Resource": [
+        "arn:aws:s3:::PROJECT-PREFIX-*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "kms:DescribeKey",
+        "kms:Decrypt",
+        "kms:Encrypt",
+        "kms:GenerateDataKey"
+      ],
+      "Resource": [
+        "arn:aws:kms:AWS_REGION:AWS_ACCOUNT:key/AWS_KMS_KEY"
+      ]
+    }
+  ]
+}

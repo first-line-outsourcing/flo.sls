@@ -1,8 +1,9 @@
+import './config/serverless/stage-loader';
 import type { AWS } from '@serverless/typescript';
 import { deployTestConfig } from './config/serverless/parts/deploy-test';
 import { iconikAppAdminConfig } from './config/serverless/parts/iconik-app-admin';
 import { GetAtt, Ref, Sub } from './config/serverless/cf-intristic-fn';
-import { joinParts } from './config/serverless/utils';
+import { getStage, joinParts } from './config/serverless/utils';
 
 const DEPLOYMENT_BUCKET = 'clients-serverless-deployment-bucket';
 const CLIENT = '${param:CLIENT}';
@@ -31,7 +32,8 @@ const masterConfig: AWS = {
   provider: {
     name: 'aws',
     runtime: 'nodejs18.x',
-    stage: STAGE, // @ts-ignore
+    stage: STAGE,
+    // @ts-ignore
     region: REGION,
     profile: PROFILE,
     environment: {
@@ -71,7 +73,8 @@ const masterConfig: AWS = {
     esbuild: {
       bundle: true,
       minify: true,
-      metafile: false, // If you want to debug the output than turn this on.
+      metafile: false,
+      // If you want to debug the output than turn this on.
       // In other cases keep it off because serverless-esbuild
       // dont update extra files if they already exists in .esbuild folder.
       // Extra files are files that you define in package.patterns settings.
@@ -89,14 +92,13 @@ const masterConfig: AWS = {
     },
     envFiles: ['env.yml'],
     envEncryptionKeyId: {
-      local: '${file(./kms_key.yml):local}',
-      dev: '${file(./kms_key.yml):dev}',
-      test: '${file(./kms_key.yml):test}',
-      prod: '${file(./kms_key.yml):prod}',
+      // Load stage specific key only
+      [getStage()]: `\${file(./kms_key.yml):${getStage()}}`,
     },
     'serverless-offline': {
       ignoreJWTSignature: true,
-    }, // capacities: [
+    },
+    // capacities: [
     //   {
     //     table: 'UsersTable',
     //     read: {
