@@ -1,5 +1,5 @@
+import { InputValidationError } from '@floteam/errors';
 import { getEnv, isStage } from '@helper/environment';
-import { messages } from '@helper/helper';
 import { dynamoose } from '@services/dynamoose';
 import { Document } from 'dynamoose/dist/Document';
 
@@ -48,9 +48,7 @@ export class User extends Document implements UserSchema {
     super(UserModel);
 
     if (user.password && user.confirmPassword && user.password !== user.confirmPassword) {
-      throw {
-        message: messages.error.forbiddenPasswords,
-      };
+      throw new InputValidationError('Password and password confirmation must be the same');
     }
     this.password = user.password;
     this.confirmPassword = user.confirmPassword;
