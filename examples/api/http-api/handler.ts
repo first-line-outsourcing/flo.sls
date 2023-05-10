@@ -2,12 +2,12 @@
 
 import { errorHandler } from '@helper/http-api/error-handler';
 import { createResponse, Response } from '@helper/http-api/response';
-import { log } from '@helper/logger';
+import { logger } from '@helper/logger';
 import { APIGatewayProxyHandlerV2 } from 'aws-lambda';
 
 // Default HTTP API Response factory
 export const defaultResponse: APIGatewayProxyHandlerV2<string> = async (event) => {
-  log(event);
+  logger.info('event', { event });
 
   try {
     return createResponse(200, 'Hi!');
@@ -18,7 +18,7 @@ export const defaultResponse: APIGatewayProxyHandlerV2<string> = async (event) =
 
 // Custom HTTP API Response factory
 export const customResponse: APIGatewayProxyHandlerV2<string> = async (event) => {
-  log(event);
+  logger.info('event', { event });
 
   const response = new Response({
     'Access-Control-Allow-Origin': '*',

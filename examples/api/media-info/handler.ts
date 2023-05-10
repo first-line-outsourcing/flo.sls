@@ -1,6 +1,6 @@
 import { errorHandler } from '@helper/http-api/error-handler';
 import { createResponse } from '@helper/http-api/response';
-import { log } from '@helper/logger';
+import { logger } from '@helper/logger';
 import { MediaInfoCurlService } from '@services/media-info-curl.service';
 import { APIGatewayProxyHandlerV2 } from 'aws-lambda';
 import { MediaInfoUrl } from './media-info.inteface';
@@ -35,7 +35,7 @@ if (process.env.LAMBDA_TASK_ROOT) {
  */
 
 export const getMediaInfo: APIGatewayProxyHandlerV2 = async (event) => {
-  log(event);
+  logger.info('event', { event });
 
   try {
     /**
