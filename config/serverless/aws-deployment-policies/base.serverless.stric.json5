@@ -1,0 +1,131 @@
+// Replace AWS_REGION and AWS_ACCOUNT number
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    // Allows validation of CloudFormation template
+    {
+      "Sid": "Serverless0",
+      "Action": [
+        "cloudformation:ValidateTemplate"
+      ],
+      "Effect": "Allow",
+      "Resource": "*" // Supports * only
+    },
+    // Allows managing of CloudFormation stack
+    {
+      "Sid": "Serverless1",
+      "Action": [
+        "cloudformation:DescribeStacks",
+        "cloudformation:CreateStack",
+        "cloudformation:DescribeStackEvents",
+        "cloudformation:ListStackResources",
+        "cloudformation:UpdateStack",
+        "cloudformation:DeleteStack",
+        "cloudformation:DescribeStackResource"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:cloudformation:AWS_REGION:AWS_ACCOUNT:stack/CLOUD_FORMATION_STACK_NAME/*" // Replace CLOUD_FORMATION_STACK_NAME
+    },
+    // When using own deployment bucket then Serverless needs these permissions
+    {
+      "Sid": "Serverless2",
+      "Action": [
+        "s3:GetBucketLocation",
+        "s3:ListBucket"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:s3:::AWS_DEPLOYMENT_BUCKET" // Replace AWS_DEPLOYMENT_BUCKET
+    },
+    // Allows uploading/deleting/getting description of CloudFormation template and functions code from the deployment bucket
+    {
+      "Sid": "Serverless4",
+      "Action": [
+        "s3:PutObject",
+        "s3:AbortMultipartUpload",
+        "s3:GetObject",
+        "s3:DeleteObject",
+        "s3:GetObjectVersion",
+        "s3:DeleteObjectVersion"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:s3:::AWS_DEPLOYMENT_BUCKET/serverless/PROJECT_NAME/STAGE/*" // Replace PROJECT_NAME and STAGE
+    },
+    // Allows @redtea/serverless-env-generator plugin encrypting and decrypting of env.yml variables
+    {
+      "Sid": "ServerlessPlugin0",
+      "Action": [
+        "kms:CreateGrant",
+        "kms:Decrypt",
+        "kms:DescribeKey",
+        "kms:Encrypt"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:kms:AWS_REGION:AWS_ACCOUNT:key/KMS_KEY_ID" // Replace KMS_KEY_ID
+    },
+    // Allows getting of REST API description
+    {
+      "Sid": "Serverless6",
+      "Effect": "Allow",
+      "Action": [
+        "apigateway:GET"
+      ],
+      "Resource": [
+        // Create an REST API and replace REST_API_ID with the ID
+        "arn:aws:apigateway:AWS_REGION::/restapis/REST_API_ID",
+        "arn:aws:apigateway:AWS_REGION::/restapis/REST_API_ID/deployments",
+        "arn:aws:apigateway:AWS_REGION::/restapis/REST_API_ID/stages/prod"
+      ]
+    },
+    // Allows setting of API Gateway resources tags
+    {
+      "Sid": "Serverless7",
+      "Effect": "Allow",
+      "Action": [
+        "apigateway:PUT",
+        "apigateway:POST",
+        "apigateway:DELETE"
+      ],
+      "Resource": [
+        "arn:aws:apigateway:AWS_REGION::/tags/*" // Currently AWS does not support ARN after tags/
+      ]
+    },
+
+    // TODO: add permissions for HTTP API
+
+    // Allows deleting of the log group
+    {
+      "Sid": "Serverless8",
+      "Effect": "Allow",
+      "Action": [
+        "logs:DeleteLogGroup"
+      ],
+      "Resource": [
+        "arn:aws:logs:AWS_REGION:AWS_ACCOUNT:log-group:/aws/api-gateway/PROJECT_NAME-STAGE" // Replace PROJECT_NAME and STAGE
+      ]
+    },
+    // Allows serverless and serverless-prune-plugin plugin getting of functions description
+    {
+      "Sid": "Serverless9",
+      "Action": [
+        "lambda:GetFunction",
+        "lambda:ListAliases",
+        "lambda:ListVersionsByFunction"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        // Add full functions ARNs
+      ]
+    },
+    // Allows serverless-prune-plugin deleting of unused functions versions
+    {
+      "Sid": "Serverless10",
+      "Action": [
+        "lambda:DeleteFunction"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        // Add full functions ARNs with :* at the end. For example: arn:aws:lambda:us-east-1:000000000000:function:my-function-name:*.
+      ]
+    }
+  ]
+}
