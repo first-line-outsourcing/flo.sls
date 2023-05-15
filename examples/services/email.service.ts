@@ -1,6 +1,9 @@
-import { log } from '@helper/logger';
-
+import { createLogger } from '@helper/logger';
 import * as nodemailer from 'nodemailer';
+
+const logger = createLogger({
+  tags: ['service', 'email'],
+});
 
 export interface MailOptions {
   to: string;
@@ -10,7 +13,7 @@ export interface MailOptions {
 }
 
 export async function sendMail(mailOptions: MailOptions): Promise<Record<string, unknown>> {
-  log(`Sending email to ${mailOptions.to}`);
+  logger.info('sending email', { to: mailOptions.to });
   const smtpTransporter =
     process.env.SMTP_OUTLOOK !== 'true'
       ? nodemailer.createTransport({

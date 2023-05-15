@@ -35,6 +35,8 @@ const masterConfig: AWS = {
     region: REGION,
     profile: PROFILE,
     environment: {
+      // Used in logs
+      VERSION: require('./package.json').version,
       STAGE,
     },
     tags: {

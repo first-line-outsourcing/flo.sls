@@ -1,11 +1,11 @@
 // DELETE THIS FILE
 import { errorHandler } from '@helper/http-api/error-handler';
 import { createResponse } from '@helper/http-api/response';
-import { log } from '@helper/logger';
+import { logger } from '@helper/logger';
 import { APIGatewayProxyHandlerV2 } from 'aws-lambda';
 
 export const handler: APIGatewayProxyHandlerV2<string> = async (event) => {
-  log(event);
+  logger.info('event', { event });
 
   try {
     return createResponse(200, 'Hi!');
