@@ -31,7 +31,7 @@ const masterConfig: AWS = {
   configValidationMode: 'warn',
   provider: {
     name: 'aws',
-    runtime: 'nodejs18.x',
+    runtime: 'nodejs20.x',
     stage: STAGE,
     // @ts-ignore
     region: REGION,
