@@ -1,5 +1,4 @@
-import { HttpError } from '@floteam/errors/http/http-error';
-import { RuntimeError } from '@floteam/errors/runtime/runtime-error';
+import { HttpError, RuntimeError } from '@flopackages/errors';
 import { APIGatewayProxyResult } from 'aws-lambda/trigger/api-gateway-proxy';
 import { AxiosError } from 'axios';
 import { baseErrorHandler } from '../base-error-handler';

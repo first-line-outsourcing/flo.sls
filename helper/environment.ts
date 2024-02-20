@@ -1,4 +1,4 @@
-import { RuntimeError } from '@floteam/errors/runtime/runtime-error';
+import { RuntimeError } from '@flopackages/errors';
 
 export type Stage = 'local' | 'dev' | 'test' | 'prod' | string;
 

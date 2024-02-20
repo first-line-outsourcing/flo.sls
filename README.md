@@ -13,9 +13,27 @@ PROJECT INFORMATION HERE
 
 - MY NAME <my@email.com> (position)
 
+## Template updating
+
+It is forked from https://github.com/first-line-outsourcing/flo.sls and all changes from parent repository can be pulled here. \
+Follow these steps:
+
+- Add `upstream` remote
+  ```shell
+  git remote add upstream https://github.com/first-line-outsourcing/flo.sls.git
+  ```
+- Pull from `upstream`
+  ```shell
+  git pull upstream master
+  ```
+- Resolve conflicts if there are some
+
 ## NPM commands
 
 - **deploy:dev**: deploy to the AWS dev environment
+- **free-up:dev**: free up AWS resources for dev stage
+- **deploy:test**: deploy to the AWS test environment
+- **free-up:test**: free up AWS resources for test stage
 - **deploy:prod**: deploy to the AWS prod environment
 - **deploy:local**: start local development environment
 - **sls:package:dev**: package code using sls package command for dev stage
@@ -27,17 +45,6 @@ PROJECT INFORMATION HERE
 - **lint**: start tslint for project files
 - **test**: start unit tests
 - **test:ci**: start test in CI environment
-- **sqs:up**: start Docker SQS container for local development
-- **sqs:down**: stop Docker SQS container for local development
-- **sqs:list-queues**: list local queues
-- **sqs:create-queue**: create local queue (remove square brackets for FIFO queue)
-- **sqs:receive-messages**: receive messages from local queue (remove square brackets for FIFO queue)
-- **sqs:delete-queue**: delete local queue (remove square brackets for FIFO queue)
-- **db:up**: start Docker Postgres container for local development
-- **db:drop**: drop Postgres database
-- **db:create**: create Postgres database
-- **db:migrate**: migrate Postgres database
-- **dynamodb:up**: start Docker DynamoDB container for local development
 - **sonarqube:up**: start Docker SonarQube container for local static code analysis
 - **sonarqube-verify**: start Static Code Analysis
 - **containers:down**: stop all containers
@@ -116,7 +123,24 @@ To set up environment variables:
 The `stage` variable can be set to `local`, `dev`, `test`, or `prod`. You can find a full list of supported stages in the `custom.envEncryptionKeyId` section of the `serverless.ts` config.
 4. You can add environment variables that will be shared across all Lambda functions. For more information on how to encrypt environment variables with KMS, see the [Set and encrypt variable](#set-and-encrypt-a-variable) section. Also, check the [FAQ](#faq) section for recommendations on when to use environment variables and [Serverless parameters](https://www.serverless.com/framework/docs/guides/parameters).
 
+### Set up the iconik APP Token
 
+Follow the instructions below to set up the iconik APP token for the WIN Automation app:
+
+1. Navigate to the iconik domain and create an app with the name `WIN Automation`. 
+   Be sure to choose the admin user for this app. If the app already exists, simply use it.
+
+2. Copy the app ID and run the following command in the root of your project:
+  ```
+  sls env --attribute ICONIK_APP_ID --value your_app_id --stage prod --encrypt
+  ```
+
+3. Copy the auth token and run the following command in the root of your project:
+  ```
+  sls env --attribute ICONIK_AUTH_TOKEN --value your_auth_token --stage prod --encrypt
+  ```
+
+By completing these steps, you will have set up the necessary credentials for your project to access the iconik API.
 
 ### PROJECT SPECIFIC ACTIONS BEFORE DEPLOYING
 
@@ -136,7 +160,54 @@ Wait for the deployment process to complete. You can monitor the progress of you
 
 That's it! Your project should now be deployed and ready to use.
 
-### Project structure
+### Freeing up AWS resources
+
+When there is no dev tasks for the project very long time you can free up AWS resources of the project. It helps to reduce total cost for AWS resources on dev account.
+
+To free up resources use `npm run free-up:<stage>` command. Where `<stage>` is a stage you are going to free up resources for.
+
+When you run the command it uses `serverless.free-up-resources.ts` config to deploy sls application. The config contains minimum set of resources(REST API, HTTP API resources, etc.) for stage to keep ability to deploy it next time without changing anything. Feel free to edit the config for your case. If your project uses only HTTP API then keep the `HttpApi` resources in the config, if it is REST API then keep the `ApiGatewayRestApi` resources.
+
+
+## iconik Resources
+
+### Feature Name
+
+#### Metadata Views
+
+- **View Name** - Metadata for the collection/asset/Custom Action for saving some data. \
+  Also, it's used in iconik search. \
+  Fields:
+
+  - win_FieldName - Description
+  - win_FieldName2 - Field for saving the asset's status
+
+- **View Name 2** - Metadata for the collection/asset/Custom Action for saving some data. \
+  Fields:
+
+  - win_FieldName3 - Description
+  - win_FieldName4 - Field for saving the asset's job ID
+
+#### Metadata Fields (aren't included in any views)
+
+- win_FieldName - It's used for saving some settings
+
+#### Webhooks
+
+- **Webhook Name** `api/webhook-url` - It triggers when the asset is added to iconik. \
+  It adds information about the asset to the DynamoDB table that is scanned by WINTrayToolset.
+
+#### Custom Actions
+
+- **Custom Action Name** `api/custom-action-url` - Description
+
+### Feature Name 2
+
+#### Custom Actions
+
+- **Custom Action Name 2** `api/custom-action-url-2` - It starts transcription process
+
+## Project structure
 
 - .circleci - Configuration for CI/CD
 - api - Code of the features or CRUD operations of entities
@@ -351,6 +422,75 @@ test:
 prod:
   <<: *common
 ```
+
+## Iconik app token
+
+Iconik App ID and Auth token is stored in the SSM parameters storage. To get or update token use `IconikCredentialsStorage` service:
+
+```typescript
+// helper/example.ts
+import { IconikCredentialsStorage } from '../services/IconikCredentialsStorage';
+
+async function printIconikCredentials() {
+  const storage = new IconikCredentialsStorage();
+  console.log(await storage.get());
+}
+```
+
+You can change iconik APP ID or APP AUTH TOKEN in the [SSM parameters store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html). The path patterns:
+
+- /win/{CLIENT_NAME}/{SERVICE_NAME/{STAGE}/iconik-credentials/{VARIABLE_NAME}
+
+Where:
+- CLIENT_NAME - value of `CLIENT` variable from `env.yaml`
+- SERVICE_NAME - value of `service` field of the sls config
+- STAGE - stage name: dev/prod/test/etc
+- VARIABLE_NAME - can be: app-id, app-auth-token
+
+Those parameters are created on first deployment(check the `init-deploy.js` script), so you don`t have to create them by hands.
+
+## Iconik app admin
+
+Iconik app admin is build-in feature to manage iconik app related things like token management. 
+
+Current list of what it does:
+
+- Provide an iconik custom action to update iconik app id and app auth token in the SSM parameter store.
+
+To install into an iconik domain go to the iconik domain custom actions admin panel and add the following custom action:
+![image](docs/images/iconik-app-admin-create-init-ca.png)
+
+- URL = `{BASE_API_URL}/api/iconik-app-admin/init`
+- App name = name of the app you used to deploy the service
+
+Then trigger the init custom action and wait some time. It adds **[{SERVICE_NAME}:{STAGE}] Update app token** metadata view and **[{SERVICE_NAME}:{STAGE}] Update app token** custom action. Remove the init custom action from custom actions list.
+
+You can use the **Update app token** custom action to update app token.
+
+Required dependencies:
+- `api/iconik-app-admin/*`
+- `services/IconikCredentialsStorage.ts`
+- `authorizers/iconik/custom-action.ts`
+- `helper/authorizers/iconik/context.ts`
+- `helper/environment.ts`
+- `helper/axios.ts`
+- `interfaces/api-gateway-lambda.interface.ts`
+- `interfaces/api-gateway-authorizer.interface.ts`
+- `config/serverless/parts/iconik-app-admin.ts`
+- `scripts/init-deploy.js` - add pre-script to each deploy command in the `package.json`: `"predeploy:<stage>": "node scripts/init-deploy.js <stage>",`
+- `@workflowwin/iconik-api` package
+- `@floteam/errors` package
+- `@redtea/format-axios-error` package
+- `axios` package
+- `node-cache` package
+- `@types/aws-lambda` package
+
+All code of the iconik app admin is here: `api/iconik-app-admin/`.
+
+PR with more details of how to integrate the module into project based on serverless v2: [#6](https://github.com/workflow-intelligence-nexus/win.sls/pull/6).
+
+Commit with some changes in projects based on serverless v3: [aa2f2e170d3e386091f23f21007e6a4c1bb3dd7e](https://github.com/workflow-intelligence-nexus/win.sls/commit/aa2f2e170d3e386091f23f21007e6a4c1bb3dd7e)
+
 
 ## FAQ
 

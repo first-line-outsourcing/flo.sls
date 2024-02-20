@@ -1,4 +1,4 @@
-import { InputValidationError } from '@floteam/errors';
+import { InputValidationError } from '@flopackages/errors';
 import { AxiosError } from 'axios';
 
 export function isAxiosError(error: unknown): error is AxiosError {

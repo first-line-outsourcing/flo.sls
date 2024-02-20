@@ -2,11 +2,6 @@
 version: '3.1'
 
 services:
-  sqs:
-    image: softwaremill/elasticmq
-    restart: always
-    ports:
-      - '9324:9324'
   sonarqube:
     container_name: sonarqube
     image: sonarqube:latest

@@ -1,23 +1,25 @@
 import './config/serverless/stage-loader';
 import type { AWS } from '@serverless/typescript';
 import { deployTestConfig } from './config/serverless/parts/deploy-test';
+import { iconikAppAdminConfig } from './config/serverless/parts/iconik-app-admin';
+import { GetAtt, Ref, Sub } from './config/serverless/cf-intristic-fn';
 import { getStage, joinParts } from './config/serverless/utils';
 
+const DEPLOYMENT_BUCKET = 'clients-serverless-deployment-bucket';
 const CLIENT = '${param:CLIENT}';
-const SERVICE_NAME = `template-flo-sls`;
+const SERVICE_NAME = `template-win-sls`;
 const STAGE = '${opt:stage, "dev"}';
 const REGION = '${param:REGION}';
 const PROFILE = '${param:PROFILE}';
 
 const masterConfig: AWS = {
-  service: SERVICE_NAME,
-  // See https://www.serverless.com/framework/docs/guides/parameters#stage-parameters
+  service: SERVICE_NAME, // See https://www.serverless.com/framework/docs/guides/parameters#stage-parameters
   params: {
     // default parameters
     default: {
       REGION: 'us-east-1',
-      CLIENT: 'FLO',
-      PROFILE: 'default',
+      CLIENT: 'WIN',
+      PROFILE: 'win',
     },
     dev: {},
     prod: {},
@@ -29,13 +31,19 @@ const masterConfig: AWS = {
   configValidationMode: 'warn',
   provider: {
     name: 'aws',
-    runtime: 'nodejs18.x',
+    runtime: 'nodejs20.x',
     stage: STAGE,
     // @ts-ignore
     region: REGION,
     profile: PROFILE,
     environment: {
+      SERVICE_NAME: '${self:service}',
       STAGE,
+      BASE_HTTP_API_URL: GetAtt('HttpApi.ApiEndpoint'), // API_URL: Sub('https://${gatewayId}.execute-api.${region}.${suffix}/${self:provider.stage}/', {
+      //   gatewayId: Ref('ApiGatewayRestApi'),
+      //   region: Ref('AWS::Region'),
+      //   suffix: Ref('AWS::URLSuffix'),
+      // }),
     },
     tags: {
       client: CLIENT,
@@ -43,10 +51,19 @@ const masterConfig: AWS = {
     logs: {
       httpApi: true,
     },
+    apiGateway: {
+      // need to be set to get free up resources feature work
+      disableDefaultEndpoint: false,
+    },
     httpApi: {
       payload: '2.0',
-      cors: true,
+      cors: true, // need to be set to get free up resources feature work
+      disableDefaultEndpoint: false,
     },
+    deploymentBucket: {
+      name: DEPLOYMENT_BUCKET,
+    },
+    deploymentPrefix: `${SERVICE_NAME}-${STAGE}`,
   },
   package: {
     individually: true,
@@ -134,4 +151,4 @@ const masterConfig: AWS = {
   ],
 };
 
-module.exports = joinParts(masterConfig, [/*DELETE THIS >*/ deployTestConfig]);
+module.exports = joinParts(masterConfig, [iconikAppAdminConfig, /*DELETE THIS >*/ deployTestConfig]);

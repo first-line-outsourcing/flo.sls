@@ -1,4 +1,4 @@
-import { HttpBadRequestError, HttpInternalServerError } from '@floteam/errors';
+import { HttpBadRequestError, HttpInternalServerError } from '@flopackages/errors';
 import { MediaInfoCurlService, Track } from '@services/media-info-curl.service';
 
 /**
