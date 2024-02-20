@@ -1,6 +1,4 @@
-import { HttpBadRequestError, HttpInternalServerError } from '@floteam/errors';
-import { HttpError } from '@floteam/errors/http/http-error';
-import { RuntimeError } from '@floteam/errors/runtime/runtime-error';
+import { HttpBadRequestError, HttpError, HttpInternalServerError, RuntimeError } from '@flopackages/errors';
 import { baseErrorHandler } from '@helper/base-error-handler';
 import { AxiosError } from 'axios';
 

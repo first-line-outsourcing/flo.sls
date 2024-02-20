@@ -1,9 +1,9 @@
-import { HttpBadRequestError, HttpInternalServerError, HttpUnauthorizedError } from '@floteam/errors';
 import { IconikCredentialsStorage } from '@services/IconikCredentialsStorage';
 import { IconikService } from '@workflowwin/iconik-api';
 import { AxiosError } from 'axios';
 import { getEnv } from '../../environment';
 import { debug, log } from '../../logger';
+import { HttpBadRequestError, HttpInternalServerError, HttpUnauthorizedError } from '@flopackages/errors';
 
 /**
  * Information about who calls an API method from iconik side

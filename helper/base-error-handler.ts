@@ -1,6 +1,4 @@
-import { HttpError } from '@floteam/errors/http/http-error';
-import { RuntimeError } from '@floteam/errors/runtime/runtime-error';
-import { convertToHttpError } from '@floteam/errors/util';
+import { HttpError, RuntimeError, convertToHttpError } from '@flopackages/errors';
 import { log } from '@helper/logger';
 import { AxiosError } from 'axios';
 

@@ -1,9 +1,8 @@
-import { InputValidationError } from '@floteam/errors';
-import { RuntimeError } from '@floteam/errors/runtime/runtime-error';
 import { getEnv, getStage } from '@helper/environment';
 import { debug } from '@helper/logger';
 import { GetParametersByPathResult, SSM } from '@aws-sdk/client-ssm';
 import NodeCache from 'node-cache';
+import { InputValidationError, RuntimeError } from '@flopackages/errors';
 
 // Reduces number of requests to external storage.
 // How it works: https://docs.aws.amazon.com/lambda/latest/operatorguide/static-initialization.html

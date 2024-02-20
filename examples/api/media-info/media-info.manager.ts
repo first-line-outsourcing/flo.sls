@@ -1,7 +1,7 @@
 import { MediaInfoCurlService, Track } from '@services/media-info-curl.service';
-import { HttpBadRequestError } from '@floteam/errors';
 import { MediaInfoUrl } from './media-info.inteface';
 import { MediaInfoService } from './media-info.service';
+import { HttpBadRequestError } from '@flopackages/errors';
 
 /**
  * It's the feature manager
